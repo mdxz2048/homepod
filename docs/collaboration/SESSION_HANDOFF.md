@@ -6,7 +6,7 @@
 
 仓库 https://github.com/mdxz2048/homepod 。当前开发分支codex/virtual-audio-mvp；main备份点4331d3b92cc2330e58dcf28ab50ffd4b7d6d283d，保持不动。分支fda6f14已保存虚拟驱动/输入/工具第一轮；本会话后续提交保存v0.3兼容修正、原始日志及本交接。最新保存点用git log -1查看，以远端核对为准。README只写变更记录。身份凭据不写进仓库。
 
-用户最新已授权继续声卡安装。第五候选修正版已安装，用户已回复“已重启并登录桌面”。尚未成功读取这次重启后的枚举结果：Tailscale SSH一次超时，局域网SSH返回system locked预启动解锁提示；为执行用户保存/换会话要求已取消该连接。此提示可能来自启动过渡，不能据此否定用户桌面操作。下次先重连、验证，不要直接再次重装或让用户再重启。
+2026-11-06 16:05 更新：第六候选已安装并完成真机验证。设备已被系统枚举，`hfla`/`hflr` 通过 `CFPropertyList`/`CFNumber` 对客户端可见并可读写，`--discover` 退出0；TCC 授权 GUI 进程中的 device Tap 已取得非零、左右独立 PCM。产品 Input 仍未实现真实 Tap 采集/转换/HPCM，WriteMix 仍为 sink。详见本目录 `virtual-audio/CONTRACT.md` v0.4 与 `reports/VirtualAudio-2026-11-06/Sixth-candidate-runtime-2026-11-06.md`。不要凭“枚举成功”宣称产品链路、浏览器或声学已通过。
 
 ## 当前真实能力与限制
 
@@ -15,19 +15,25 @@
 - UI单布局设置，真实型号/坐标/数量；菜单影院/同步两模式。没有产品文件播放入口。音画延迟滑块禁用。
 - 影院独立processing库Mac Release CTest1/1、Python真实绑定4项通过，尚未接入实际链路。当前影院/同步实际均复制同一L/R；不能宣称真实5.1环绕。
 - App尚依赖Python开发环境与绝对runtime路径，非完整正式自包含包。Tap当前unmuted，本机重复出声待处理；一次重启ProtocolError根因未修。
+- 虚拟声卡第六候选：系统枚举、AudioUnit create/bind/initialize、`hfla`/`hflr` 读写、revision 单调、stream latency 两 scope 同步、`--discover` 已通过；TCC 授权 GUI 进程的 device Tap 已测到非零、左右独立 PCM。产品 Input 采集/转换/HPCM 未实现；默认输出恢复仍靠人工/协调脚本，自动接管门禁保持关闭。
 - 旧核心C ABI v1及35个冻结文件不能改，快照baselines/M2-core-source.json；.gitattributes保留其原始字节。新输入、处理和驱动分库扩展。
 
 ## 声卡安装的精确状态
 
-系统路径 `/Library/Audio/Plug-Ins/HAL/HomePodFlowAudio.driver`，root:wheel，group/other不可写，签名严格验证通过。没有切换默认输出，没有重新签名/安装GUI App。
+系统路径 `/Library/Audio/Plug-Ins/HAL/HomePodFlowAudio.driver`，root:wheel，group/other不可写，签名严格验证通过。没有重新签名/安装GUI App。
 
-第三候选首次安装后重启：coreaudiod创建remote driver service成功，但add-device初始化UnknownProperty（2003332927，'who?'）；CLI driver_unavailable。不是加载成功即设备可用，也未定位具体失败selector。
+第六候选已安装并验证：
 
-第五候选补齐HAL初始化属性兼容并有界诊断，Mac tests/stage均退出0。源码SHA256 `7e8987cd76780fa3ca2bafb94d1c2b70be30e36ca081666bdd8f9a8e8b37f536`，已安装binary SHA256 `78b0ec699ac53ae316343c98e82879605254da36dc3944ff72035712abd63ee5`。
+- 源码 `platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c` SHA256 `22ef229761c2ac8d4dbb731eda5874d001df612b124063c453cbd530e0167540`（LF 统一后；重新编译 binary 仍为下方 SHA）；安装 binary SHA256 `32a61621dea1bc8016f19b16e5a549b6cd8baaf4a07fc0d519112168738077a3`。
+- 第五候选备份：`live-validation/virtual-driver-backup-fifth/HomePodFlowAudio.driver`，SHA256 `78b0ec699ac53ae316343c98e82879605254da36dc3944ff72035712abd63ee5`。
+- `system_profiler` 显示 `HomePod Flow Audio`，2ch/48000/Virtual；AudioUnit create/bind/initialize 均 status=0。
+- `hfla`/`hflr` 已从 `DataTypeNone` 改为 `CFPropertyList`/`CFNumber`；真机读取 hfla=0、hflr>0；设 4800 后 revision 递增且两个 scope stream latency 同步，重复写不增 revision，归零后继续递增。
+- `virtual-audio-input --discover` 真机退出0，读出 UID、stereo/48k、FL/FR、revision、uncalibrated、buffer 512、period 16384。
+- **buffer size 重要差异**：`kAudioDevicePropertyBufferFrameSize` 由 coreaudiod 管理；虚拟设备与内置扬声器都报 15..4096，客户端可设 256/1024/4096 并回读同一值，驱动自身 512..512 不生效。不要再宣称“范围仅512”；驱动 DoIO 必须接受 host 给出的可变帧数。
+- device Tap：在带 `NSAudioCaptureUsageDescription`、TCC 已授权的临时 GUI app 中，以内置扬声器为时钟，对虚拟设备创建 device tap；只播左声道时 `callbacks=301 frames=154112 nonzero=142436 rmsL=0.169940 rmsR=0.000000 peakL=0.25 peakR=0`，时间戳 flags=7。证明 Tap 数据面与非复制左右声道成立；但这是临时 probe，不是产品 Input。
+- 一次 Tap 测试前发现默认输出被改为虚拟设备，已用 CoreAudio 恢复为 `BuiltInSpeakerDevice`；未观察到驱动代码主动切换，但不能据此断言人为/其他进程原因。任何后续测试结束都必须检查默认输出。
 
-原第三候选已备份：Mac live-validation/virtual-driver-backup-third/HomePodFlowAudio.driver。第五候选stage：live-validation/virtual-driver-stage-fifth/HomePodFlowAudio.driver。安装后再discover仍旧服务驻留/退出1，随后用户再次重启；新枚举尚待检查。SIP已拒绝launchctl热重载；不关闭SIP、不用kill绕过。不要自动重启未保存工作。
-
-驱动仅output-only立体声Float32/44.1或48k/512frames，目前WriteMix sink本身不会转发HomePod。输入Tap真实PCM、源时钟、浏览器采用和声学音画均未验。契约v0.3初始reported latency0=uncalibrated，不能理解为真实零延迟。无独立恢复helper、无跨进程journal事务或真实默认输出writer，自动接管必须保持禁用。
+仍未实现/未验：产品 Input 的真实 Tap 采集、ring、48k→44.1k 转换与 HPCM；App 身份下的 TCC；WriteMix 转发（当前 sink，若 Tap 产品化成立则不必改，但要保留系统 Tap 兜底）；源 render time/延迟校准、Chrome/Safari 采用、声学音画；恢复 helper/lease 跨进程事务/自动默认输出接管；6/8ch；正式签名与自包含安装包。
 
 ## Mac连接与位置
 
@@ -43,12 +49,12 @@
 
 ## 下次先做这些
 
-1. 重连Mac（优先Tailscale；超时则LAN发现），确认桌面会话和Tailscale实际状态。不要复用旧SSH session ID。
-2. cd到base；执行只读 `./source/platforms/macos/VirtualAudioInput/.build/debug/virtual-audio-input --discover`，保存JSON、stderr和exit code；再执行 `./output-latency-probe`，检查UID `com.homepodflow.virtual-audio.stereo.v1` 是否存在、AudioUnit是否可初始化以及延迟属性。
-3. 若仍失败，读取重启后CoreAudio Driver helper与coreaudiod日志，查HomePodFlowAudio新增32条上限的property read rejected诊断，将十进制selector/scope解FourCC。精确关联HomePod段，勿误用Parrot等其他插件错误。再交driver/architect/QA；不盲目反复重启。
-4. 下载base中的virtual-driver-tests-fourth.log、virtual-driver-stage-fourth.log、virtual-driver-tests-fifth.log、virtual-driver-stage-fifth.log、virtual-fifth-installed-verify.log与virtual-fifth-installed-discover.{json,err}。这些仍仅在Mac，本次尚未下载，不能误称已有本地原始证据。此前virtual-fifth-evidence.zip打包命令因Mac重启未执行。
-5. 设备真实枚举和AudioUnit通过后，才设计device/stream Tap有限实验，验证左右独立非零PCM、源render时间戳。尚无该数据面实现；保留现有系统Tap兜底。不要将静音虚拟设备留作正常默认输出。
-6. 依次完成恢复helper/lease跨进程原子事务、输入桥接、可控延迟上报实验、浏览器真实采用及同一时钟音画录制测量。播放器/浏览器可不一定采纳；属性成功不等于音画已自动同步。
+1. 把已真机验证的 device Tap 路径实现进 `platforms/macos/VirtualAudioInput`：create tap/aggregate、IOProc、有界 ring、48k→44.1k、HPCM v1 字段与源时间戳；产品路径必须显式报告 TCC 未授权，不能静默全0。保留系统 Tap 兜底。
+2. 在 HomePod Flow App 的签名/Info.plist/TCC 身份下复验同一路径；临时 ad-hoc probe 通过不等于产品 App 通过。未授权时返回 `permission_required`。
+3. 用 `hfla` 做受控延迟预算实验：先停止全组、确认无 running IO、设置后回读并观察两 scope 通知；记录 AU/device/stream/safety/buffer/callback hostTime/PCM receipt，再验证 Chrome/Safari 是否采用。属性成功不等于音画已同步。
+4. 完成恢复 helper、lease 跨进程原子事务和默认输出恢复；在此之前自动接管保持禁用。任何 Tap/测试结束检查默认输出，不得把静音虚拟设备留作默认。
+5. 下载/保存本轮第六候选原始证据与报告（已保存到 `reports/VirtualAudio-2026-11-06/`）；后续补 driver test/stage 原始日志、App 身份 TCC 结果和声学测量。
+6. 再评估 6/8ch、真实 pair/多声道与正式签名/自包含安装包；不得静默取消历史需求或伪报完成。
 
 原始本地证据在reports/VirtualAudio-2026-11-06/（23文件，首轮构建失败/成功及第三候选重启失败均保留）。QA已独立核对第三候选mock/stage、Input13、工具6项。第五候选执行结果协调已见工具输出，原始Mac日志待下载后再独立复核。
 

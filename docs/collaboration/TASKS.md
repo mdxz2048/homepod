@@ -8,9 +8,9 @@
 |---|---|---|
 | T025 | 当前系统声音/动态音量开发基线Git备份 | 完成：远端main与本地main均4331d3b92cc2330e58dcf28ab50ffd4b7d6d283d |
 | T026 | 虚拟入口产品/架构及共享接口冻结 | 契约v0.3已冻结（含Chrome stream latency output scope及HAL初始化有限兼容），架构/驱动/QA对齐 |
-| T027 | 最小立体声虚拟输出驱动 | 首版安装后重启枚举失败；第五兼容候选Mac tests/stage/plist/codesign通过并更新安装；用户已再次重启，新枚举待读取；未改默认输出 |
+| T027 | 最小立体声虚拟输出驱动 | 第六候选已安装并真机枚举成功；hfla/hflr(CFPropertyList)可读写、revision单调、stream latency两scope同步；codesign/权限/默认输出恢复核验通过；buffer size实测由coreaudiod管理（15..4096） |
 | T028 | 原生输出/虚拟输出音画对照验收 | 工具Mac6/6通过，MP4素材已生成；浏览器采用及实际音画仍未测 |
-| T029 | 虚拟输入到现有实时核心的适配 | 新VirtualAudioInput骨架Mac13测试通过，默认禁接管；真实Tap、恢复helper/跨进程事务及音频整合未实现验收 |
+| T029 | 虚拟输入到现有实时核心的适配 | `--discover`真机退出0；TCC授权GUI进程的device Tap已取得非零、左右独立PCM；但产品Input尚无真实Tap采集/转换/HPCM实现，恢复helper/跨进程事务及App身份TCC未验 |
 
 统一入口：[虚拟音频MVP工作流](VIRTUAL_AUDIO_MVP_WORKFLOW.md)。本轮备份不代表正式版验收通过。
 

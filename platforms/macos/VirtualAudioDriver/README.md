@@ -4,7 +4,11 @@ This is an independent, original C implementation of the public AudioServerPlugI
 The only declared format is native-endian packed Float32 **interleaved stereo**, at
 44100 or 48000 Hz (initial 48000). One output stream, no input or microphone,
 no volume controls, no network, no shared-memory transport, no PCM storage.
-Buffer size is fixed at 512 frames. Zero timestamp period is independently 16384.
+Preferred/initial buffer size is 512 frames. On the target Mac, however,
+coreaudiod owns `kAudioDevicePropertyBufferFrameSize`: it exposes 15...4096 and
+accepts client sets to 256/1024/4096, reading back the host value even though
+this driver answers 512...512. The sink IO path accepts the host-provided frame
+count; do not claim a 512-only HAL range.
 
 The device **silently consumes output**. It does not send anything to HomePods by
 itself. Whether a device/stream Core Audio Tap can retrieve nonzero, independent
@@ -36,7 +40,7 @@ sleep/wake, and acoustic delay remain separate real-system tests.
 
 ## Contract and latency
 
-Source of truth: `docs/collaboration/virtual-audio/CONTRACT.md` v0.2.
+Source of truth: `docs/collaboration/virtual-audio/CONTRACT.md` v0.4.
 Device UID: `com.homepodflow.virtual-audio.stereo.v1`.
 Plug-in bundle ID: `com.homepodflow.audio.driver`.
 
@@ -50,9 +54,11 @@ no audio, process identity, or application content is logged.
 
 - Device latency and safety offset: 0 frames. The **single stream** holds the
   downstream latency budget, initially 0 **uncalibrated**, not zero-latency playback.
-- Device global/main `'hfla'`: UInt32 latency frames, 0..10×current sample rate;
-  only writable with no running clients and no pending format change.
-- Device global/main `'hflr'`: read-only UInt64 revision, initially 1.
+- Device global/main `'hfla'`: CFNumber(UInt32) latency frames, 0..10×current
+  sample rate; only writable with no running clients and no pending format change.
+- Device global/main `'hflr'`: read-only CFNumber(UInt64) revision, initially 1.
+- Custom properties must be declared as `CFPropertyList` with a `None` qualifier;
+  `DataTypeNone` for the value makes the selector invisible to HAL clients.
 - Stream latency is readable with global/main and output/main, one value. Input
   scope and non-main elements are rejected. Both latency scopes are notified.
 - Sample-rate requests use the host configuration request/perform/abort protocol.

@@ -12,7 +12,7 @@
 | UI | 单布局页、真实型号/坐标/数量、保存/取消；菜单开关、两模式、动态音量；Debug/Release构建通过 | 从正常菜单操作的完整交互验收及必要状态文案；影院仍未实际接算法 |
 | 影院处理 | 独立processing库Mac Release构建、CTest1/1及Python真实绑定4项通过 | 接入真实音频链路及听感/路由验收；当前实际仍同一L/R复制 |
 | 音画延迟 | 已明确当前协议1.5秒+软件0.5秒余量=计划约2秒；现有控件禁用 | 实测总延迟、优化准备余量、有用的声音延后/可控播放器画面补偿；任意来源不能假承诺负延迟 |
-| 虚拟声卡/原生多声道 | 契约v0.3；首版已安装但重启后HAL设备初始化失败；兼容修正版Mac tests/stage/签名通过并更新安装；输入模块13测试通过 | 用户已再次重启，修正版新枚举结果待读取；Tap/浏览器/声学及6/8ch尚未验收 |
+| 虚拟声卡/原生多声道 | 契约v0.4；第六候选已安装并真机枚举成功；`hfla`/`hflr`(CFPropertyList/CFNumber)可读写、revision单调、stream latency两scope同步；`--discover`退出0；TCC授权GUI进程的device Tap已取得非零、左右独立PCM | 产品Input尚未实现真实Tap采集/转换/HPCM；WriteMix仍sink；buffer size实测由coreaudiod管理（15..4096，非固定512）；浏览器/声学/恢复helper/正式包未验 |
 | 安装与签名 | Mac固定路径内部构建可运行 | 当前依赖开发目录/Python环境；固定签名、独立安装/卸载/恢复和正式包尚缺。ad-hoc更新曾使旧录音授权不匹配，用户重新允许后动态音量实测通过 |
 | Git备份 | GitHub main已确认4331d3b，与本地main一致；35个冻结文件在Git内字节校验一致；README仅变更记录 | 这是开发快照，不是完整正式版；后续在codex/virtual-audio-mvp开发 |
 
@@ -24,6 +24,13 @@
 2. 接入已分库的影院处理，验证与同步播放确实不同、布局确实影响内容且不丢主声音；增加第三台和故障/恢复场景。
 3. 单独推进真实音画能力：测量当前延迟，安全优化；仅延后声音不能解决声音已晚于画面，可控播放器适配负责视频延后。虚拟声卡并行预研，不阻断优先链路。
 4. 固定签名与自包含安装包、正式UI/权限/兼容验收、文档及首次Git备份。未通过的原生pair/多声道/应用选择等需求不得静默取消或伪报完成。
+
+### 虚拟声卡第六候选后的顺序
+
+1. 把已真机验证的 device Tap 路径实现进 VirtualAudioInput：创建 tap/aggregate、IOProc、有界 ring、48k→44.1k 转换、HPCM v1 字段与源时间戳；保留系统 Tap 兜底。
+2. 在 HomePod Flow App 的 TCC/Info.plist 身份下验证同一路径，确认不是只有临时 ad-hoc probe 可用；未授权时显式报 `permission_required`，不静默全 0。
+3. 用 hfla 做受控延迟预算实验并观察 revision/通知；记录 AU、device、stream、safety、buffer、callback hostTime、PCM receipt，再验证 Chrome/Safari 是否采用。
+4. 完成恢复 helper、lease 跨进程事务和默认输出恢复；在此之前保持自动接管关闭。
 
 架构未打乱：SwiftUI/AppState → SystemAudioStore → system_worker → 输入适配/TapCaptureHost → live桥 → 处理与冻结路由核心 → AirPlay。输入、DSP、调度、传输、UI保持模块边界，新增处理不修改旧核心ABI。
 

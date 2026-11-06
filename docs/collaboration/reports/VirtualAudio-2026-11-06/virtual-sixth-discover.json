@@ -1,0 +1,42 @@
+{
+  "availableSampleRates" : [
+    44100,
+    48000
+  ],
+  "bufferFrames" : 512,
+  "descriptor" : {
+    "audioCapturePermission" : "unknown",
+    "backend" : "virtual_device_stream_tap",
+    "capturedFormat" : {
+      "channelCount" : 2,
+      "labels" : [
+        "FL",
+        "FR"
+      ],
+      "layoutAuthority" : "device",
+      "layoutVerified" : true,
+      "packing" : "interleaved",
+      "sampleRate" : 48000,
+      "sampleType" : "f32"
+    },
+    "deviceUID" : "com.homepodflow.virtual-audio.stereo.v1",
+    "latency" : {
+      "calibration" : "uncalibrated",
+      "reportedFrames" : 0,
+      "revision" : 3,
+      "sampleRate" : 48000
+    },
+    "provenance" : "device_mix",
+    "schemaVersion" : 1,
+    "sourceClockDomain" : "mach_absolute",
+    "streamIndex" : 0,
+    "transformations" : [
+
+    ]
+  },
+  "deviceLatencyFrames" : 0,
+  "running" : false,
+  "safetyOffsetFrames" : 0,
+  "tapVerified" : false,
+  "zeroTimestampPeriod" : 16384
+}

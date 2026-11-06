@@ -1,0 +1,13 @@
+start 2026-11-06 08:02:54 +0000
+virtual=85 clock=BuiltInSpeakerDevice
+create_tap=0 tap=106
+tap_uid=C569D1D3-9C8C-44B4-8EB9-B62F997DD721
+waiting 8s for TCC
+create_aggregate=0 agg=107
+install_io=0
+start_capture=0
+au_init=0 au_start=0
+render_callbacks=281 render_frames=143872 render_rms=0.12500275194890745
+RESULT callbacks=301 frames=154112 nonzero=142436 badLayout=0 rmsL=0.169940 rmsR=0.000000 peakL=0.250000 peakR=0.000000
+TIMING firstHost=13864714507 lastHost=13941514625 firstSample=-885.0 lastSample=152715.0 flags=7
+done 2026-11-06 08:03:05 +0000

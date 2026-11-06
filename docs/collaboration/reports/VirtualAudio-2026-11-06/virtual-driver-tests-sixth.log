@@ -1,0 +1,2 @@
+PASS stage path rejection: system HAL, relative/dot paths, symlink bundle and parent
+PASS driver factory, scopes, latency policy, stopped rate change, current-time clock, RT sink, stereo-only formats

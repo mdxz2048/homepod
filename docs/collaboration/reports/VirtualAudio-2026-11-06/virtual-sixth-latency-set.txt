@@ -1,0 +1,6 @@
+device=85
+before hfla=0 hflr=3 stream_global=0 stream_output=0
+set_hfla=4800 status=0
+after  hfla=4800 hflr=4 stream_global=4800 stream_output=4800
+set_same_status=0 hflr=4
+reset_status=0 hfla=0 hflr=5 stream_global=0 stream_output=0

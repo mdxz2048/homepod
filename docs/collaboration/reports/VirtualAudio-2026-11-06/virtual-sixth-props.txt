@@ -1,0 +1,8 @@
+device=85
+ltnc scope=6f757470 status=0 size=4 value=0
+saft scope=6f757470 status=0 size=4 value=0
+fsiz scope=676c6f62 status=0 size=4 value=512
+ring scope=676c6f62 status=0 size=4 value=16384
+hfla status=0 size=8 value=0
+hflr status=0 size=8 value=3
+fsz# status=0 size=16 min=15.000 max=4096.000

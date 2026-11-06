@@ -33,6 +33,31 @@ static UInt32 Read32(AudioObjectID object, AudioObjectPropertySelector selector,
     assert(GetData(Driver(),object,0,&address,0,NULL,sizeof(value),&written,&value)==noErr);
     assert(written==sizeof(value)); return value;
 }
+/* Custom properties are CFPropertyListRefs; the host only marshals
+ * CFString/CFPropertyList, never raw integers. */
+static UInt32 ReadCustom32(AudioObjectID object, AudioObjectPropertySelector selector) {
+    AudioObjectPropertyAddress address = Global(selector);
+    CFNumberRef number=NULL; UInt32 written=0;
+    assert(GetData(Driver(),object,0,&address,0,NULL,sizeof(number),&written,&number)==noErr);
+    assert(written==sizeof(number) && number && CFGetTypeID(number)==CFNumberGetTypeID());
+    SInt32 value=0; assert(CFNumberGetValue(number,kCFNumberSInt32Type,&value));
+    CFRelease(number); return (UInt32)value;
+}
+static UInt64 ReadCustom64(AudioObjectID object, AudioObjectPropertySelector selector) {
+    AudioObjectPropertyAddress address = Global(selector);
+    CFNumberRef number=NULL; UInt32 written=0;
+    assert(GetData(Driver(),object,0,&address,0,NULL,sizeof(number),&written,&number)==noErr);
+    assert(written==sizeof(number) && number && CFGetTypeID(number)==CFNumberGetTypeID());
+    SInt64 value=0; assert(CFNumberGetValue(number,kCFNumberSInt64Type,&value));
+    CFRelease(number); return (UInt64)value;
+}
+static OSStatus SetCustom32(AudioObjectID object, AudioObjectPropertySelector selector, SInt64 value) {
+    AudioObjectPropertyAddress address = Global(selector);
+    CFNumberRef number = CFNumberCreate(kCFAllocatorDefault,kCFNumberSInt64Type,&value);
+    assert(number);
+    OSStatus status = SetData(Driver(),object,0,&address,0,NULL,sizeof(number),&number);
+    CFRelease(number); return status;
+}
 static void CheckLatencyScope(AudioObjectPropertyScope scope, Boolean expected) {
     AudioObjectPropertyAddress address={kAudioStreamPropertyLatency,scope,kAudioObjectPropertyElementMain};
     UInt32 size=0,written=0,value=0; Boolean settable=true;
@@ -100,13 +125,20 @@ int main(void) {
     assert(Read32(kFlowObjectDevice,kAudioDevicePropertySafetyOffset,kAudioObjectPropertyScopeInput)==0);
     assert(Read32(kFlowObjectDevice,kAudioDevicePropertyRelatedDevices,kAudioObjectPropertyScopeGlobal)==kFlowObjectDevice);
     assert(Read32(kFlowObjectDevice,kAudioObjectPropertyOwnedObjects,kAudioObjectPropertyScopeOutput)==kFlowObjectOutputStream);
+    AudioObjectPropertyAddress infoAddress=Global(kAudioObjectPropertyCustomPropertyInfoList);
+    AudioServerPlugInCustomPropertyInfo info[2]; UInt32 infoSize=0,infoWritten=0;
+    assert(DataSize(Driver(),kFlowObjectDevice,0,&infoAddress,0,NULL,&infoSize)==noErr && infoSize==sizeof(info));
+    assert(GetData(Driver(),kFlowObjectDevice,0,&infoAddress,0,NULL,sizeof(info),&infoWritten,&info)==noErr && infoWritten==sizeof(info));
+    assert(info[0].mSelector==kFlowLatencyFrames && info[0].mPropertyDataType==kAudioServerPlugInCustomPropertyDataTypeCFPropertyList);
+    assert(info[1].mSelector==kFlowLatencyRevision && info[1].mPropertyDataType==kAudioServerPlugInCustomPropertyDataTypeCFPropertyList);
     AudioObjectPropertyAddress emptyOwned={kAudioObjectPropertyOwnedObjects,kAudioObjectPropertyScopeInput,kAudioObjectPropertyElementMain};
     UInt32 emptySize=99;
     assert(DataSize(Driver(),kFlowObjectDevice,0,&emptyOwned,0,NULL,&emptySize)==noErr && emptySize==0);
     assert(Read32(kFlowObjectOutputStream,kAudioStreamPropertyLatency,kAudioObjectPropertyScopeGlobal)==0);
-    AudioObjectPropertyAddress address=Global(kFlowLatencyFrames);
-    UInt32 latency=96000;
-    assert(SetData(Driver(),kFlowObjectDevice,0,&address,0,NULL,sizeof(latency),&latency)==noErr);
+    assert(ReadCustom64(kFlowObjectDevice,kFlowLatencyRevision)==1);
+    assert(SetCustom32(kFlowObjectDevice,kFlowLatencyFrames,96000)==noErr);
+    assert(ReadCustom32(kFlowObjectDevice,kFlowLatencyFrames)==96000);
+    assert(ReadCustom64(kFlowObjectDevice,kFlowLatencyRevision)==2);
     assert(Read32(kFlowObjectOutputStream,kAudioStreamPropertyLatency,kAudioObjectPropertyScopeGlobal)==96000);
     assert(Read32(kFlowObjectOutputStream,kAudioStreamPropertyLatency,kAudioObjectPropertyScopeOutput)==96000);
     assert(Read32(kFlowObjectDevice,kAudioDevicePropertyLatency,kAudioObjectPropertyScopeOutput)==0);
@@ -114,14 +146,14 @@ int main(void) {
     CheckLatencyScope(kAudioObjectPropertyScopeOutput,true);
     CheckLatencyScope(kAudioObjectPropertyScopeInput,false);
     assert(gStreamGlobalNotifications==1 && gStreamOutputNotifications==1 && gRevisionNotifications==1);
-    assert(SetData(Driver(),kFlowObjectDevice,0,&address,0,NULL,sizeof(latency),&latency)==noErr);
+    assert(SetCustom32(kFlowObjectDevice,kFlowLatencyFrames,96000)==noErr);
     assert(gStreamGlobalNotifications==1 && gStreamOutputNotifications==1 && gRevisionNotifications==1);
     AudioObjectPropertyAddress invalidLatency={kAudioStreamPropertyLatency,kAudioObjectPropertyScopeInput,kAudioObjectPropertyElementMain};
     UInt32 badSize=0; assert(DataSize(Driver(),kFlowObjectOutputStream,0,&invalidLatency,0,NULL,&badSize)==kAudioHardwareUnknownPropertyError);
     assert(StartIO(Driver(),kFlowObjectDevice,1)==noErr);
     assert(StartIO(Driver(),kFlowObjectDevice,1)==kAudioHardwareIllegalOperationError);
     assert(StartIO(Driver(),kFlowObjectDevice,2)==noErr);
-    assert(SetData(Driver(),kFlowObjectDevice,0,&address,0,NULL,sizeof(latency),&latency)==kAudioHardwareIllegalOperationError);
+    assert(SetCustom32(kFlowObjectDevice,kFlowLatencyFrames,96000)==kAudioHardwareIllegalOperationError);
     Float64 sample1,sample2; UInt64 host1,host2,seed1,seed2;
     assert(ZeroTime(Driver(),kFlowObjectDevice,1,&sample1,&host1,&seed1)==noErr);
     usleep(400000);
@@ -158,8 +190,7 @@ int main(void) {
     assert(DoIO(Driver(),kFlowObjectDevice,kFlowObjectOutputStream,1,kAudioServerPlugInIOOperationWriteMix,4,NULL,samples,NULL)==noErr);
     assert(!memcmp(copy,samples,sizeof(copy)));
     assert(StopIO(Driver(),kFlowObjectDevice,1)==noErr);
-    latency=480001;
-    assert(SetData(Driver(),kFlowObjectDevice,0,&address,0,NULL,sizeof(latency),&latency)==kAudioHardwareIllegalOperationError);
+    assert(SetCustom32(kFlowObjectDevice,kFlowLatencyFrames,480001)==kAudioHardwareIllegalOperationError);
     AudioObjectPropertyAddress inputs={kAudioDevicePropertyStreams,kAudioObjectPropertyScopeInput,kAudioObjectPropertyElementMain};
     UInt32 size=99; assert(DataSize(Driver(),kFlowObjectDevice,0,&inputs,0,NULL,&size)==noErr && size==0);
     AudioStreamBasicDescription bad=Format(44100); bad.mChannelsPerFrame=6; assert(!ValidFormat(&bad));

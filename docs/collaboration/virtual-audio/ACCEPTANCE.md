@@ -1,6 +1,6 @@
 # 虚拟音频 MVP 独立验收
 
-日期：2026-11-06。所有 Mac 驱动、浏览器、声学项目目前均为**未测**。本文是验收设计，不是通过记录。原生设备既有属性数据引用 [原生延迟报告](../reports/Native-output-latency-2026-11-06.md)，不替代本阶段结果。
+日期：2026-11-06。驱动第六候选已有真机 HAL/属性/device Tap 结果；浏览器采用与声学项目仍未测。本文是验收设计加阶段记录，不是产品通过记录。原生设备既有属性数据引用 [原生延迟报告](../reports/Native-output-latency-2026-11-06.md)，不替代本阶段结果。
 
 ## 必须区分的三层证据
 
@@ -192,3 +192,19 @@ QA已独立读取 [原始证据目录](../reports/VirtualAudio-2026-11-06/) 中�
 据原始证据可确认mock/stage与13项policy测试成功、第三候选实际枚举失败，二者同时成立。当前不宣称真实HAL枚举、Tap、浏览器采用或最终音画通过。
 
 v0.3随后补充DataSize失败诊断，最新源码SHA256 `7e8987cd76780fa3ca2bafb94d1c2b70be30e36ca081666bdd8f9a8e8b37f536`。QA只读确认DataSize失败调用同一32条限额函数，HasProperty不记录，RT调用图未变；关闭上面的诊断覆盖缺口。运行/安装后的枚举结论仍待新日志。
+
+### 第六候选真机运行结果（2026-11-06）
+
+原始证据与完整命令见 [Sixth-candidate-runtime-2026-11-06.md](../reports/VirtualAudio-2026-11-06/Sixth-candidate-runtime-2026-11-06.md)。
+
+| 项目 | 结果 | 说明 |
+|---|---|---|
+| 系统枚举 | PASS | `HomePod Flow Audio` 2ch/48000/Virtual；默认输出保持内置 |
+| AudioUnit create/bind/initialize | PASS | 均 status=0 |
+| `hfla`/`hflr` 客户端可见 | PASS | 改为 CFPropertyList/CFNumber 后真机可读写 |
+| revision/通知语义 | PASS（属性层） | 4800 帧→revision+1；重复写不增；归零再+1；两 scope stream latency 同步 |
+| `--discover` | PASS | 退出0，读出 UID/格式/revision/uncalibrated/buffer/period |
+| device Tap PCM | PASS（临时 probe） | TCC 授权 GUI app，301 callbacks/154112 frames；只播左声道时 rmsL=0.169940、rmsR=0、peakL=0.25、flags=7 |
+| buffer size 契约 | 需修订 | coreaudiod 管理 15..4096，可设 256/1024/4096；驱动 512..512 不生效 |
+| 产品 Input 接入 | 未测 | 尚无真实 Tap 采集/转换/HPCM |
+| 浏览器采用/声学 | 未测 | 不得由属性或 Tap 通过推断 |

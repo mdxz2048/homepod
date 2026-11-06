@@ -225,8 +225,9 @@ static OSStatus PropertyDataSize(AudioObjectID object, const AudioObjectProperty
             case kAudioObjectPropertyCustomPropertyInfoList:
                 if (global) { *size = 2 * sizeof(AudioServerPlugInCustomPropertyInfo); return noErr; } break;
             case kFlowLatencyRevision:
-                if (global) { *size = sizeof(UInt64); return noErr; } break;
-            case kFlowLatencyFrames: case kAudioDevicePropertyTransportType:
+            case kFlowLatencyFrames:
+                if (global) { *size = sizeof(CFNumberRef); return noErr; } break;
+            case kAudioDevicePropertyTransportType:
             case kAudioDevicePropertyClockDomain: case kAudioDevicePropertyDeviceIsAlive:
             case kAudioDevicePropertyDeviceIsRunning: case kAudioDevicePropertyDeviceIsRunningSomewhere:
             case kAudioDevicePropertyIsHidden: case kAudioDevicePropertyZeroTimeStampPeriod:
@@ -312,10 +313,20 @@ static OSStatus GetData(AudioServerPlugInDriverRef driver, AudioObjectID object,
         case kAudioStreamPropertyTerminalType: u = kAudioStreamTerminalTypeSpeaker; break;
         case kAudioStreamPropertyStartingChannel: u = 1; break;
         case kAudioStreamPropertyLatency: u = object == kFlowObjectOutputStream ? atomic_load(&gLatency) : 0; break;
-        case kFlowLatencyFrames: u = atomic_load(&gLatency); break;
+        case kFlowLatencyFrames: {
+            UInt32 frames = atomic_load(&gLatency);
+            CFNumberRef number = CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &frames);
+            if (!number) return kAudioHardwareUnspecifiedError;
+            memcpy(data, &number, sizeof(number)); *written = sizeof(number); return noErr;
+        }
         case kAudioDevicePropertyClockDomain: case kAudioDevicePropertyIsHidden:
         case kAudioDevicePropertySafetyOffset: u = 0; break;
-        case kFlowLatencyRevision: { UInt64 revision = atomic_load(&gRevision); memcpy(data, &revision, size); *written = size; return noErr; }
+        case kFlowLatencyRevision: {
+            SInt64 revision = (SInt64)atomic_load(&gRevision);
+            CFNumberRef number = CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt64Type, &revision);
+            if (!number) return kAudioHardwareUnspecifiedError;
+            memcpy(data, &number, sizeof(number)); *written = sizeof(number); return noErr;
+        }
         case kAudioDevicePropertyNominalSampleRate: { Float64 rate = atomic_load(&gRate); memcpy(data, &rate, size); *written = size; return noErr; }
         case kAudioDevicePropertyAvailableNominalSampleRates: {
             AudioValueRange ranges[] = {{44100,44100},{48000,48000}}; memcpy(data,ranges,size); *written=size; return noErr;
@@ -329,8 +340,8 @@ static OSStatus GetData(AudioServerPlugInDriverRef driver, AudioObjectID object,
         }
         case kAudioObjectPropertyCustomPropertyInfoList: {
             AudioServerPlugInCustomPropertyInfo properties[] = {
-                {kFlowLatencyFrames,kAudioServerPlugInCustomPropertyDataTypeNone,kAudioServerPlugInCustomPropertyDataTypeNone},
-                {kFlowLatencyRevision,kAudioServerPlugInCustomPropertyDataTypeNone,kAudioServerPlugInCustomPropertyDataTypeNone}
+                {kFlowLatencyFrames,kAudioServerPlugInCustomPropertyDataTypeCFPropertyList,kAudioServerPlugInCustomPropertyDataTypeNone},
+                {kFlowLatencyRevision,kAudioServerPlugInCustomPropertyDataTypeCFPropertyList,kAudioServerPlugInCustomPropertyDataTypeNone}
             }; memcpy(data,properties,size); *written=size; return noErr;
         }
         case kAudioStreamPropertyVirtualFormat: case kAudioStreamPropertyPhysicalFormat: {
@@ -357,8 +368,14 @@ static OSStatus SetData(AudioServerPlugInDriverRef driver, AudioObjectID object,
         return frames == 512 ? noErr : kAudioHardwareIllegalOperationError;
     }
     if (a->mSelector == kFlowLatencyFrames) {
-        if (size != sizeof(UInt32)) return kAudioHardwareBadPropertySizeError;
-        UInt32 frames; memcpy(&frames,data,sizeof(frames));
+        CFPropertyListRef property = NULL;
+        if (size != sizeof(property)) return kAudioHardwareBadPropertySizeError;
+        memcpy(&property,data,sizeof(property));
+        if (!property || CFGetTypeID(property) != CFNumberGetTypeID()) return kAudioHardwareBadPropertySizeError;
+        SInt64 value = 0;
+        if (!CFNumberGetValue((CFNumberRef)property,kCFNumberSInt64Type,&value) || value < 0 || value > UINT32_MAX)
+            return kAudioHardwareIllegalOperationError;
+        UInt32 frames = (UInt32)value;
         pthread_mutex_lock(&gControl);
         if (atomic_load(&gRunning) || gRatePending || frames > 10 * atomic_load(&gRate)) {
             pthread_mutex_unlock(&gControl); return kAudioHardwareIllegalOperationError;

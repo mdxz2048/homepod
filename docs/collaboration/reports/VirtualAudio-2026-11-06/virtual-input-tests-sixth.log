@@ -1,0 +1,46 @@
+[0/1] Planning build
+Building for debugging...
+[0/4] Write swift-version-3CD7052B146186F2.txt
+Build complete! (0.17s)
+Test Suite 'All tests' started at 2026-11-06 16:06:31.663.
+Test Suite 'VirtualAudioInputPackageTests.xctest' started at 2026-11-06 16:06:31.663.
+Test Suite 'ControlChecks' started at 2026-11-06 16:06:31.663.
+Test Case '-[VirtualAudioInputTests.ControlChecks testDefaultTakeoverBlockedWithoutIndependentHelper]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testDefaultTakeoverBlockedWithoutIndependentHelper]' passed (0.001 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testDiscoveryIsReadOnlyAndStartNeverPretendsReady]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testDiscoveryIsReadOnlyAndStartNeverPretendsReady]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testDriverRaceAndExternalRevisionDoNotConfirmSuccess]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testDriverRaceAndExternalRevisionDoNotConfirmSuccess]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testFailedJournalDoesNotSwitchOutput]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testFailedJournalDoesNotSwitchOutput]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testFileJournalRejectsStaleOwnerAndPersistsForNextProcess]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testFileJournalRejectsStaleOwnerAndPersistsForNextProcess]' passed (0.002 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testJournalBeforeSwitchAndRestoreLeavesSystemRoleAlone]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testJournalBeforeSwitchAndRestoreLeavesSystemRoleAlone]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testLatencyWriteConfirmsRevisionButNotCalibration]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testLatencyWriteConfirmsRevisionButNotCalibration]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testMissingOriginalRequiresVerifiedFallbackAndRetainsJournalOnFailure]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testMissingOriginalRequiresVerifiedFallbackAndRetainsJournalOnFailure]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testOversizedJournalIsRejectedByBoundedRead]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testOversizedJournalIsRejectedByBoundedRead]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testRunningStaleAndOutOfRangeNeverWrite]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testRunningStaleAndOutOfRangeNeverWrite]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testUserOverrideIsPreservedAndOldOwnerCannotRestore]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testUserOverrideIsPreservedAndOldOwnerCannotRestore]' passed (0.000 seconds).
+Test Suite 'ControlChecks' passed at 2026-11-06 16:06:31.669.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.005 (0.006) seconds
+Test Suite 'FormatChecks' started at 2026-11-06 16:06:31.669.
+Test Case '-[VirtualAudioInputTests.FormatChecks testDescriptorRoundTripKeepsUnverifiedCaptureAndSourceProvenance]' started.
+Test Case '-[VirtualAudioInputTests.FormatChecks testDescriptorRoundTripKeepsUnverifiedCaptureAndSourceProvenance]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.FormatChecks testRejectsLabelCountAndNonFiniteRate]' started.
+Test Case '-[VirtualAudioInputTests.FormatChecks testRejectsLabelCountAndNonFiniteRate]' passed (0.000 seconds).
+Test Suite 'FormatChecks' passed at 2026-11-06 16:06:31.669.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'VirtualAudioInputPackageTests.xctest' passed at 2026-11-06 16:06:31.669.
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.005 (0.006) seconds
+Test Suite 'All tests' passed at 2026-11-06 16:06:31.669.
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.005 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

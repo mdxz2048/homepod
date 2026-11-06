@@ -46,12 +46,32 @@ public final class HALVirtualDeviceBackend: VirtualDeviceBackend {
     }
     private func string(_ id: AudioObjectID, _ selector: AudioObjectPropertySelector) throws -> String {
         var a = address(selector)
-        var raw: CFString?
         var size = UInt32(MemoryLayout<CFString?>.size)
-        let status = AudioObjectGetPropertyData(id, &a, 0, nil, &size, &raw)
+        let holder = UnsafeMutablePointer<CFString?>.allocate(capacity: 1)
+        holder.initialize(to: nil)
+        defer { holder.deinitialize(count: 1); holder.deallocate() }
+        let status = AudioObjectGetPropertyData(id, &a, 0, nil, &size, holder)
         guard status == noErr else { throw InputFailure.hal(operation: "string \(selector)", status: status) }
-        guard size == MemoryLayout<CFString?>.size, let raw else { throw InputFailure.invalidProperty("missing string") }
+        guard size == MemoryLayout<CFString?>.size, let raw = holder.pointee else {
+            throw InputFailure.invalidProperty("missing string")
+        }
         return raw as String
+    }
+    /// HAL custom properties are marshalled as CFPropertyList. Reading and
+    /// writing raw UInt32/UInt64 into a custom selector is silently invisible
+    /// to clients because coreaudiod only forwards CFString/CFPropertyList.
+    private func number(_ id: AudioObjectID, _ selector: AudioObjectPropertySelector) throws -> NSNumber {
+        var a = address(selector)
+        var raw: CFTypeRef?
+        var size = UInt32(MemoryLayout<CFTypeRef?>.size)
+        let status = withUnsafeMutablePointer(to: &raw) {
+            AudioObjectGetPropertyData(id, &a, 0, nil, &size, $0)
+        }
+        guard status == noErr else { throw InputFailure.hal(operation: "read custom \(selector) on \(id)", status: status) }
+        guard size == MemoryLayout<CFTypeRef?>.size, let value = raw as? NSNumber else {
+            throw InputFailure.invalidProperty("custom property type")
+        }
+        return value
     }
     private func deviceID() throws -> AudioObjectID {
         let ids: [UInt32] = try array(AudioObjectID(kAudioObjectSystemObject), kAudioHardwarePropertyDevices, UInt32(0))
@@ -79,7 +99,7 @@ public final class HALVirtualDeviceBackend: VirtualDeviceBackend {
         }
         let alive = try read(id, kAudioDevicePropertyDeviceIsAlive, UInt32(0))
         guard alive == 1 else { throw InputFailure.driverUnavailable }
-        let beforeRevision = try read(id, revisionSelector, UInt64(0))
+        let beforeRevision = try number(id, revisionSelector).uint64Value
         let rate = try read(id, kAudioDevicePropertyNominalSampleRate, Double(0))
         guard rate == 44_100 || rate == 48_000 else { throw InputFailure.unsupportedFormat("sample rate") }
         let outputs: [UInt32] = try array(id, kAudioDevicePropertyStreams, UInt32(0), scope: kAudioObjectPropertyScopeOutput)
@@ -120,7 +140,9 @@ public final class HALVirtualDeviceBackend: VirtualDeviceBackend {
         }
         let frames = try read(stream, kAudioStreamPropertyLatency, UInt32(0))
         let outputFrames = try read(stream, kAudioStreamPropertyLatency, UInt32(0), scope: kAudioObjectPropertyScopeOutput)
-        let controlFrames = try read(id, latencySelector, UInt32(0))
+        let controlValue = try number(id, latencySelector)
+        guard controlValue.uint64Value <= UInt32.max else { throw InputFailure.invalidProperty("latency control range") }
+        let controlFrames = controlValue.uint32Value
         guard frames == outputFrames, frames == controlFrames, Double(frames) <= 10 * rate else {
             throw InputFailure.invalidProperty("latency scopes/control mismatch")
         }
@@ -129,11 +151,18 @@ public final class HALVirtualDeviceBackend: VirtualDeviceBackend {
         let buffer = try read(id, kAudioDevicePropertyBufferFrameSize, UInt32(0))
         let period = try read(id, flow_input_zero_timestamp_period_selector(), UInt32(0))
         let range = try read(id, kAudioDevicePropertyBufferFrameSizeRange, AudioValueRange())
-        guard deviceLatency == 0, safety == 0, buffer == 512, period == 16_384,
-              range.mMinimum == 512, range.mMaximum == 512 else { throw InputFailure.invalidProperty("clock/budget capability") }
+        // coreaudiod owns kAudioDevicePropertyBufferFrameSize for HAL devices:
+        // on the target Mac it exposes 15...4096 even when the driver answers
+        // 512...512, and a client set to 256/1024/4096 is reflected on read.
+        // The sink accepts the host-provided IO frame count, so validate the
+        // actual value against the host range rather than claiming 512-only.
+        guard deviceLatency == 0, safety == 0, buffer >= 16, buffer <= 4_096, period == 16_384,
+              range.mMinimum <= Double(buffer), Double(buffer) <= range.mMaximum else {
+            throw InputFailure.invalidProperty("clock/budget capability")
+        }
         let runningValue = try read(id, kAudioDevicePropertyDeviceIsRunningSomewhere, UInt32(0))
         guard runningValue <= 1 else { throw InputFailure.invalidProperty("running flag") }
-        let afterRevision = try read(id, revisionSelector, UInt64(0))
+        let afterRevision = try number(id, revisionSelector).uint64Value
         guard beforeRevision > 0, beforeRevision == afterRevision else { throw InputFailure.latencyRevisionChanged }
         guard try string(id, kAudioDevicePropertyDeviceUID) == VirtualIdentity.deviceUID else { throw InputFailure.driverUnavailable }
         let format = try InputFormat(sampleRate: rate, packing: .interleaved, channelCount: 2,
@@ -153,8 +182,13 @@ public final class HALVirtualDeviceBackend: VirtualDeviceBackend {
         var status = AudioObjectIsPropertySettable(id, &a, &settable)
         guard status == noErr else { throw InputFailure.hal(operation: "latency settable", status: status) }
         guard settable.boolValue else { throw InputFailure.invalidProperty("latency read-only") }
-        var value = frames
-        status = AudioObjectSetPropertyData(id, &a, 0, nil, UInt32(MemoryLayout<UInt32>.size), &value)
+        // The HAL expects a pointer to a CFPropertyListRef, not the object
+        // pointer itself. Use an explicit holder so Swift cannot bridge or
+        // copy the optional object reference behind our back.
+        let holder = UnsafeMutablePointer<CFTypeRef?>.allocate(capacity: 1)
+        holder.initialize(to: NSNumber(value: frames))
+        defer { holder.deinitialize(count: 1); holder.deallocate() }
+        status = AudioObjectSetPropertyData(id, &a, 0, nil, UInt32(MemoryLayout<CFTypeRef?>.size), holder)
         if status == kAudioHardwareIllegalOperationError { throw InputFailure.deviceBusy }
         guard status == noErr else { throw InputFailure.hal(operation: "set latency", status: status) }
     }

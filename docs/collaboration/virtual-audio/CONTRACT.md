@@ -1,4 +1,4 @@
-# Virtual Audio MVP 契约 v0.3
+# Virtual Audio MVP 契约 v0.4
 
 日期：2026-11-06。状态：首轮实现接口冻结；所有安装、Tap 可读性、客户端音画补偿与声学结果尚待验收。本文是本阶段 driver / input / app / QA 的唯一接口依据；变更需总协调确认并更新版本。旧 core C ABI v1 与35个保护文件不变。
 
@@ -14,11 +14,13 @@
 | Stream logical key | `<deviceUID>.output.0`，仅本项目逻辑标识；不伪造 HAL 标准 stream UID 属性 |
 | PCM | Float32 native-endian packed interleaved，2ch；8 bytes/frame，1 frame/packet |
 | Rates | 精确44100、48000Hz；初始48000Hz |
-| Buffer | 首轮512 frames；范围仅512，不能声明未实现的任意尺寸 |
+| Buffer | 初始/期望 512 frames。目标 Mac 实测 `kAudioDevicePropertyBufferFrameSize` 由 coreaudiod 管理：暴露 15..4096，客户端可设 256/1024/4096 并回读同一值，即使驱动自身返回 512..512。驱动 DoIO 必须接受 host 给出的可变帧数，不能假设固定 512。 |
 | Zero timestamp period | 16384 frames，与 buffer size 独立；目标 SDK 若有更严格约束需先报告 |
 | Input provenance | `device_mix`，不是已证实的源轨道 stereo；labels 的权威来源是设备布局 |
 
 physical/virtual ASBD 必须与 IO 样本一致；输入方向设备查询返回零 stream/零通道。不可把 output-only 设备误报为物理麦克风。驱动接受输出但不提供本机回放；App 未接通时该设备可能无声，未验收前不得自动接管系统输出。首轮不声明6/8ch，不声明 encoded passthrough/Atmos。驱动只实现 `WriteMix` 数据面；实现者需按 SDK 的 IO operation 调用约束报告 in-place 支持，不支持操作应明确拒绝。
+
+自定义属性 `hfla`/`hflr` 必须以 `kAudioServerPlugInCustomPropertyDataTypeCFPropertyList` 声明，值用 `CFNumber` 承载；`mQualifierDataType` 为 `None` 表示不需要 qualifier。不能再使用 `kAudioServerPlugInCustomPropertyDataTypeNone` 承载原生 UInt32/UInt64：HAL 只 marshal `CFString`/`CFPropertyList`，`None` 会使属性对客户端不可见（第六候选中已实际修复并验证）。
 
 所有对象属性必须符合 HasProperty / IsPropertySettable / GetPropertyDataSize / GetPropertyData 的 scope、element、大小、错误语义。**单输出 stream 的 `kAudioStreamPropertyLatency` 必须同时接受 global/main 与 output/main 查询，返回同一 UInt32 值与同一大小，均只读。** 该兼容例外需贯穿上述四个属性入口；stream 的 input scope 或非 main element 仍拒绝。**device 的 latency、safety offset 接受 output/main 与 input/main 查询，两者均只读UInt32零。** input 查询返回零仅是空方向的兼容数值，不代表存在输入流、输入格式或输入IO能力。格式、采样率、默认输出 eligibility 等按 HAL SDK 查询矩阵实现，不能将这些例外推广为所有 selector 通吃。object IDs 为进程内句柄，不能持久化。
 
@@ -61,8 +63,8 @@ streamLatency = round(configuredSeconds * sampleRate)
 
 | selector | 类型 | 规则 |
 |---|---|---|
-| `'hfla'` | UInt32 | get/set；设置当前 rate 下 streamLatency frames，0..10*rate。停止且无 pending 重配置时才能更改；相同值幂等不增 revision。控制器必须回读确认。 |
-| `'hflr'` | UInt64 | read-only monotonic config revision；首次为1，生效 latency/rate 变更才递增。跨 coreaudiod 重启不保证连续，设备重发现使旧 revision 失效。 |
+| `'hfla'` | CFNumber(UInt32) | get/set；设置当前 rate 下 streamLatency frames，0..10*rate。停止且无 pending 重配置时才能更改；相同值幂等不增 revision。控制器必须回读确认。 |
+| `'hflr'` | CFNumber(UInt64) | read-only monotonic config revision；首次为1，生效 latency/rate 变更才递增。跨 coreaudiod 重启不保证连续，设备重发现使旧 revision 失效。 |
 
 `hfla` commit 保存等价秒预算（frames/rate），未来 rate commit 按新rate重算；先验证所有值再原子提交。主动改变 rate 后 App 必须重新读取预算，重新校准并生成新 session；不能在旧 session 继续。通知 stream 的 `kAudioStreamPropertyLatency`，同时发布 global/main 与 output/main 两地址，使两类监听者均可观察；通知 device 的 `hflr`。两个 stream 地址只是同一值的通知，不是两份延迟。rate commit 还需完整格式通知。不在 holding RT mutex 下通知。
 
@@ -124,3 +126,7 @@ App 崩溃不能靠 App 的 defer 自救。正式自动接管前必须实现独�
 三层结果分开：①HAL属性与稳定时钟；②浏览器实际读取/采用；③最终画面与声学偏差。第①层通过不等于②③。Chrome、Safari、普通HTML media/WebAudio/WebRTC分别列实际版本；重开、pause/seek和设备切换分别验证。未实现项不得在应用或报告显示已支持。
 
 依据：本项目 [原生延迟报告](../reports/Native-output-latency-2026-11-06.md)；[Apple AudioServerPlugIn](https://developer.apple.com/documentation/coreaudio/creating-an-audio-server-driver-plug-in)；[Chromium latency读取](https://raw.githubusercontent.com/chromium/chromium/main/media/audio/mac/core_audio_util_mac.cc)；[Chromium播放时间计算](https://raw.githubusercontent.com/chromium/chromium/main/media/audio/apple/audio_auhal.cc)。Chromium源码是实现依据，不能推广为Safari的已验证行为。
+
+## 7. 变更记录
+
+- v0.4（2026-11-06）：`hfla`/`hflr` 改为 CFPropertyList/CFNumber，qualifier None；第六候选真机验证属性可读写、revision 单调、两 scope stream latency 同步；记录 coreaudiod 管理 buffer size 的实测差异（15..4096，可设 256/1024/4096），不再宣称“范围仅512”；记录 TCC 授权 GUI 进程中虚拟设备 device Tap 已取得非零、左右独立 PCM，但产品接入/浏览器/声学仍未验。
