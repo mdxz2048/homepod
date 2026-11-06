@@ -1,0 +1,19 @@
+{
+  "blocks" : 468,
+  "bytesPerFrame" : 8,
+  "channels" : 2,
+  "deviceUID" : "com.homepodflow.virtual-audio.stereo.v1",
+  "droppedBefore" : 0,
+  "firstHostTime" : 61899161034,
+  "firstSampleTime" : 1,
+  "frames" : 239616,
+  "lastHostTime" : 62018733923,
+  "lastSampleTime" : 239145,
+  "nonzeroSamples" : 0,
+  "note" : "silent_or_permission_unconfirmed: this process may lack System Audio Recording permission; do not treat as driver failure",
+  "peak" : 0,
+  "rms" : 0,
+  "sampleRate" : 48000,
+  "tapVerified" : false,
+  "timestampFlags" : 7
+}

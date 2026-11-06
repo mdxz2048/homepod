@@ -6,6 +6,7 @@ let package = Package(
     platforms: [.macOS("14.2")],
     products: [
         .library(name: "ProcessTapCapture", targets: ["ProcessTapCapture"]),
+        .library(name: "CaptureRing", targets: ["CaptureRing"]),
         .executable(name: "tap-capture-probe", targets: ["TapCaptureProbe"]),
         .executable(name: "tap-capture-host", targets: ["TapCaptureHost"])
     ],
