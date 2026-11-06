@@ -57,8 +57,8 @@
 
 ## 下次先做这些
 
-1. 把已真机验证的 device Tap 路径实现进 `platforms/macos/VirtualAudioInput`：create tap/aggregate、IOProc、有界 ring、48k→44.1k、HPCM v1 字段与源时间戳；产品路径必须显式报告 TCC 未授权，不能静默全0。保留系统 Tap 兜底。
-2. 在 HomePod Flow App 的签名/Info.plist/TCC 身份下复验同一路径；临时 ad-hoc probe 通过不等于产品 App 通过。未授权时返回 `permission_required`。
+1. `VirtualAudioInput.DeviceTapCapture` 已实现 2..8ch/ring/时间戳；下一步接 48k→44.1k、HPCM v2 输出和产品 worker。产品路径必须显式报告 TCC 未授权，不能静默全0。保留系统 Tap 兜底。
+2. 在 HomePod Flow App 的签名/Info.plist/TCC 身份下复验同一路径；临时 ad-hoc probe 通过不等于产品 App 通过。未授权时返回 `permission_required`。HPCM v2 校验器 18测试、FlowRoutePlan 21组检查、QA 26测试/84 case/6工具已通过，但都还是离线/模型层。
 3. 用 `hfla` 做受控延迟预算实验：先停止全组、确认无 running IO、设置后回读并观察两 scope 通知；记录 AU/device/stream/safety/buffer/callback hostTime/PCM receipt，再验证 Chrome/Safari 是否采用。属性成功不等于音画已同步。
 4. 完成恢复 helper、lease 跨进程原子事务和默认输出恢复；在此之前自动接管保持禁用。任何 Tap/测试结束检查默认输出，不得把静音虚拟设备留作默认。
 5. 下载/保存本轮第六候选原始证据与报告（已保存到 `reports/VirtualAudio-2026-11-06/`）；后续补 driver test/stage 原始日志、App 身份 TCC 结果和声学测量。

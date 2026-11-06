@@ -29,6 +29,7 @@ def analyze_capture(
     expected = json.loads(Path(expected_path).read_text(encoding="utf-8"))
     capture = wav.read_wav(Path(capture_path))
     labels = list(expected["labels"])
+    channel_order = list(expected.get("channel_order", labels))
     failures: List[str] = []
     warnings: List[str] = []
     checks: List[Dict[str, object]] = []
@@ -37,6 +38,10 @@ def analyze_capture(
         failures.append(f"rate {capture.rate} != expected {expected['rate']}")
     if capture.channels != len(labels):
         failures.append(f"channel count {capture.channels} != expected {len(labels)}")
+    if channel_order != labels:
+        failures.append(
+            f"expected channelOrder {channel_order!r} != labels {labels!r}"
+        )
 
     slot_identity_verified = False
     if capture.mask == 0:
@@ -57,8 +62,11 @@ def analyze_capture(
                 failures.append(
                     f"mask layout {actual_layout} != expected {expected['container_layout']}"
                 )
-            elif list(model.labels_for(actual_layout)) != labels:
-                failures.append("mask-derived label order differs from expected")
+            elif list(model.channel_order(actual_layout)) != channel_order:
+                failures.append(
+                    "mask-derived channelOrder differs from expected: "
+                    f"{list(model.channel_order(actual_layout))!r}"
+                )
             else:
                 slot_identity_verified = True
 
@@ -130,6 +138,8 @@ def analyze_capture(
         "case": expected.get("case"),
         "source_layout": expected.get("source_layout"),
         "container_layout": expected.get("container_layout"),
+        "matrix_id": expected.get("matrix_id"),
+        "channel_order": channel_order,
         "slot_identity_verified": slot_identity_verified,
         "channel_count": capture.channels,
         "rate": capture.rate,
