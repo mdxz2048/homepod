@@ -1,0 +1,11 @@
+# 011 Python v2 subprocess consumer ONLY
+
+Only create adapters/live/capture_v2.py. At most ONE shell call to read adapters/live/capture.py and pcm_v2.py. No other reads, git, tests, temp scripts, models or SSH. Implement then final<=150 Chinese chars. Coordinator wires session/routing and tests. Do not expand scope.
+
+Implement CaptureHostV2(CaptureHost), inheriting start(),stop(),_stderr() lifecycle and bounded owned subprocess from existing capture.py. __init__(executable,session,hub,device_uid,layout,processor) calls super(executable,session,hub), then uses PCMV2Validator(session,self.start_id) instead of v1 validator; validate canonical deviceUID/layout using existing CANONICAL_DEVICE_UID and LAYOUTS and store processor callable.
+
+Override _command(command,command_id): JSONL v=2 id command_id command start/stop params session plusdeviceUID/layout onstart only; self.process.stdin.write; awaitwait_for drain1. Bounded fields, no exclusions claimed in v2 (device-only tap).
+
+Override _pump() based existing lifecycle: read_frame_v2(process.stdout); ready strictly correlate startid/session, oneonly, outputRateint44100, outputChannels actual expectedcount, outputLayoutlayout, deviceUIDrequested, sourceRate44100or48000 (finite, notbool), sourceChannelscount; resolve self.ready. pcm before ready reject; validatedsamples=self.validator.pcm(frame); processed=self.processor(validatedsamples); ifnotstopping awaithub.push(processed). stopped mustself.stopping; correlate stopid/session; cleanupComplete strictbool, drainComplete exactlyFalse, discardedConverterTail strictbool; resolve self.stopped_reply thenreturn. error require correlationstartid/session and strict cleanupCompletebool ifpresent, store self.error_header andraise LiveFailure bounded message. Unknown/duplicate/out-of-order failclosed. Guard futures.done before resolve to preventduplicatecallbacks; duplicate ready/stop isprotocolerror. Exception handler same existingcapture: self.last_error/type, fail unresolved ready/stopped futures, awaithub.fail whennotstopping, no leaked task exception.
+
+Never fake cleanup ACK or permission state; inherited stop only trusts cleanuptrue+exit3 onterminalerror, or matchingstoppedACK+exit0. Import inert, no automatic capture. Do not change existing v1 modules. Keep <160 lines; no tests since coordinator owns them.

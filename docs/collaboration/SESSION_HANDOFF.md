@@ -6,6 +6,12 @@
 
 ## Git与当前任务
 
+2026-11-06 23:49 更新：Mac 已重启，系统确认只枚举一个 HomePod Flow Audio（8ch，UID surround71.v1），已是默认媒体输出。013 Swift 47 测试和 Release 通过；014 App Debug/Release 与4组静默检查通过；016 修正 Swift ready 顶层字段与 Python 消费者不一致，Mac Python 24项通过。协调器独立重跑真实 Swift 宿主进程（注入夹具）→Python→原生核心，双端点降混、八独立端点和 EOF 清理均通过。新版 Release 已替换唯一用户 App，runtime 启用受管 v2 host，App 已启动。备份 live-validation/app-backups/20261106-234906，包含旧 App 和 runtime；真实 TCC/实际取声与 HomePod 出声仍待用户确认。没有明确完整端点角色时，实际采用立体声降混，不能宣称原生环绕声。模型启动日志核对为百炼 deepseek-v4-pro-0813，GPT只做派工、审查和安装验收。
+
+2026-11-06 22:42 更新（进行中）：用户要求继续产品接入，并只留一个 Flow 虚拟声卡；又明确“DeepSeek token 不用省，要省的是 GPT 消耗”。故 DeepSeek 默认1800秒/100命令，充分实现自测，GPT只读结果/关键证据。新共享决定为 INTEGRATION_SINGLE_DEVICE.md：产品单个固定8ch设备，沿用surround71.v1 UID，显示HomePod Flow Audio；不是隐藏6设备，也不宣称保留播放器原始源身份。单设备真实driver/mock门禁已在Mac通过，单设备bundle已安装到原HAL路径并严格签名/哈希核对；binary SHA256 031d36674485de0bb7d39da34a7b6be18bdb0eca7e0cc90ca413b88407070825，备份 live-validation/driver-backups/family-before-single-20261106-224217/HomePodFlowAudioFamily.driver。coreaudiod尚未重启，内存旧3可见设备仍需用户最终重启后核对；不要主动重启中断任务。未切默认输出。
+
+本轮活跃DeepSeek任务：012 Python消费/路由/worker及Mac静默测试；013 Swift受管v2 host及Mac编译/DI测试；014 App接线/状态与Mac构建。各结果写artifacts/deepseek/012-python-complete.md、013-swift-host-complete.md、014-app-checks.md。主线程已给这些任务授权SSH同步各自源码/静默编译测试，仍禁止agent安装、改系统、实际录制/出声或修改runtime.json。主线程负责最终安装、新旧App唯一化、TCC与真实信号/播放验收。App尚未被替换，runtime尚未启用新host。早期006/007/008因14命令预算停止无实现；009完成driver三处机械改动，协调器修正宏重定义并通过单设备测试。010/011及两次受限直接API尝试没有生成文件，后续由012/013全面完成。最新已提交基线仍为b40cb95；当前在同一分支继续改动，未提交，不要覆盖工作区。012/013/014互不重叠文件；不要让GPT重读其长日志，只看最终报告/必要diff。
+
 2026-11-06 20:35 阶段进展：DeepSeek 完成 mono 采集格式门禁、独立多声道重采样器与 Swift HPCM v2 编码器；协调器修正并在 Mac 验证 35 项单测及 Release 构建，独立 Swift→Python 验收 14 组/448 包/220052 帧通过。详见 `reports/VirtualAudio-2026-11-06/Multichannel-transport-stage.md`。这覆盖软件组件及合成输入传输，不是产品 App/worker 已接入。下一步做受管 v2 capture host 与有界输出/停止，再做 App 身份实际非零 PCM。mono 真机能打开但 0 回调，不能计实际采集通过。新 worker 统一经有时限/命令次数边界的项目脚本调用。
 
 仓库 https://github.com/mdxz2048/homepod 。当前开发分支codex/virtual-audio-mvp；main备份点4331d3b92cc2330e58dcf28ab50ffd4b7d6d283d，保持不动。分支fda6f14已保存虚拟驱动/输入/工具第一轮；本会话后续提交保存v0.3兼容修正、原始日志及本交接。最新保存点用git log -1查看，以远端核对为准。README只写变更记录。身份凭据不写进仓库。

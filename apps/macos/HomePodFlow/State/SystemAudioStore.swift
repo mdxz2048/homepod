@@ -48,6 +48,20 @@ import Observation
     private var volumeEpoch = UUID()
     private var outputCount = 0
 
+    /// Worker-reported playback rendering. Implementation strings stay internal;
+    /// the UI only ever shows a truthful, human-readable claim.
+    private enum ActualMode {
+        case sameStereo, stereoDownmix, channelDistribution, unknown
+        init(_ raw: String?) {
+            switch raw {
+            case "same_stereo": self = .sameStereo
+            case "stereo_downmix": self = .stereoDownmix
+            case "channel_distribution": self = .channelDistribution
+            default: self = .unknown
+            }
+        }
+    }
+
     /// Keeps at most one pending value. The request already sent is never duplicated or recalled.
     func setVolume(_ value: Double) {
         guard value.isFinite, (0...100).contains(value) else { return }
@@ -205,6 +219,9 @@ import Observation
             statusText = "请先选择1至8个当前可用的独立音箱"; return
         }
         guard volume.isFinite, (0...100).contains(volume) else { statusText = "启动音量无效"; return }
+        if let service, service.runtime.virtual_capture_host != nil, !service.supportsVirtualInput {
+            statusText = "本机服务尚不支持 Flow 虚拟声卡，请更新采集服务"; return
+        }
         cancelTimers()
         if !desiredEnabled { recovery.enable() }
         guard !recovery.blocked else { return }
@@ -229,12 +246,20 @@ import Observation
         }
         var retryable = false
         do {
-            let result = try await service.request("start", params: [
+            var params: [String: JSONValue] = [
                 "session": .string(sid), "library": .string(service.runtime.library),
-                "capture_host": .string(service.runtime.capture_host), "routes": .array(routes),
+                "capture_host": .string(service.runtime.virtual_capture_host ?? service.runtime.capture_host), "routes": .array(routes),
                 "volume": .number(activeVolume), "mode": .string(activeMode.rawValue),
                 "exclude_pids": .array([.integer(Int(ProcessInfo.processInfo.processIdentifier))])
-            ], session: sid, timeout: nil)
+            ]
+            if service.runtime.virtual_capture_host != nil {
+                params["input"] = .object([
+                    "backend": .string("virtual_device_v2"),
+                    "device_uid": .string("com.homepodflow.virtual-audio.surround71.v1"),
+                    "layout": .string("7_1")
+                ])
+            }
+            let result = try await service.request("start", params: params, session: sid, timeout: nil)
             guard generation == token, session == sid else { return }
             lastResultPayload = result.payload
             guard result.payload["state"]?.string == "stopped",
@@ -434,13 +459,24 @@ import Observation
         guard event.event == "state", let phase = event.payload["state"]?.string else { return }
         switch phase {
         case "preparing": statusText = "正在准备音箱与采集 · 尚未开始发送"
-        case "capturing": statusText = "正在采集系统立体声并准备共同播放"
+        case "capturing": statusText = "正在采集系统音频并准备播放"
         case "streaming":
             isRunning = true
             pumpVolume()
-            statusText = activeMode == .cinema
-                ? "系统立体声正在发送 · 影院模式当前同声退化"
-                : "系统立体声正在同步发送 · 声学同步尚未测量"
+            switch ActualMode(event.payload["actual_mode"]?.string) {
+            case .channelDistribution:
+                statusText = "已按所选音箱分配声道发送"
+            case .stereoDownmix:
+                statusText = activeMode == .cinema
+                    ? "8 声道输入 · 影院模式已下混为立体声发送"
+                    : "8 声道输入 · 已下混为立体声同步发送"
+            case .sameStereo:
+                statusText = activeMode == .cinema
+                    ? "系统立体声正在发送 · 影院模式当前同声退化"
+                    : "系统立体声正在同步发送 · 声学同步尚未测量"
+            case .unknown:
+                statusText = activeMode == .cinema ? "影院模式当前同声退化" : "正在同步发送"
+            }
             if stableTask == nil {
                 let intent = recovery.intent, sid = session
                 stableTask = Task { [weak self] in

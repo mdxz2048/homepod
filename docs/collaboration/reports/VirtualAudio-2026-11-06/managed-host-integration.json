@@ -1,0 +1,411 @@
+{
+  "acoustic_sync_verified": false,
+  "cinema": {
+    "continuity": {
+      "first_source": {
+        "droppedBlocksBefore": 0,
+        "flags": 3,
+        "hostTime": 2655469341625,
+        "nativeClaim": false,
+        "nowFlags": 3,
+        "nowHostTime": 2655469341626,
+        "nowSampleTime": "2655469341625.0",
+        "sampleTime": "2655469341625.0",
+        "sourceChannelOrder": [
+          "FL",
+          "FR",
+          "FC",
+          "LFE",
+          "SL",
+          "SR",
+          "BL",
+          "BR"
+        ],
+        "sourceChannels": 8,
+        "sourceFrameStart": 0,
+        "sourceFrames": 480,
+        "sourceLayout": "7_1",
+        "sourceLayoutAuthority": "device",
+        "sourceLayoutVerified": false,
+        "sourceOrigin": "os_mix",
+        "sourceRate": 48000,
+        "sourceSequence": 0,
+        "timebaseDenominator": 3,
+        "timebaseNumerator": 125,
+        "upstreamTransform": "os_mix_possible"
+      },
+      "last_source": {
+        "droppedBlocksBefore": 0,
+        "flags": 3,
+        "hostTime": 2655570543041,
+        "nativeClaim": false,
+        "nowFlags": 3,
+        "nowHostTime": 2655570543042,
+        "nowSampleTime": "2655570543041.0",
+        "sampleTime": "2655570543041.0",
+        "sourceChannelOrder": [
+          "FL",
+          "FR",
+          "FC",
+          "LFE",
+          "SL",
+          "SR",
+          "BL",
+          "BR"
+        ],
+        "sourceChannels": 8,
+        "sourceFrameStart": 4800,
+        "sourceFrames": 480,
+        "sourceLayout": "7_1",
+        "sourceLayoutAuthority": "device",
+        "sourceLayoutVerified": false,
+        "sourceOrigin": "os_mix",
+        "sourceRate": 48000,
+        "sourceSequence": 10,
+        "timebaseDenominator": 3,
+        "timebaseNumerator": 125,
+        "upstreamTransform": "os_mix_possible"
+      },
+      "output_frames": 4851,
+      "sequence": 11,
+      "source_rate": 48000,
+      "total_input": 5280
+    },
+    "discarded": [],
+    "first_presentation_ns": 2655599835708,
+    "mode": "channel_distribution",
+    "report": {
+      "acoustic_sync_verified": false,
+      "capture_to_receipt_uncertainty_ns": null,
+      "clock_anchor": "python_first_pcm_receipt_not_native_host_time",
+      "first_receipt_ns": 2655479835708,
+      "group_failed": false,
+      "hub_stopped": false,
+      "input_capacity_frames": 88200,
+      "input_frames": 4410,
+      "input_peak_frames": 441,
+      "live": true,
+      "native_core_used": true,
+      "native_submit_calls": 19,
+      "native_submitted_frames": 4321,
+      "outputs": [
+        {
+          "consumed_frames": 4096,
+          "consumed_pcm_sha256": "d90b7a662417ff057d6003cb44c5b1f1fb3664f9adbbfa06252dc2672a14c232",
+          "first_presentation_ns": 2655599835708,
+          "native_frames": 4321,
+          "native_pcm_sha256": "114b411c72657e1a45dc26224bbdde041433f4083ac9642d8cb2e01532792284",
+          "output_id": 0,
+          "queue_capacity_frames": 1408,
+          "queue_peak_frames": 441
+        },
+        {
+          "consumed_frames": 4096,
+          "consumed_pcm_sha256": "fa4b69a097ae7ada0d79c3227625d29fb6332b277b5f0fe30f76a08c710a244d",
+          "first_presentation_ns": 2655599835708,
+          "native_frames": 4321,
+          "native_pcm_sha256": "1f6039b77346b3c2b9e7c48dfb428aa48818375100694c66bb3faf2ed2acd8a9",
+          "output_id": 1,
+          "queue_capacity_frames": 1408,
+          "queue_peak_frames": 441
+        },
+        {
+          "consumed_frames": 4096,
+          "consumed_pcm_sha256": "37ed2491c330915a5fa87f5a72d6df0b97df3286e942b05543efd73f44a3c304",
+          "first_presentation_ns": 2655599835708,
+          "native_frames": 4321,
+          "native_pcm_sha256": "99d5820353dcbb56d8b6acbf45722149d347ee74a7a549ca9e9a6c98cf63c30e",
+          "output_id": 2,
+          "queue_capacity_frames": 1408,
+          "queue_peak_frames": 441
+        },
+        {
+          "consumed_frames": 4096,
+          "consumed_pcm_sha256": "d11deee300e7db9913d9fabc0df02bc95fe93e29257995d3b2a525a35ce3809d",
+          "first_presentation_ns": 2655599835708,
+          "native_frames": 4321,
+          "native_pcm_sha256": "607fc8c9f18881cc83df39b9bd21c734ff052d849410b8e9d2a9e39dc0abc677",
+          "output_id": 3,
+          "queue_capacity_frames": 1408,
+          "queue_peak_frames": 441
+        },
+        {
+          "consumed_frames": 4096,
+          "consumed_pcm_sha256": "f6200e00a058df188423db5a239981eeb85a2902387aab96555db7205ab674f2",
+          "first_presentation_ns": 2655599835708,
+          "native_frames": 4321,
+          "native_pcm_sha256": "ccd53a7a479ad8c1134814d009ed3010fad0d022910f97c291fde9ca05dc7b4d",
+          "output_id": 4,
+          "queue_capacity_frames": 1408,
+          "queue_peak_frames": 441
+        },
+        {
+          "consumed_frames": 4096,
+          "consumed_pcm_sha256": "66ee5ed51b2276aea401444ffcd778deb5eb88ac487ac5fc5dd5085698654be0",
+          "first_presentation_ns": 2655599835708,
+          "native_frames": 4321,
+          "native_pcm_sha256": "1150ff4fd511eb42b01044d1fb88ec638cbf1e73539930e4ad1d7abd11ba27d5",
+          "output_id": 5,
+          "queue_capacity_frames": 1408,
+          "queue_peak_frames": 441
+        },
+        {
+          "consumed_frames": 4096,
+          "consumed_pcm_sha256": "2516e8db6a869309001a14d699d5518f28cb031e1d94076b993bb2e618facafa",
+          "first_presentation_ns": 2655599835708,
+          "native_frames": 4321,
+          "native_pcm_sha256": "8499428fc32103cec0d7360cac62e2d89f344af8f3e894eddae8868932645e05",
+          "output_id": 6,
+          "queue_capacity_frames": 1408,
+          "queue_peak_frames": 441
+        },
+        {
+          "consumed_frames": 4096,
+          "consumed_pcm_sha256": "deae0cc52c859d4df657754766ad3c54e0c2a47407de281a086dc7f5a7de0f8c",
+          "first_presentation_ns": 2655599835708,
+          "native_frames": 4321,
+          "native_pcm_sha256": "784a04af6bdb1f26315bc838a6ab217a01f36d2e0ddebcfcd109cee4a08284c6",
+          "output_id": 7,
+          "queue_capacity_frames": 1408,
+          "queue_peak_frames": 441
+        }
+      ],
+      "playback_origin_ns": 2655599835708
+    },
+    "roles": {
+      "0": "FL",
+      "1": "FR",
+      "2": "FC",
+      "3": "LFE",
+      "4": "SL",
+      "5": "SR",
+      "6": "BL",
+      "7": "BR"
+    },
+    "stats": {
+      "0": {
+        "peak": 0.1000091555528428,
+        "role": "FL",
+        "value": 0.1000091555528428
+      },
+      "1": {
+        "peak": 0.2000183111056856,
+        "role": "FR",
+        "value": -0.19999652494315928
+      },
+      "2": {
+        "peak": 0.7000335703604236,
+        "role": "FC",
+        "value": 0.700003260473571
+      },
+      "3": {
+        "peak": 0.4000061037018952,
+        "role": "LFE",
+        "value": -0.4000061037018952
+      },
+      "4": {
+        "peak": 0.2999969481490524,
+        "role": "SL",
+        "value": 0.2999969481490524
+      },
+      "5": {
+        "peak": 0.2999969481490524,
+        "role": "SR",
+        "value": -0.2999969481490524
+      },
+      "6": {
+        "peak": 0.500015259254738,
+        "role": "BL",
+        "value": 0.500015259254738
+      },
+      "7": {
+        "peak": 0.500015259254738,
+        "role": "BR",
+        "value": -0.500015259254738
+      }
+    },
+    "status": "ok"
+  },
+  "eof": {
+    "exit_code": 0,
+    "ready_has_nested_source": false,
+    "ready_header": {
+      "deviceUID": "com.homepodflow.virtual-audio.surround71.v1",
+      "id": "eof-check",
+      "kind": "ready",
+      "outputChannels": 8,
+      "outputLayout": "7_1",
+      "outputRate": 44100,
+      "session": "AB12CD34-AB12-4D34-AB12-AB12CD34EF56",
+      "sourceChannels": 8,
+      "sourceRate": 48000,
+      "v": 2
+    },
+    "status": "ok",
+    "stderr_tail": "",
+    "stop_header": {
+      "cleanupComplete": true,
+      "discardedConverterTail": true,
+      "drainComplete": false,
+      "id": "eof-check",
+      "kind": "stopped",
+      "session": "AB12CD34-AB12-4D34-AB12-AB12CD34EF56",
+      "v": 2
+    }
+  },
+  "gate": "015 managed Swift host -> Python -> native core",
+  "library": "/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m2-validation/build/core/libflow_bridge.dylib",
+  "probe": "/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/tests/virtual_audio/managed_host_probe/.build/arm64-apple-macosx/debug/ManagedHostProbe",
+  "session": "AB12CD34-AB12-4D34-AB12-AB12CD34EF56",
+  "source_sha256": {
+    "adapters/live/capture.py": "3c0658a1f89558de8573aa325ce112a39401574a42b7748e2d721f93324ddd7e",
+    "adapters/live/capture_v2.py": "e21eee2d9c3dc6421afaf4639f61ad3fdb42792926416e0046d9e7bcefbabf2c",
+    "adapters/live/hub.py": "0bdebcf7caeafb7b54ff9dfd6c53fae01b07fcf337218d798d8b2b1b1b3339e3",
+    "adapters/live/pcm_v2.py": "2d1662c479d2342939e82dd4d2b4e2f61dc0bcdde56bc6d4a99e9e3d39219344",
+    "adapters/live/routing_v2.py": "56d53627289f0b64e48c44e738dd342f170c6c3e2264ec055f370dd38582f22e",
+    "bindings/python/flow_core.py": "cdf514f2cba099a36819759d60dc6f2f8069f3dbbf9c99ca3a17355f2f898f6d",
+    "managed_host_probe_binary": "42dae6c76fa0f679b5970a0a25504e53ff5ceef4603f3818bc19b2664c24a6a0",
+    "native_core_dylib": "c5cdd4e058c2a702a715c6cacf4710629b43f81da35445dfd19b107ff48c8fbe",
+    "platforms/macos/ProcessTapCapture/Sources/TapCaptureHostSupport/BoundedPipeWriter.swift": "dd98f6ca4efde0e358350a3d0f59f1b5227b5f74f6aa7147bcc2f0aa62e933a7",
+    "platforms/macos/VirtualAudioInput/Package.swift": "09127ac610c140f8c0e25a3112a35ba1d2004d10f60adc6b8e009e7137bb4190",
+    "platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/DeviceTapCapture.swift": "94f32ca947bfe286b96e19cc9e628f6670073d1f0e944dc24464754484d155c1",
+    "platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/VirtualHPCMEncoder.swift": "d7ecbdca1a21703542b83388424c8892162944a6c1d1c9734b9a80cf2ce5dc8d",
+    "platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/VirtualPCMResampler.swift": "8a34bdd00bc0da0733c70ec83c17c9bcc41e936774aced3bc1dfafba0421136d",
+    "platforms/macos/VirtualAudioInput/Sources/VirtualCaptureHost/main.swift": "dfd847272b65c27f19e2805e3cbba8bc1f0d3d0914a99f9f9ac9e7d5a59929fe",
+    "platforms/macos/VirtualAudioInput/Sources/VirtualCaptureHostSupport/VirtualCaptureHostController.swift": "0f1333f5ba81ffcd9c2276f66e4458d57872541d64795d2e2926512d1d15c79d"
+  },
+  "status": "ok",
+  "synchronized": {
+    "continuity": {
+      "first_source": {
+        "droppedBlocksBefore": 0,
+        "flags": 3,
+        "hostTime": 2655313875625,
+        "nativeClaim": false,
+        "nowFlags": 3,
+        "nowHostTime": 2655313875626,
+        "nowSampleTime": "2655313875625.0",
+        "sampleTime": "2655313875625.0",
+        "sourceChannelOrder": [
+          "FL",
+          "FR",
+          "FC",
+          "LFE",
+          "SL",
+          "SR",
+          "BL",
+          "BR"
+        ],
+        "sourceChannels": 8,
+        "sourceFrameStart": 0,
+        "sourceFrames": 480,
+        "sourceLayout": "7_1",
+        "sourceLayoutAuthority": "device",
+        "sourceLayoutVerified": false,
+        "sourceOrigin": "os_mix",
+        "sourceRate": 48000,
+        "sourceSequence": 0,
+        "timebaseDenominator": 3,
+        "timebaseNumerator": 125,
+        "upstreamTransform": "os_mix_possible"
+      },
+      "last_source": {
+        "droppedBlocksBefore": 0,
+        "flags": 3,
+        "hostTime": 2655446042166,
+        "nativeClaim": false,
+        "nowFlags": 3,
+        "nowHostTime": 2655446042167,
+        "nowSampleTime": "2655446042166.0",
+        "sampleTime": "2655446042166.0",
+        "sourceChannelOrder": [
+          "FL",
+          "FR",
+          "FC",
+          "LFE",
+          "SL",
+          "SR",
+          "BL",
+          "BR"
+        ],
+        "sourceChannels": 8,
+        "sourceFrameStart": 6240,
+        "sourceFrames": 480,
+        "sourceLayout": "7_1",
+        "sourceLayoutAuthority": "device",
+        "sourceLayoutVerified": false,
+        "sourceOrigin": "os_mix",
+        "sourceRate": 48000,
+        "sourceSequence": 13,
+        "timebaseDenominator": 3,
+        "timebaseNumerator": 125,
+        "upstreamTransform": "os_mix_possible"
+      },
+      "output_frames": 6174,
+      "sequence": 14,
+      "source_rate": 48000,
+      "total_input": 6720
+    },
+    "discarded": [
+      "LFE"
+    ],
+    "mode": "stereo_downmix",
+    "reference": {
+      "left": 0.3636038899421692,
+      "right": 0.005025246646255255
+    },
+    "report": {
+      "acoustic_sync_verified": false,
+      "capture_to_receipt_uncertainty_ns": null,
+      "clock_anchor": "python_first_pcm_receipt_not_native_host_time",
+      "first_receipt_ns": 2655319933041,
+      "group_failed": false,
+      "hub_stopped": false,
+      "input_capacity_frames": 88200,
+      "input_frames": 6174,
+      "input_peak_frames": 441,
+      "live": true,
+      "native_core_used": true,
+      "native_submit_calls": 28,
+      "native_submitted_frames": 6174,
+      "outputs": [
+        {
+          "consumed_frames": 6144,
+          "consumed_pcm_sha256": "8240e50aa96d589aef5bd055ee14b425bbdb09e9e8c1c7403c121a5c6d6d5512",
+          "first_presentation_ns": 2655439933041,
+          "native_frames": 6174,
+          "native_pcm_sha256": "3d72cf9b6f46959130e21f2d1cb397ef5d41d3b97b82aaf0d861bdf5e5f144b5",
+          "output_id": 0,
+          "queue_capacity_frames": 1408,
+          "queue_peak_frames": 441
+        },
+        {
+          "consumed_frames": 6144,
+          "consumed_pcm_sha256": "8240e50aa96d589aef5bd055ee14b425bbdb09e9e8c1c7403c121a5c6d6d5512",
+          "first_presentation_ns": 2655439933041,
+          "native_frames": 6174,
+          "native_pcm_sha256": "3d72cf9b6f46959130e21f2d1cb397ef5d41d3b97b82aaf0d861bdf5e5f144b5",
+          "output_id": 1,
+          "queue_capacity_frames": 1408,
+          "queue_peak_frames": 441
+        }
+      ],
+      "playback_origin_ns": 2655439933041
+    },
+    "stats": {
+      "0": {
+        "left": 0.36359773051965394,
+        "peak": 0.36362804040650654,
+        "right": 0.005035554063539537
+      },
+      "1": {
+        "left": 0.36359773051965394,
+        "peak": 0.36362804040650654,
+        "right": 0.005035554063539537
+      }
+    },
+    "status": "ok"
+  },
+  "tcc_claimed": false,
+  "timestamp": "2026-11-06T15:48:45.032336+00:00"
+}

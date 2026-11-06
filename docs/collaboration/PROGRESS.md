@@ -1,5 +1,7 @@
 # HomePod Flow 当前进度
 
+2026-11-06 23:49：单一 8 通道虚拟声卡与新版 Flow 已安装，Mac 重启后确认只显示一个设备。受管 v2 已接入 App，独立软件串联通过；真实系统录音权限和 HomePod 出声待确认。见 SESSION_HANDOFF.md 最新记录。
+
 更新：2026-11-06。换会话先读[SESSION_HANDOFF.md](SESSION_HANDOFF.md)。正式方向：Mac 系统声音输入、影院/同步两种模式、单一布局设置、按真实设备显示；无产品文件播放入口。基础链路已真机跑通，完整正式版尚未验收。以下为当前状态；历史失败与阶段证据保留在 reports/，不以早期条目覆盖本页。
 
 20:35 更新：重启后 3 个可见虚拟设备已确认；仅保留一个已验证主 App。新增 mono 采集格式支持、多声道转换与 Swift HPCM v2 编码，Mac 全包 35 测试/Release、独立 Swift→Python 14 组合/220052 帧通过；产品 host/worker 尚未接入，真实 mono/6/8ch 非零采集仍未验。详见 [阶段验收](reports/VirtualAudio-2026-11-06/Multichannel-transport-stage.md)。

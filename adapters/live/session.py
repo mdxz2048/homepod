@@ -139,7 +139,8 @@ class LivePatches(SessionPatches):
 
 
 async def play_system_audio(library, capture_host, routes, hosts, volume=15,
-                            exclude_pids=(), report=None, volume_control=None):
+                            exclude_pids=(), report=None, volume_control=None,
+                            input_config=None, mode='synchronized', endpoint_roles=None):
     """Runs until cancelled or failed. Calling is an explicit audible action.
 
     report cleanup fields describe resource shutdown, never acoustic proof.
@@ -158,8 +159,18 @@ async def play_system_audio(library, capture_host, routes, hosts, volume=15,
                 or not routes or set(routes) != set(hosts) or len(set(hosts.values())) != len(hosts)
                 or any(not isinstance(host, str) or not host or len(host) > 255 for host in hosts.values())):
             raise ValueError("valid live volume and unique receiver targets required")
-        hub = LiveHub(library, routes)
-        capture = CaptureHost(capture_host, report.get("session", str(uuid.uuid4())), hub, exclude_pids)
+        if input_config is None:
+            hub = LiveHub(library, routes)
+            capture = CaptureHost(capture_host, report.get("session", str(uuid.uuid4())), hub, exclude_pids)
+        else:
+            from .capture_v2 import CaptureHostV2
+            from .routing_v2 import VirtualRoutePlan
+            plan = VirtualRoutePlan(input_config['layout'], routes, mode, endpoint_roles)
+            report.update(plan.report(), input_backend='virtual_device_v2',
+                          source_layout=input_config['layout'], source_layout_verified=False)
+            hub = LiveHub(library, plan.routes, input_channels=plan.channels)
+            capture = CaptureHostV2(capture_host, report.get("session", str(uuid.uuid4())), hub,
+                                    input_config['device_uid'], input_config['layout'], plan.process)
         devices = await scan(list(hosts.values()))
         by_host = {str(device.address): device for device in devices}
         if any(host not in by_host for host in hosts.values()):

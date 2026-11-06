@@ -94,7 +94,7 @@ def parse_system_request(line):
             session_id(params["session"])
             number(params["volume"], 0, 100, "volume")
         else:
-            keys(params, ("session", "library", "capture_host", "routes"), ("volume", "exclude_pids", "mode"))
+            keys(params, ("session", "library", "capture_host", "routes"), ("volume", "exclude_pids", "mode", "input"))
             session_id(params["session"])
             absolute_path(params["library"], "library")
             absolute_path(params["capture_host"], "capture_host")
@@ -110,7 +110,7 @@ def parse_system_request(line):
                 raise ProtocolError("invalid_params", "select one to eight independent outputs")
             ids, addresses = set(), set()
             for route in routes:
-                keys(route, ("output_id", "channels", "host"))
+                keys(route, ("output_id", "channels", "host"), ("role",) if "input" in params else ())
                 output, host = route["output_id"], route["host"]
                 if (type(output) is not int or not 0 <= output < 1 << 32 or output in ids
                         or not isinstance(host, str) or not 0 < len(host) <= 255 or host in addresses
@@ -118,6 +118,21 @@ def parse_system_request(line):
                         or any(type(ch) is not int for ch in route["channels"])):
                     raise ProtocolError("invalid_params", "system stereo requires unique outputs and [0,1] routes")
                 ids.add(output); addresses.add(host)
+            if "input" in params:
+                config = params['input']
+                keys(config, ('backend', 'device_uid', 'layout'))
+                from adapters.live.pcm_v2 import CANONICAL_DEVICE_UID
+                if (config['backend'] != 'virtual_device_v2'
+                        or not isinstance(config['layout'], str)
+                        or CANONICAL_DEVICE_UID.get(config['layout']) != config['device_uid']):
+                    raise ProtocolError('invalid_params', 'unsupported virtual input descriptor')
+                try:
+                    from adapters.live.routing_v2 import VirtualRoutePlan
+                    VirtualRoutePlan(config['layout'], [r['output_id'] for r in routes],
+                                     params.get('mode', 'synchronized'),
+                                     {r['output_id']: r['role'] for r in routes if 'role' in r})
+                except (ValueError, TypeError):
+                    raise ProtocolError('invalid_params', 'invalid virtual endpoint routing')
         return obj
     except ProtocolError as error:
         error.request_id, error.session = request_id, correlation
@@ -136,7 +151,9 @@ async def system_runner(params, report):
             {r["output_id"]: r["channels"] for r in params["routes"]},
             {r["output_id"]: r["host"] for r in params["routes"]},
             volume=params.get("volume", 15), exclude_pids=tuple(params.get("exclude_pids", ())), report=report,
-            volume_control=params.get("_volume_control"))
+            volume_control=params.get("_volume_control"), input_config=params.get('input'),
+            mode=params.get('mode', 'synchronized'),
+            endpoint_roles={r['output_id']: r['role'] for r in params['routes'] if 'role' in r})
         raise RuntimeError("live session returned without an explicit stop")
     finally:
         if not entered:
@@ -172,7 +189,8 @@ class SystemWorkerServer(WorkerServer):
                 self.emit(rid, "result", payload={"protocol_version": 1, "core_abi_version": 1,
                     "commands": list(COMMANDS), "worker_pid": os.getpid(),
                     "capabilities": {"system_audio": True, "live": True, "capture": True,
-                                     "stereo_pair": False, "realtime_volume": True, "av_offset": False},
+                                     "stereo_pair": False, "realtime_volume": True, "av_offset": False,
+                                     "virtual_device_v2": True},
                     "worker_poisoned": self.poisoned})
             elif command == "scan":
                 payload = await self.scanner(params)
@@ -190,7 +208,12 @@ class SystemWorkerServer(WorkerServer):
                 runtime_params["_volume_control"] = LiveVolumeControl()
                 state = Session(rid, sid, runtime_params)
                 self.active = state
-                self.emit(rid, "accepted", sid, {"execution": "system_audio", "actual_mode": "same_stereo"})
+                if 'input' in params:
+                    from adapters.live.routing_v2 import VirtualRoutePlan
+                    state.report.update(VirtualRoutePlan(params['input']['layout'],
+                        [r['output_id'] for r in params['routes']], params.get('mode', 'synchronized'),
+                        {r['output_id']: r['role'] for r in params['routes'] if 'role' in r}).report())
+                self.emit(rid, "accepted", sid, {"execution": "system_audio", "actual_mode": state.report.get('actual_mode', 'same_stereo')})
                 state.task = asyncio.create_task(self._run_session(state))
                 await asyncio.sleep(0)
             elif command == "set_volume":
@@ -239,7 +262,7 @@ class SystemWorkerServer(WorkerServer):
                 phase = "preparing"
             if phase != previous:
                 self.emit(session.request_id, "state", session.session_id,
-                    {"state": phase, "execution": "system_audio", "actual_mode": "same_stereo",
+                    {"state": phase, "execution": "system_audio", "actual_mode": report.get('actual_mode', 'same_stereo'),
                      "acoustic_sync_verified": False})
                 previous = phase
             await asyncio.sleep(.05)

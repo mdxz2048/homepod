@@ -43,6 +43,7 @@ typedef struct {
  * separate devices, or a different subset without rewriting the HAL logic.
  */
 static const MCDeviceInfo gDevices[MC_DEVICE_COUNT] = {
+#if !MC_SINGLE_DEVICE
     {kMCObjectDeviceStereo, kMCObjectStreamStereo,
      MC_DEVICE_UID_STEREO, MC_MODEL_UID_STEREO,
      MC_DEVICE_NAME_STEREO, MC_STREAM_NAME_STEREO,
@@ -79,6 +80,7 @@ static const MCDeviceInfo gDevices[MC_DEVICE_COUNT] = {
      CFSTR(MC_DEVICE_UID_51B), CFSTR(MC_MODEL_UID_51B),
      CFSTR(MC_DEVICE_NAME_51B), CFSTR(MC_STREAM_NAME_51B),
      MC_LAYOUT_5_1_BACK, false, true},
+#endif
     {kMCObjectDevice71, kMCObjectStream71,
      MC_DEVICE_UID_71, MC_MODEL_UID_71,
      MC_DEVICE_NAME_71, MC_STREAM_NAME_71,

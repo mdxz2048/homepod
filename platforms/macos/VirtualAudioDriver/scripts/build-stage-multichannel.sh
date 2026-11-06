@@ -19,8 +19,14 @@ else
   info_plist="$source_root/Info-Multichannel.plist"
 fi
 
+if [[ "${MC_SINGLE_DEVICE:-0}" == "1" ]]; then
+  single_flag="-DMC_SINGLE_DEVICE=1"
+else
+  single_flag=""
+fi
+
 xcrun clang -std=c11 -O2 -Wall -Wextra -Werror -mmacosx-version-min=14.2 \
-  -fvisibility=hidden -bundle $identity_flag \
+  -fvisibility=hidden -bundle $identity_flag $single_flag \
   "$source_root/src/FlowVirtualAudioMultichannel.c" \
   "$source_root/src/FlowMultichannelMap.c" \
   -framework CoreAudio -framework CoreFoundation \
@@ -36,3 +42,4 @@ shasum -a 256 "$source_root/src/FlowVirtualAudioMultichannel.c" \
   "$bundle/Contents/MacOS/HomePodFlowAudioFamily"
 echo "STAGE_ONLY=$bundle"
 echo "PRODUCTION_IDENTITY=${MC_PRODUCTION_IDENTITY:-0}"
+echo "SINGLE_DEVICE=${MC_SINGLE_DEVICE:-0}"

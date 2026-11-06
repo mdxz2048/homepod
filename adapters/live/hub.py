@@ -64,10 +64,11 @@ class LiveHub:
 
     def __init__(self, library, routes, *, input_capacity_frames=88200,
                  block_frames=352, output_capacity_blocks=4, stall_timeout=2.0,
-                 clock_ns=time.monotonic_ns, engine_factory=Engine):
-        if (not routes or len(routes) > 8
+                 clock_ns=time.monotonic_ns, engine_factory=Engine, input_channels=2):
+        if (type(input_channels) is not int or not 1 <= input_channels <= 16
+                or not routes or len(routes) > 8
                 or any(type(key) is not int or not 0 <= key < 2**32 for key in routes)
-                or any(len(mapping) != 2 or any(type(c) is not int or c not in (0, 1) for c in mapping)
+                or any(len(mapping) != 2 or any(type(c) is not int or not 0 <= c < input_channels for c in mapping)
                        for mapping in routes.values())
                 or type(block_frames) is not int or not 1 <= block_frames <= 4096
                 or type(input_capacity_frames) is not int or not block_frames <= input_capacity_frames <= 88200
@@ -75,6 +76,7 @@ class LiveHub:
                 or not math.isfinite(stall_timeout) or not 0 < stall_timeout <= 10):
             raise ValueError("invalid live routes or queue budgets")
         self.routes = {key: list(value) for key, value in routes.items()}
+        self.channels = input_channels
         self.block_frames = block_frames
         self.input_capacity_frames = input_capacity_frames
         self.stall_timeout, self.clock_ns = stall_timeout, clock_ns
@@ -99,12 +101,12 @@ class LiveHub:
 
     async def push(self, samples, receipt_ns=None):
         # PCM validation remains outside the HAL callback and before native ABI.
-        if (not samples or len(samples) % 2 or len(samples) > 16384
+        if (not samples or len(samples) % self.channels or len(samples) > 8192 * self.channels
                 or any(not math.isfinite(v) or abs(v) > 1 for v in samples)):
             await self.fail(LiveFailure("invalid live PCM block"))
             raise self.failure
         owned = array.array("f", samples)
-        frames = len(owned) // 2
+        frames = len(owned) // self.channels
         async with self.condition:
             self._require_live()
             if self.input_resident + frames > self.input_capacity_frames:
@@ -151,18 +153,18 @@ class LiveHub:
         if not self.input_queue:
             return False
         head = self.input_queue[0]
-        count = min(self.block_frames, len(head) // 2 - self.input_offset)
+        count = min(self.block_frames, len(head) // self.channels - self.input_offset)
         if any(output.buffered + count > output.capacity for output in self.outputs.values()):
             return False
-        first = self.input_offset * 2
-        self.engine.submit(1, self.next_frame, head[first:first + count * 2])
+        first = self.input_offset * self.channels
+        self.engine.submit(1, self.next_frame, head[first:first + count * self.channels])
         self.next_frame += count
         self.submit_calls += 1
         self.input_offset += count
         self.input_buffered -= count
-        if self.input_offset == len(head) // 2:
+        if self.input_offset == len(head) // self.channels:
             self.input_queue.popleft()
-            self.input_resident -= len(head) // 2
+            self.input_resident -= len(head) // self.channels
             self.input_offset = 0
         return True
 

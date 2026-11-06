@@ -18,6 +18,10 @@
 #define MC_PRODUCTION_IDENTITY 0
 #endif
 
+#ifndef MC_SINGLE_DEVICE
+#define MC_SINGLE_DEVICE 0
+#endif
+
 #if MC_PRODUCTION_IDENTITY
 #define MC_BUNDLE_ID "com.homepodflow.audio.driver"
 
@@ -90,6 +94,11 @@
 #define MC_PLUGIN_NAME "HomePod Flow Multichannel Family (Dev) Plug-in"
 #endif
 
+#if MC_SINGLE_DEVICE
+#undef MC_DEVICE_NAME_71
+#define MC_DEVICE_NAME_71 "HomePod Flow Audio"
+#endif
+
 enum {
     kMCObjectDeviceStereo = 2,
     kMCObjectStreamStereo = 3,
@@ -110,7 +119,11 @@ enum {
     kMCZeroTimeStampPeriod = 16384
 };
 
+#if MC_SINGLE_DEVICE
+#define MC_DEVICE_COUNT 1
+#else
 #define MC_DEVICE_COUNT 7
+#endif
 
 /* Fixed process-local handles.  Never persist these across launches. */
 __attribute__((visibility("default")))

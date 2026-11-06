@@ -7,6 +7,7 @@ let package = Package(
     products: [
         .library(name: "ProcessTapCapture", targets: ["ProcessTapCapture"]),
         .library(name: "CaptureRing", targets: ["CaptureRing"]),
+        .library(name: "TapCaptureHostSupport", targets: ["TapCaptureHostSupport"]),
         .executable(name: "tap-capture-probe", targets: ["TapCaptureProbe"]),
         .executable(name: "tap-capture-host", targets: ["TapCaptureHost"])
     ],
