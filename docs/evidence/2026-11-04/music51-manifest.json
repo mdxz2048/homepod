@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "kind": "downloaded_discrete_5.1_music",
+  "title": "Odyssey - Emphasis",
+  "source_url": "https://www.hirez.one/streaming/odyssey/odyssey-metastasia-emphasis.ac3",
+  "publisher_page": "https://surroundmusic.one/streaming/",
+  "source_metadata": {
+    "codec": "ac3",
+    "sample_rate": 44100,
+    "layout": "5.1(side)",
+    "channel_order": [
+      "FL",
+      "FR",
+      "FC",
+      "LFE",
+      "SL",
+      "SR"
+    ]
+  },
+  "source_start_seconds": 10,
+  "source_sha256": "2e2e6967128f86952cff7a168cc641004a52e1aa6a3e0268da59c088b9782a7f",
+  "sample_rate": 44100,
+  "duration_seconds": 60,
+  "frames": 2646000,
+  "channel_order": [
+    "FL",
+    "FR",
+    "FC",
+    "LFE",
+    "SL",
+    "SR"
+  ],
+  "rendered_master_channel_order": [
+    "FL",
+    "FR",
+    "FC",
+    "LFE",
+    "BL",
+    "BR"
+  ],
+  "outputs": {
+    "front": "front.wav",
+    "rear-left": "rear-left.wav",
+    "rear-right": "rear-right.wav"
+  },
+  "routing": {
+    "front": "0.45*(0.5*FL+0.5*FR+0.7071*FC+0.3162*LFE)",
+    "rear-left": "0.45*SL",
+    "rear-right": "0.45*SR"
+  },
+  "output_peak": {
+    "front": 0.3087729513645172,
+    "rear-left": 0.2543140649795532,
+    "rear-right": 0.186565563082695
+  },
+  "checks": {
+    "six_channel_source_verified": true,
+    "different_output_content": true,
+    "no_output_clipping": true
+  },
+  "acoustic_sync_verified": false
+}

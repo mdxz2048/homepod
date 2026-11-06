@@ -1,0 +1,8 @@
+{
+  "os": "macOS-26.5.2-arm64-arm-64bit",
+  "xcode": "Xcode 26.6\nBuild version 17F113\n",
+  "reused_native_library_sha256": "c5cdd4e058c2a702a715c6cacf4710629b43f81da35445dfd19b107ff48c8fbe",
+  "native_library": "/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m2-validation/build/core/libflow_bridge.dylib",
+  "release_zip_sha256": "ded3d1cbfce250d6a8061d8f69944bfe9bd605d90ad5f14e7cfe85d044934e23",
+  "version": "0.2.0"
+}

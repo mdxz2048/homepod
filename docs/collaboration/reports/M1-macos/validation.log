@@ -1,0 +1,206 @@
+RUN ['cmake', '-S', '/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/source', '-B', '/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build', '-DFLOW_BUILD_TESTS=ON', '-DCMAKE_BUILD_TYPE=Debug']
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build
+
+exit=0
+
+RUN ['cmake', '--build', '/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build']
+[ 10%] Building CXX object core/CMakeFiles/flow_core.dir/src/core.cpp.o
+[ 20%] Linking CXX static library libflow_core.a
+[ 20%] Built target flow_core
+[ 30%] Building CXX object CMakeFiles/flow_offline_demo.dir/examples/offline_demo.cpp.o
+[ 40%] Linking CXX executable flow_offline_demo
+[ 40%] Built target flow_offline_demo
+[ 50%] Building CXX object core/CMakeFiles/flow_bridge.dir/src/bridge.cpp.o
+[ 60%] Linking CXX shared library libflow_bridge.dylib
+[ 60%] Built target flow_bridge
+[ 70%] Building C object CMakeFiles/flow_bridge_c_tests.dir/tests/bridge_c_contract.c.o
+[ 80%] Linking C executable flow_bridge_c_tests
+[ 80%] Built target flow_bridge_c_tests
+[ 90%] Building CXX object tests/CMakeFiles/flow_core_contract_tests.dir/core_contract_tests.cpp.o
+[100%] Linking CXX executable flow_core_contract_tests
+[100%] Built target flow_core_contract_tests
+
+exit=0
+
+RUN ['ctest', '--test-dir', '/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build', '-V']
+Internal ctest changing into directory: /Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build
+UpdateCTestConfiguration  from :/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build/DartConfiguration.tcl
+Parse Config file:/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build/DartConfiguration.tcl
+Parse Config file:/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build/DartConfiguration.tcl
+Test project /Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: flow_bridge_c_tests
+
+1: Test command: /Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build/flow_bridge_c_tests
+1: Working Directory: /Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build
+1: Test timeout computed to be: 1500
+1: PASS native C ABI version/null/ownership/routing/timeline/epoch/stop/partial-prepare/backpressure
+1/2 Test #1: flow_bridge_c_tests ..............   Passed    1.08 sec
+test 2
+    Start 2: flow_core_contract_tests
+
+2: Test command: /Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build/tests/flow_core_contract_tests
+2: Working Directory: /Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build/tests
+2: Test timeout computed to be: 1500
+2: PASS N outputs get distinct channel content on shared media timeline
+2: PASS duplicated channels retain interleaved order
+2: PASS presentation is frame based independent of submission clock
+2: PASS invalid source formats rejected before preparing
+2: PASS invalid routes and outputs rejected before preparing
+2: PASS unscheduled backend refuses group before any prepare
+2: PASS partial prepare failure cleans successful and failing output
+2: PASS zero and negative startup lead refused without losing prepared state
+2: PASS startup clock overflow rejected
+2: PASS invalid blocks preserve running state and allow valid retry
+2: PASS duplicate gap and epoch changes rejected after accepted block
+2: PASS backpressure after partial acceptance faults and clears every output
+2: PASS transport failure faults group
+2: PASS stop is idempotent and restart uses configured epoch beginning frame zero
+2: PASS invalid lifecycle calls do not enqueue
+2: PASS destructor releases queued outputs
+2: PASS same output object cannot own two independent routes
+2: PASS null clock rejected before output preparation
+2: PASS prepare exception closes partially opened backend
+2: PASS enqueue exception after acceptance faults whole group
+2: PASS block end presentation overflow rejects without enqueue or timeline advance
+2: 21/21 offline contract groups passed
+2/2 Test #2: flow_core_contract_tests .........   Passed    0.43 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =   1.52 sec
+
+exit=0
+
+RUN ['/Users/lvzhipeng/Developer/HomePodSpatialRouter/.venv/bin/python', '-m', 'unittest', 'discover', '-s', 'tests', '-p', 'test_*.py', '-v']
+test_bounded_render_rejects_before_loading_native_library (test_airplay_bridge.AirPlayBridgeTests.test_bounded_render_rejects_before_loading_native_library) ... ok
+test_native_submit_called_and_cpp_output_consumed_by_source (test_airplay_bridge.AirPlayBridgeTests.test_native_submit_called_and_cpp_output_consumed_by_source) ... ok
+test_source_refuses_unattached_reads_and_mismatched_or_repeated_attachment (test_airplay_bridge.AirPlayBridgeTests.test_source_refuses_unattached_reads_and_mismatched_or_repeated_attachment) ... ok
+test_async_close_failure_cannot_report_cleanup_complete (test_airplay_session.AirPlaySessionTests.test_async_close_failure_cannot_report_cleanup_complete) ... ok
+test_barrier_timeout_never_builds_or_releases_partial_group (test_airplay_session.AirPlaySessionTests.test_barrier_timeout_never_builds_or_releases_partial_group) ... ok
+test_cleanup_cancels_active_stream_and_closes_source (test_airplay_session.AirPlaySessionTests.test_cleanup_cancels_active_stream_and_closes_source) ... ok
+test_cleanup_closes_every_resource_when_one_close_raises (test_airplay_session.AirPlaySessionTests.test_cleanup_closes_every_resource_when_one_close_raises) ... ok
+test_cli_dry_run_uses_native_and_never_scans_or_connects (test_airplay_session.AirPlaySessionTests.test_cli_dry_run_uses_native_and_never_scans_or_connects) ... ok
+test_cli_failure_has_failed_status_without_scanning (test_airplay_session.AirPlaySessionTests.test_cli_failure_has_failed_status_without_scanning) ... ok
+test_full_play_stream_failure_closes_sources_connections_and_restores_patches (test_airplay_session.AirPlaySessionTests.test_full_play_stream_failure_closes_sources_connections_and_restores_patches) ... ok
+test_mismatched_receiver_latency_refused_before_native_render (test_airplay_session.AirPlaySessionTests.test_mismatched_receiver_latency_refused_before_native_render) ... ok
+test_partial_patch_install_failure_restores_prior_methods (test_airplay_session.AirPlaySessionTests.test_partial_patch_install_failure_restores_prior_methods) ... ok
+test_real_native_plan_attaches_all_sources_and_applies_latency_mapping (test_airplay_session.AirPlaySessionTests.test_real_native_plan_attaches_all_sources_and_applies_latency_mapping) ... ok
+test_scoped_install_rejects_overlap_and_restores_every_method_on_error (test_airplay_session.AirPlaySessionTests.test_scoped_install_rejects_overlap_and_restores_every_method_on_error) ... ok
+test_slow_real_render_refuses_plan_before_release (test_airplay_session.AirPlaySessionTests.test_slow_real_render_refuses_plan_before_release) ... ok
+test_actual_pyatv_context_first_and_next_rtp_map_to_core_presentation (test_airplay_timing.AirPlayTimingTests.test_actual_pyatv_context_first_and_next_rtp_map_to_core_presentation) ... ok
+test_invalid_and_overflow_domains (test_airplay_timing.AirPlayTimingTests.test_invalid_and_overflow_domains) ... ok
+test_latency_subtracted_from_core_presentation_origin (test_airplay_timing.AirPlayTimingTests.test_latency_subtracted_from_core_presentation_origin) ... ok
+test_ready_guard_inclusive_and_late_rejected (test_airplay_timing.AirPlayTimingTests.test_ready_guard_inclusive_and_late_rejected) ... ok
+test_release_early_and_late_rejected_at_fixed_plan (test_airplay_timing.AirPlayTimingTests.test_release_early_and_late_rejected_at_fixed_plan) ... ok
+test_snapshot_conversion_and_anchor_delta (test_airplay_timing.AirPlayTimingTests.test_snapshot_conversion_and_anchor_delta) ... ok
+test_actual_native_fanout_and_owned_callback_data (test_native_binding.NativeBindingTests.test_actual_native_fanout_and_owned_callback_data) ... ok
+test_capacity_failure_closes_every_native_callback_output (test_native_binding.NativeBindingTests.test_capacity_failure_closes_every_native_callback_output) ... ok
+test_destroy_releases_queue_and_is_idempotent (test_native_binding.NativeBindingTests.test_destroy_releases_queue_and_is_idempotent) ... ok
+test_failed_constructor_does_not_raise_unraisable_destructor_error (test_native_binding.NativeBindingTests.test_failed_constructor_does_not_raise_unraisable_destructor_error) ... ok
+test_integer_overflow_rejected_before_ffi_conversion (test_native_binding.NativeBindingTests.test_integer_overflow_rejected_before_ffi_conversion) ... ok
+test_non_scheduled_backend_rejected_without_preparing (test_native_binding.NativeBindingTests.test_non_scheduled_backend_rejected_without_preparing) ... ok
+test_python_enqueue_exception_contained_by_abi_and_group_closed (test_native_binding.NativeBindingTests.test_python_enqueue_exception_contained_by_abi_and_group_closed) ... ok
+test_python_output_alias_cannot_bypass_independent_output_contract (test_native_binding.NativeBindingTests.test_python_output_alias_cannot_bypass_independent_output_contract) ... ok
+test_python_prepare_exception_closes_attempted_outputs (test_native_binding.NativeBindingTests.test_python_prepare_exception_closes_attempted_outputs) ... ok
+test_samples_rejected_then_valid_retry (test_native_binding.NativeBindingTests.test_samples_rejected_then_valid_retry) ... ok
+test_timestamp_rejection_does_not_advance (test_native_binding.NativeBindingTests.test_timestamp_rejection_does_not_advance) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 0.048s
+
+OK
+
+exit=0
+
+RUN ['/Users/lvzhipeng/Developer/HomePodSpatialRouter/.venv/bin/python', '-m', 'adapters.airplay_pyatv', 'dry-run', '--library', '/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build/core/libflow_bridge.dylib', '--seconds', '1', '--report', '/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/dry-run.json']
+{
+  "status": "offline_dry_run_completed",
+  "acoustic_sync_verified": false,
+  "command": "dry-run",
+  "input_sample_rate": 44100,
+  "input_channels": 3,
+  "input_frames": 44100,
+  "routes": {
+    "0": [
+      0,
+      0
+    ],
+    "1": [
+      1,
+      1
+    ],
+    "2": [
+      2,
+      2
+    ]
+  },
+  "native_library": "/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build/core/libflow_bridge.dylib",
+  "native_core_used": true,
+  "playback_origin_ns": 16237599279208,
+  "epoch": 1,
+  "frames": 44100,
+  "outputs": [
+    {
+      "output_id": 0,
+      "channels": 2,
+      "frames": 44100,
+      "pcm_sha256": "2dc4e9dedc2f8c20861eaf8d63a2abdf802e6df8e9c336938dac46758ff5baea",
+      "first_presentation_ns": 16237599279208,
+      "last_block_frame": 44000,
+      "blocks": 126
+    },
+    {
+      "output_id": 1,
+      "channels": 2,
+      "frames": 44100,
+      "pcm_sha256": "e59a5adabc28b92dc0ad5bbdb9255bc4148c09801c69e6f67ebfbd7e90549635",
+      "first_presentation_ns": 16237599279208,
+      "last_block_frame": 44000,
+      "blocks": 126
+    },
+    {
+      "output_id": 2,
+      "channels": 2,
+      "frames": 44100,
+      "pcm_sha256": "cb73c6b13dcc5e0e5d4fcc9000bac98a08470944b7c2cfe4262dc1b5d2b81e17",
+      "first_presentation_ns": 16237599279208,
+      "last_block_frame": 44000,
+      "blocks": 126
+    }
+  ],
+  "network_used": false,
+  "audio_source_consumed": {
+    "0": {
+      "frames": 44100,
+      "pcm_sha256": "2dc4e9dedc2f8c20861eaf8d63a2abdf802e6df8e9c336938dac46758ff5baea"
+    },
+    "1": {
+      "frames": 44100,
+      "pcm_sha256": "e59a5adabc28b92dc0ad5bbdb9255bc4148c09801c69e6f67ebfbd7e90549635"
+    },
+    "2": {
+      "frames": 44100,
+      "pcm_sha256": "cb73c6b13dcc5e0e5d4fcc9000bac98a08470944b7c2cfe4262dc1b5d2b81e17"
+    }
+  }
+}
+
+exit=0
+
+RUN ['xcrun', 'clang++', '--version']
+Apple clang version 21.0.0 (clang-2100.1.1.101)
+Target: arm64-apple-darwin25.5.0
+Thread model: posix
+InstalledDir: /Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+
+exit=0

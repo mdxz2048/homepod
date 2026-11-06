@@ -1,0 +1,18 @@
+{
+  "recorded_at": "2026-11-05T06:05:01.896277+00:00",
+  "mac_ip": "192.168.0.100",
+  "python": "3.12.16 (main, Oct 25 2026, 18:24:37) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "pyatv": "0.18.0",
+  "srptools": "1.0.1",
+  "remote_source_drift": [],
+  "volume_percent": 15,
+  "real_stream_seconds": 60,
+  "restart_runs": 2,
+  "restart_seconds_per_run": 3,
+  "input": "on-demand ToneReader; no full-input preload",
+  "subjective_feedback": "60 second run feedback requested, pending",
+  "audio_recording": "not captured",
+  "validation_execution": "root coordinator; independent QA wrote test cases",
+  "independent_final_review": "not complete; QA agent usage limit",
+  "native_library_sha256": "c5cdd4e058c2a702a715c6cacf4710629b43f81da35445dfd19b107ff48c8fbe"
+}

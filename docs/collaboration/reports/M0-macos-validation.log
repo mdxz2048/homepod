@@ -1,0 +1,83 @@
+RUN ['cmake', '-S', '/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m0-validation/source', '-B', '/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m0-validation/build', '-DFLOW_BUILD_TESTS=ON', '-DCMAKE_BUILD_TYPE=Debug']
+-- The CXX compiler identification is AppleClang 21.0.0.21000101
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (1.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m0-validation/build
+
+exit=0
+
+RUN ['cmake', '--build', '/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m0-validation/build']
+[ 16%] Building CXX object core/CMakeFiles/flow_core.dir/src/core.cpp.o
+[ 33%] Linking CXX static library libflow_core.a
+[ 33%] Built target flow_core
+[ 50%] Building CXX object CMakeFiles/flow_offline_demo.dir/examples/offline_demo.cpp.o
+[ 66%] Linking CXX executable flow_offline_demo
+[ 66%] Built target flow_offline_demo
+[ 83%] Building CXX object tests/CMakeFiles/flow_core_contract_tests.dir/core_contract_tests.cpp.o
+[100%] Linking CXX executable flow_core_contract_tests
+[100%] Built target flow_core_contract_tests
+
+exit=0
+
+RUN ['ctest', '--test-dir', '/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m0-validation/build', '--output-on-failure']
+Internal ctest changing into directory: /Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m0-validation/build
+Test project /Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m0-validation/build
+    Start 1: flow_core_contract_tests
+1/1 Test #1: flow_core_contract_tests .........   Passed    0.52 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.52 sec
+
+exit=0
+
+RUN ['/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m0-validation/build/tests/flow_core_contract_tests']
+PASS N outputs get distinct channel content on shared media timeline
+PASS duplicated channels retain interleaved order
+PASS presentation is frame based independent of submission clock
+PASS invalid source formats rejected before preparing
+PASS invalid routes and outputs rejected before preparing
+PASS unscheduled backend refuses group before any prepare
+PASS partial prepare failure cleans successful and failing output
+PASS zero and negative startup lead refused without losing prepared state
+PASS startup clock overflow rejected
+PASS invalid blocks preserve running state and allow valid retry
+PASS duplicate gap and epoch changes rejected after accepted block
+PASS backpressure after partial acceptance faults and clears every output
+PASS transport failure faults group
+PASS stop is idempotent and restart uses configured epoch beginning frame zero
+PASS invalid lifecycle calls do not enqueue
+PASS destructor releases queued outputs
+PASS same output object cannot own two independent routes
+PASS null clock rejected before output preparation
+PASS prepare exception closes partially opened backend
+PASS enqueue exception after acceptance faults whole group
+PASS block end presentation overflow rejects without enqueue or timeline advance
+21/21 offline contract groups passed
+
+exit=0
+
+RUN ['/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m0-validation/build/flow_offline_demo']
+Offline simulation only; timestamps are not acoustic evidence.
+front epoch=7 frame=0 presentation_ns=1500000000 samples=0.1 0.1 0.4 0.4 
+left epoch=7 frame=0 presentation_ns=1500000000 samples=0.2 0.2 0.5 0.5 
+right epoch=7 frame=0 presentation_ns=1500000000 samples=0.3 0.3 0.6 0.6 
+Bounded queue full: WouldBlock; entire group closed and Faulted.
+
+exit=0
+
+COMPILER
+Apple clang version 21.0.0 (clang-2100.1.1.101)
+Target: arm64-apple-darwin25.5.0
+Thread model: posix
+InstalledDir: /Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+
+CMAKE
+cmake version 3.27.8
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).

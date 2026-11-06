@@ -1,0 +1,892 @@
+{
+  "test": "system_audio_to_homepods",
+  "volume_percent": 15,
+  "acoustic_sync_verified": false,
+  "cycles": [
+    {
+      "session": "368e3192-a2c0-4775-b286-a056b5d88c14",
+      "requested_seconds": 10,
+      "streaming_ns": 80761149627291,
+      "volume_checks": [
+        {
+          "state": "volume_applied",
+          "volume_percent": 25,
+          "applied_outputs": 2
+        },
+        {
+          "state": "volume_applied",
+          "volume_percent": 0,
+          "applied_outputs": 2
+        },
+        {
+          "state": "volume_applied",
+          "volume_percent": 15,
+          "applied_outputs": 2
+        }
+      ],
+      "stop_requested_ns": 80780360292250,
+      "terminal": {
+        "state": "stopped",
+        "cleanup_complete": true,
+        "report": {
+          "session": "368e3192-a2c0-4775-b286-a056b5d88c14",
+          "status": "failed",
+          "live": true,
+          "volume_percent": 15,
+          "acoustic_sync_verified": false,
+          "input_closed": true,
+          "hub_stopped": true,
+          "cleanup_complete": true,
+          "shared_start_ts": 176529336632438,
+          "send_origin_ns": 80761104397125,
+          "playback_origin_ns": 80762604397125,
+          "protocol_latency_samples": 66150,
+          "protocol_sample_rate": 44100,
+          "prepared_receivers": 2,
+          "anchor_uncertainty_ns": 8791,
+          "capture_to_receipt_uncertainty_ns": null,
+          "converter_delay_known": false,
+          "stream_releases": [
+            {
+              "output_id": 1,
+              "monotonic_ns": 80761105295458,
+              "start_ts": 176529336632438,
+              "first_rtp": 66150
+            },
+            {
+              "output_id": 2,
+              "monotonic_ns": 80761112151125,
+              "start_ts": 176529336632438,
+              "first_rtp": 66150
+            }
+          ],
+          "audio_packets": 4825,
+          "nonzero_packets": 2316,
+          "volume_updates": 3,
+          "error_type": "CancelledError",
+          "error_detail": "",
+          "native_core_used": true,
+          "input_frames": 871651,
+          "native_submitted_frames": 849424,
+          "input_peak_frames": 22580,
+          "input_capacity_frames": 88200,
+          "native_submit_calls": 3611,
+          "group_failed": false,
+          "first_receipt_ns": 80760604397125,
+          "clock_anchor": "python_first_pcm_receipt_not_native_host_time",
+          "outputs": [
+            {
+              "output_id": 1,
+              "native_frames": 849424,
+              "consumed_frames": 849376,
+              "queue_peak_frames": 1293,
+              "queue_capacity_frames": 1408,
+              "first_presentation_ns": 80762604397125,
+              "native_pcm_sha256": "84721c5a53d11a734f9dfd098d9b181631e77b6d2b6248dddaecd25db30acd66",
+              "consumed_pcm_sha256": "f7c1d1fd31ebf98e9618070aa0736e8bf7778c0a3c27d717e5dc78e89cabd80b"
+            },
+            {
+              "output_id": 2,
+              "native_frames": 849424,
+              "consumed_frames": 849024,
+              "queue_peak_frames": 1293,
+              "queue_capacity_frames": 1408,
+              "first_presentation_ns": 80762604397125,
+              "native_pcm_sha256": "84721c5a53d11a734f9dfd098d9b181631e77b6d2b6248dddaecd25db30acd66",
+              "consumed_pcm_sha256": "af2ef2da0dd08bc584067a57fdf1b615ec51573260b0dfb92e7450a4b67e32f9"
+            }
+          ],
+          "capture_cleanup_complete": true,
+          "capture_host_exited": true,
+          "capture_frames": 871651,
+          "capture_blocks": 1853,
+          "capture_first_source": {
+            "sourceFrames": 512,
+            "sourceSequence": 0,
+            "flags": 7,
+            "timebaseNumerator": 125,
+            "hostTime": 1938253746755,
+            "captureSession": "979329EC-35DF-43B6-A2F2-FD49F611F3FB",
+            "nowFlags": 7,
+            "droppedBlocksBefore": 0,
+            "sampleTime": "43395.0",
+            "sourceChannels": 2,
+            "sourceRate": 48000,
+            "sourceFrameStart": 0,
+            "nowHostTime": 1938254486460,
+            "nowSampleTime": "44874.0",
+            "timebaseDenominator": 3
+          },
+          "capture_last_source": {
+            "nowHostTime": 1938728599749,
+            "sourceFrames": 512,
+            "sampleTime": "991619.0",
+            "timebaseDenominator": 3,
+            "sourceFrameStart": 948224,
+            "sourceSequence": 1852,
+            "timebaseNumerator": 125,
+            "captureSession": "979329EC-35DF-43B6-A2F2-FD49F611F3FB",
+            "nowSampleTime": "993098.0",
+            "hostTime": 1938727860216,
+            "sourceChannels": 2,
+            "flags": 7,
+            "sourceRate": 48000,
+            "droppedBlocksBefore": 0,
+            "nowFlags": 7
+          },
+          "capture_last_error": null,
+          "capture_error_code": null,
+          "capture_error_message": "",
+          "capture_error_cleanup_reported": null,
+          "capture_exclusion_policy": {
+            "objectExcludedPIDs": [
+              27530
+            ],
+            "notRegisteredPIDs": [
+              27526,
+              27528
+            ],
+            "policy": "fail_stop_on_registration_identity_or_object_change",
+            "registrationMonitoring": true
+          },
+          "capture_permission": "not_inferred",
+          "drain_complete": false
+        }
+      },
+      "stop": {
+        "state": "stopped",
+        "already_stopped": false,
+        "cleanup_complete": true
+      },
+      "stop_confirmed_ns": 80781244893791,
+      "local_sound_runs": 9
+    },
+    {
+      "session": "ddf306e2-582e-4ebb-9637-3debe06ffb38",
+      "requested_seconds": 10,
+      "streaming_ns": 80786180630916,
+      "volume_checks": [
+        {
+          "state": "volume_applied",
+          "volume_percent": 25,
+          "applied_outputs": 2
+        },
+        {
+          "state": "volume_applied",
+          "volume_percent": 0,
+          "applied_outputs": 2
+        },
+        {
+          "state": "volume_applied",
+          "volume_percent": 15,
+          "applied_outputs": 2
+        }
+      ],
+      "stop_requested_ns": 80805602542833,
+      "terminal": {
+        "state": "stopped",
+        "cleanup_complete": true,
+        "report": {
+          "session": "ddf306e2-582e-4ebb-9637-3debe06ffb38",
+          "status": "failed",
+          "live": true,
+          "volume_percent": 15,
+          "acoustic_sync_verified": false,
+          "input_closed": true,
+          "hub_stopped": true,
+          "cleanup_complete": true,
+          "shared_start_ts": 176529337736351,
+          "send_origin_ns": 80786136301666,
+          "playback_origin_ns": 80787636301666,
+          "protocol_latency_samples": 66150,
+          "protocol_sample_rate": 44100,
+          "prepared_receivers": 2,
+          "anchor_uncertainty_ns": 5917,
+          "capture_to_receipt_uncertainty_ns": null,
+          "converter_delay_known": false,
+          "stream_releases": [
+            {
+              "output_id": 1,
+              "monotonic_ns": 80786136716875,
+              "start_ts": 176529337736351,
+              "first_rtp": 66150
+            },
+            {
+              "output_id": 2,
+              "monotonic_ns": 80786142515000,
+              "start_ts": 176529337736351,
+              "first_rtp": 66150
+            }
+          ],
+          "audio_packets": 4878,
+          "nonzero_packets": 2292,
+          "volume_updates": 3,
+          "error_type": "CancelledError",
+          "error_detail": "",
+          "native_core_used": true,
+          "input_frames": 880588,
+          "native_submitted_frames": 858832,
+          "input_peak_frames": 23520,
+          "input_capacity_frames": 88200,
+          "native_submit_calls": 3651,
+          "group_failed": false,
+          "first_receipt_ns": 80785636301666,
+          "clock_anchor": "python_first_pcm_receipt_not_native_host_time",
+          "outputs": [
+            {
+              "output_id": 1,
+              "native_frames": 858832,
+              "consumed_frames": 858528,
+              "queue_peak_frames": 1059,
+              "queue_capacity_frames": 1408,
+              "first_presentation_ns": 80787636301666,
+              "native_pcm_sha256": "9c0dff391a1c1c4731d92729e32b438d17828f961cbefde48357dd9bc66f0f00",
+              "consumed_pcm_sha256": "eca42d5124128a946de67095cdd3cb35a1ff144b38b9094fbfa06e658b1679a4"
+            },
+            {
+              "output_id": 2,
+              "native_frames": 858832,
+              "consumed_frames": 858528,
+              "queue_peak_frames": 1293,
+              "queue_capacity_frames": 1408,
+              "first_presentation_ns": 80787636301666,
+              "native_pcm_sha256": "9c0dff391a1c1c4731d92729e32b438d17828f961cbefde48357dd9bc66f0f00",
+              "consumed_pcm_sha256": "eca42d5124128a946de67095cdd3cb35a1ff144b38b9094fbfa06e658b1679a4"
+            }
+          ],
+          "capture_cleanup_complete": true,
+          "capture_host_exited": true,
+          "capture_frames": 881059,
+          "capture_blocks": 1873,
+          "capture_first_source": {
+            "sourceSequence": 0,
+            "droppedBlocksBefore": 0,
+            "nowHostTime": 1938855199201,
+            "nowSampleTime": "58627.0",
+            "timebaseNumerator": 125,
+            "flags": 7,
+            "sampleTime": "57147.0",
+            "sourceChannels": 2,
+            "captureSession": "372411B9-340F-4069-846B-ABC78BFEA057",
+            "hostTime": 1938854459258,
+            "sourceFrames": 512,
+            "sourceRate": 48000,
+            "nowFlags": 7,
+            "timebaseDenominator": 3,
+            "sourceFrameStart": 0
+          },
+          "capture_last_source": {
+            "sourceFrames": 512,
+            "nowFlags": 7,
+            "sourceFrameStart": 958464,
+            "nowHostTime": 1939334432389,
+            "sourceChannels": 2,
+            "nowSampleTime": "1017091.0",
+            "sourceSequence": 1872,
+            "timebaseNumerator": 125,
+            "droppedBlocksBefore": 0,
+            "hostTime": 1939333692610,
+            "timebaseDenominator": 3,
+            "flags": 7,
+            "captureSession": "372411B9-340F-4069-846B-ABC78BFEA057",
+            "sourceRate": 48000,
+            "sampleTime": "1015611.0"
+          },
+          "capture_last_error": null,
+          "capture_error_code": null,
+          "capture_error_message": "",
+          "capture_error_cleanup_reported": null,
+          "capture_exclusion_policy": {
+            "registrationMonitoring": true,
+            "policy": "fail_stop_on_registration_identity_or_object_change",
+            "objectExcludedPIDs": [
+              27542
+            ],
+            "notRegisteredPIDs": [
+              27526,
+              27528
+            ]
+          },
+          "capture_permission": "not_inferred",
+          "drain_complete": false
+        }
+      },
+      "stop": {
+        "state": "stopped",
+        "already_stopped": false,
+        "cleanup_complete": true
+      },
+      "stop_confirmed_ns": 80806458804875,
+      "local_sound_runs": 9
+    }
+  ],
+  "events": [
+    {
+      "received_ns": 80759248807625,
+      "v": 1,
+      "id": "77a15e90-7b3c-42ba-8bb8-d6f893abcaf0",
+      "event": "result",
+      "session": null,
+      "payload": {
+        "protocol_version": 1,
+        "core_abi_version": 1,
+        "commands": [
+          "hello",
+          "scan",
+          "start",
+          "stop",
+          "shutdown",
+          "set_volume"
+        ],
+        "worker_pid": 27528,
+        "capabilities": {
+          "system_audio": true,
+          "live": true,
+          "capture": true,
+          "stereo_pair": false,
+          "realtime_volume": true,
+          "av_offset": false
+        },
+        "worker_poisoned": false
+      }
+    },
+    {
+      "received_ns": 80759581282250,
+      "v": 1,
+      "id": "76a70ccb-56a6-437a-b812-bf40ea10b082",
+      "event": "result",
+      "session": null,
+      "payload": {
+        "devices": [
+          {
+            "name": "\u5ba2\u5385",
+            "address": "192.168.0.104",
+            "model": "DeviceModel.HomePodGen2",
+            "identifier": "361AC6F1EFBF"
+          },
+          {
+            "name": "HomePod mini\u5c0f\u767d",
+            "address": "192.168.0.113",
+            "model": "DeviceModel.HomePodMini",
+            "identifier": "CE8FDBCE190F"
+          }
+        ]
+      }
+    },
+    {
+      "received_ns": 80759583641875,
+      "v": 1,
+      "id": "93c8282a-1269-4070-becb-e6248f58b8c7",
+      "event": "accepted",
+      "session": "368e3192-a2c0-4775-b286-a056b5d88c14",
+      "payload": {
+        "execution": "system_audio",
+        "actual_mode": "same_stereo"
+      }
+    },
+    {
+      "received_ns": 80759588713541,
+      "v": 1,
+      "id": "93c8282a-1269-4070-becb-e6248f58b8c7",
+      "event": "state",
+      "session": "368e3192-a2c0-4775-b286-a056b5d88c14",
+      "payload": {
+        "state": "preparing",
+        "execution": "system_audio",
+        "actual_mode": "same_stereo",
+        "acoustic_sync_verified": false
+      }
+    },
+    {
+      "received_ns": 80760491516333,
+      "v": 1,
+      "id": "93c8282a-1269-4070-becb-e6248f58b8c7",
+      "event": "state",
+      "session": "368e3192-a2c0-4775-b286-a056b5d88c14",
+      "payload": {
+        "state": "capturing",
+        "execution": "system_audio",
+        "actual_mode": "same_stereo",
+        "acoustic_sync_verified": false
+      }
+    },
+    {
+      "received_ns": 80761149579125,
+      "v": 1,
+      "id": "93c8282a-1269-4070-becb-e6248f58b8c7",
+      "event": "state",
+      "session": "368e3192-a2c0-4775-b286-a056b5d88c14",
+      "payload": {
+        "state": "streaming",
+        "execution": "system_audio",
+        "actual_mode": "same_stereo",
+        "acoustic_sync_verified": false
+      }
+    },
+    {
+      "received_ns": 80761210679083,
+      "v": 1,
+      "id": "8048194e-ee80-4d7d-be6a-07cd7ef0d407",
+      "event": "result",
+      "session": "368e3192-a2c0-4775-b286-a056b5d88c14",
+      "payload": {
+        "state": "volume_applied",
+        "volume_percent": 25,
+        "applied_outputs": 2
+      }
+    },
+    {
+      "received_ns": 80764231968166,
+      "v": 1,
+      "id": "b59d8ddd-27ab-4d7f-af1d-400481be1c34",
+      "event": "result",
+      "session": "368e3192-a2c0-4775-b286-a056b5d88c14",
+      "payload": {
+        "state": "volume_applied",
+        "volume_percent": 0,
+        "applied_outputs": 2
+      }
+    },
+    {
+      "received_ns": 80767358189291,
+      "v": 1,
+      "id": "b3e490ef-8121-4c86-a985-0196abcb92d5",
+      "event": "result",
+      "session": "368e3192-a2c0-4775-b286-a056b5d88c14",
+      "payload": {
+        "state": "volume_applied",
+        "volume_percent": 15,
+        "applied_outputs": 2
+      }
+    },
+    {
+      "received_ns": 80781244593875,
+      "v": 1,
+      "id": "93c8282a-1269-4070-becb-e6248f58b8c7",
+      "event": "state",
+      "session": "368e3192-a2c0-4775-b286-a056b5d88c14",
+      "payload": {
+        "state": "stopped"
+      }
+    },
+    {
+      "received_ns": 80781244692666,
+      "v": 1,
+      "id": "93c8282a-1269-4070-becb-e6248f58b8c7",
+      "event": "result",
+      "session": "368e3192-a2c0-4775-b286-a056b5d88c14",
+      "payload": {
+        "state": "stopped",
+        "cleanup_complete": true,
+        "report": {
+          "session": "368e3192-a2c0-4775-b286-a056b5d88c14",
+          "status": "failed",
+          "live": true,
+          "volume_percent": 15,
+          "acoustic_sync_verified": false,
+          "input_closed": true,
+          "hub_stopped": true,
+          "cleanup_complete": true,
+          "shared_start_ts": 176529336632438,
+          "send_origin_ns": 80761104397125,
+          "playback_origin_ns": 80762604397125,
+          "protocol_latency_samples": 66150,
+          "protocol_sample_rate": 44100,
+          "prepared_receivers": 2,
+          "anchor_uncertainty_ns": 8791,
+          "capture_to_receipt_uncertainty_ns": null,
+          "converter_delay_known": false,
+          "stream_releases": [
+            {
+              "output_id": 1,
+              "monotonic_ns": 80761105295458,
+              "start_ts": 176529336632438,
+              "first_rtp": 66150
+            },
+            {
+              "output_id": 2,
+              "monotonic_ns": 80761112151125,
+              "start_ts": 176529336632438,
+              "first_rtp": 66150
+            }
+          ],
+          "audio_packets": 4825,
+          "nonzero_packets": 2316,
+          "volume_updates": 3,
+          "error_type": "CancelledError",
+          "error_detail": "",
+          "native_core_used": true,
+          "input_frames": 871651,
+          "native_submitted_frames": 849424,
+          "input_peak_frames": 22580,
+          "input_capacity_frames": 88200,
+          "native_submit_calls": 3611,
+          "group_failed": false,
+          "first_receipt_ns": 80760604397125,
+          "clock_anchor": "python_first_pcm_receipt_not_native_host_time",
+          "outputs": [
+            {
+              "output_id": 1,
+              "native_frames": 849424,
+              "consumed_frames": 849376,
+              "queue_peak_frames": 1293,
+              "queue_capacity_frames": 1408,
+              "first_presentation_ns": 80762604397125,
+              "native_pcm_sha256": "84721c5a53d11a734f9dfd098d9b181631e77b6d2b6248dddaecd25db30acd66",
+              "consumed_pcm_sha256": "f7c1d1fd31ebf98e9618070aa0736e8bf7778c0a3c27d717e5dc78e89cabd80b"
+            },
+            {
+              "output_id": 2,
+              "native_frames": 849424,
+              "consumed_frames": 849024,
+              "queue_peak_frames": 1293,
+              "queue_capacity_frames": 1408,
+              "first_presentation_ns": 80762604397125,
+              "native_pcm_sha256": "84721c5a53d11a734f9dfd098d9b181631e77b6d2b6248dddaecd25db30acd66",
+              "consumed_pcm_sha256": "af2ef2da0dd08bc584067a57fdf1b615ec51573260b0dfb92e7450a4b67e32f9"
+            }
+          ],
+          "capture_cleanup_complete": true,
+          "capture_host_exited": true,
+          "capture_frames": 871651,
+          "capture_blocks": 1853,
+          "capture_first_source": {
+            "sourceFrames": 512,
+            "sourceSequence": 0,
+            "flags": 7,
+            "timebaseNumerator": 125,
+            "hostTime": 1938253746755,
+            "captureSession": "979329EC-35DF-43B6-A2F2-FD49F611F3FB",
+            "nowFlags": 7,
+            "droppedBlocksBefore": 0,
+            "sampleTime": "43395.0",
+            "sourceChannels": 2,
+            "sourceRate": 48000,
+            "sourceFrameStart": 0,
+            "nowHostTime": 1938254486460,
+            "nowSampleTime": "44874.0",
+            "timebaseDenominator": 3
+          },
+          "capture_last_source": {
+            "nowHostTime": 1938728599749,
+            "sourceFrames": 512,
+            "sampleTime": "991619.0",
+            "timebaseDenominator": 3,
+            "sourceFrameStart": 948224,
+            "sourceSequence": 1852,
+            "timebaseNumerator": 125,
+            "captureSession": "979329EC-35DF-43B6-A2F2-FD49F611F3FB",
+            "nowSampleTime": "993098.0",
+            "hostTime": 1938727860216,
+            "sourceChannels": 2,
+            "flags": 7,
+            "sourceRate": 48000,
+            "droppedBlocksBefore": 0,
+            "nowFlags": 7
+          },
+          "capture_last_error": null,
+          "capture_error_code": null,
+          "capture_error_message": "",
+          "capture_error_cleanup_reported": null,
+          "capture_exclusion_policy": {
+            "objectExcludedPIDs": [
+              27530
+            ],
+            "notRegisteredPIDs": [
+              27526,
+              27528
+            ],
+            "policy": "fail_stop_on_registration_identity_or_object_change",
+            "registrationMonitoring": true
+          },
+          "capture_permission": "not_inferred",
+          "drain_complete": false
+        }
+      }
+    },
+    {
+      "received_ns": 80781244854916,
+      "v": 1,
+      "id": "941545c6-74a5-422a-b5dc-c8741f18eeed",
+      "event": "result",
+      "session": "368e3192-a2c0-4775-b286-a056b5d88c14",
+      "payload": {
+        "state": "stopped",
+        "already_stopped": false,
+        "cleanup_complete": true
+      }
+    },
+    {
+      "received_ns": 80784305677416,
+      "v": 1,
+      "id": "9222bc10-2498-46bd-8986-ff844fed6003",
+      "event": "accepted",
+      "session": "ddf306e2-582e-4ebb-9637-3debe06ffb38",
+      "payload": {
+        "execution": "system_audio",
+        "actual_mode": "same_stereo"
+      }
+    },
+    {
+      "received_ns": 80784305735125,
+      "v": 1,
+      "id": "9222bc10-2498-46bd-8986-ff844fed6003",
+      "event": "state",
+      "session": "ddf306e2-582e-4ebb-9637-3debe06ffb38",
+      "payload": {
+        "state": "preparing",
+        "execution": "system_audio",
+        "actual_mode": "same_stereo",
+        "acoustic_sync_verified": false
+      }
+    },
+    {
+      "received_ns": 80785522492166,
+      "v": 1,
+      "id": "9222bc10-2498-46bd-8986-ff844fed6003",
+      "event": "state",
+      "session": "ddf306e2-582e-4ebb-9637-3debe06ffb38",
+      "payload": {
+        "state": "capturing",
+        "execution": "system_audio",
+        "actual_mode": "same_stereo",
+        "acoustic_sync_verified": false
+      }
+    },
+    {
+      "received_ns": 80786180458000,
+      "v": 1,
+      "id": "9222bc10-2498-46bd-8986-ff844fed6003",
+      "event": "state",
+      "session": "ddf306e2-582e-4ebb-9637-3debe06ffb38",
+      "payload": {
+        "state": "streaming",
+        "execution": "system_audio",
+        "actual_mode": "same_stereo",
+        "acoustic_sync_verified": false
+      }
+    },
+    {
+      "received_ns": 80786527681291,
+      "v": 1,
+      "id": "733844c5-aac8-492b-9d9a-2386f2a18de4",
+      "event": "result",
+      "session": "ddf306e2-582e-4ebb-9637-3debe06ffb38",
+      "payload": {
+        "state": "volume_applied",
+        "volume_percent": 25,
+        "applied_outputs": 2
+      }
+    },
+    {
+      "received_ns": 80789560366000,
+      "v": 1,
+      "id": "ba0355b7-5965-43d4-bda0-0fdd2c6b602b",
+      "event": "result",
+      "session": "ddf306e2-582e-4ebb-9637-3debe06ffb38",
+      "payload": {
+        "state": "volume_applied",
+        "volume_percent": 0,
+        "applied_outputs": 2
+      }
+    },
+    {
+      "received_ns": 80792598517666,
+      "v": 1,
+      "id": "409dc25e-38b8-4539-b9fc-9c0376a71967",
+      "event": "result",
+      "session": "ddf306e2-582e-4ebb-9637-3debe06ffb38",
+      "payload": {
+        "state": "volume_applied",
+        "volume_percent": 15,
+        "applied_outputs": 2
+      }
+    },
+    {
+      "received_ns": 80806458268958,
+      "v": 1,
+      "id": "9222bc10-2498-46bd-8986-ff844fed6003",
+      "event": "state",
+      "session": "ddf306e2-582e-4ebb-9637-3debe06ffb38",
+      "payload": {
+        "state": "stopped"
+      }
+    },
+    {
+      "received_ns": 80806458431791,
+      "v": 1,
+      "id": "9222bc10-2498-46bd-8986-ff844fed6003",
+      "event": "result",
+      "session": "ddf306e2-582e-4ebb-9637-3debe06ffb38",
+      "payload": {
+        "state": "stopped",
+        "cleanup_complete": true,
+        "report": {
+          "session": "ddf306e2-582e-4ebb-9637-3debe06ffb38",
+          "status": "failed",
+          "live": true,
+          "volume_percent": 15,
+          "acoustic_sync_verified": false,
+          "input_closed": true,
+          "hub_stopped": true,
+          "cleanup_complete": true,
+          "shared_start_ts": 176529337736351,
+          "send_origin_ns": 80786136301666,
+          "playback_origin_ns": 80787636301666,
+          "protocol_latency_samples": 66150,
+          "protocol_sample_rate": 44100,
+          "prepared_receivers": 2,
+          "anchor_uncertainty_ns": 5917,
+          "capture_to_receipt_uncertainty_ns": null,
+          "converter_delay_known": false,
+          "stream_releases": [
+            {
+              "output_id": 1,
+              "monotonic_ns": 80786136716875,
+              "start_ts": 176529337736351,
+              "first_rtp": 66150
+            },
+            {
+              "output_id": 2,
+              "monotonic_ns": 80786142515000,
+              "start_ts": 176529337736351,
+              "first_rtp": 66150
+            }
+          ],
+          "audio_packets": 4878,
+          "nonzero_packets": 2292,
+          "volume_updates": 3,
+          "error_type": "CancelledError",
+          "error_detail": "",
+          "native_core_used": true,
+          "input_frames": 880588,
+          "native_submitted_frames": 858832,
+          "input_peak_frames": 23520,
+          "input_capacity_frames": 88200,
+          "native_submit_calls": 3651,
+          "group_failed": false,
+          "first_receipt_ns": 80785636301666,
+          "clock_anchor": "python_first_pcm_receipt_not_native_host_time",
+          "outputs": [
+            {
+              "output_id": 1,
+              "native_frames": 858832,
+              "consumed_frames": 858528,
+              "queue_peak_frames": 1059,
+              "queue_capacity_frames": 1408,
+              "first_presentation_ns": 80787636301666,
+              "native_pcm_sha256": "9c0dff391a1c1c4731d92729e32b438d17828f961cbefde48357dd9bc66f0f00",
+              "consumed_pcm_sha256": "eca42d5124128a946de67095cdd3cb35a1ff144b38b9094fbfa06e658b1679a4"
+            },
+            {
+              "output_id": 2,
+              "native_frames": 858832,
+              "consumed_frames": 858528,
+              "queue_peak_frames": 1293,
+              "queue_capacity_frames": 1408,
+              "first_presentation_ns": 80787636301666,
+              "native_pcm_sha256": "9c0dff391a1c1c4731d92729e32b438d17828f961cbefde48357dd9bc66f0f00",
+              "consumed_pcm_sha256": "eca42d5124128a946de67095cdd3cb35a1ff144b38b9094fbfa06e658b1679a4"
+            }
+          ],
+          "capture_cleanup_complete": true,
+          "capture_host_exited": true,
+          "capture_frames": 881059,
+          "capture_blocks": 1873,
+          "capture_first_source": {
+            "sourceSequence": 0,
+            "droppedBlocksBefore": 0,
+            "nowHostTime": 1938855199201,
+            "nowSampleTime": "58627.0",
+            "timebaseNumerator": 125,
+            "flags": 7,
+            "sampleTime": "57147.0",
+            "sourceChannels": 2,
+            "captureSession": "372411B9-340F-4069-846B-ABC78BFEA057",
+            "hostTime": 1938854459258,
+            "sourceFrames": 512,
+            "sourceRate": 48000,
+            "nowFlags": 7,
+            "timebaseDenominator": 3,
+            "sourceFrameStart": 0
+          },
+          "capture_last_source": {
+            "sourceFrames": 512,
+            "nowFlags": 7,
+            "sourceFrameStart": 958464,
+            "nowHostTime": 1939334432389,
+            "sourceChannels": 2,
+            "nowSampleTime": "1017091.0",
+            "sourceSequence": 1872,
+            "timebaseNumerator": 125,
+            "droppedBlocksBefore": 0,
+            "hostTime": 1939333692610,
+            "timebaseDenominator": 3,
+            "flags": 7,
+            "captureSession": "372411B9-340F-4069-846B-ABC78BFEA057",
+            "sourceRate": 48000,
+            "sampleTime": "1015611.0"
+          },
+          "capture_last_error": null,
+          "capture_error_code": null,
+          "capture_error_message": "",
+          "capture_error_cleanup_reported": null,
+          "capture_exclusion_policy": {
+            "registrationMonitoring": true,
+            "policy": "fail_stop_on_registration_identity_or_object_change",
+            "objectExcludedPIDs": [
+              27542
+            ],
+            "notRegisteredPIDs": [
+              27526,
+              27528
+            ]
+          },
+          "capture_permission": "not_inferred",
+          "drain_complete": false
+        }
+      }
+    },
+    {
+      "received_ns": 80806458639708,
+      "v": 1,
+      "id": "d21e9897-ab6d-4734-8b58-74e88e6c6650",
+      "event": "result",
+      "session": "ddf306e2-582e-4ebb-9637-3debe06ffb38",
+      "payload": {
+        "state": "stopped",
+        "already_stopped": false,
+        "cleanup_complete": true
+      }
+    },
+    {
+      "received_ns": 80808622486791,
+      "v": 1,
+      "id": "9f0efb3c-4c57-497f-b367-1de32197d31b",
+      "event": "result",
+      "session": null,
+      "payload": {
+        "state": "shutdown",
+        "cleanup_complete": true
+      }
+    }
+  ],
+  "errors": [],
+  "devices": [
+    {
+      "name": "\u5ba2\u5385",
+      "address": "192.168.0.104",
+      "model": "DeviceModel.HomePodGen2",
+      "identifier": "361AC6F1EFBF"
+    },
+    {
+      "name": "HomePod mini\u5c0f\u767d",
+      "address": "192.168.0.113",
+      "model": "DeviceModel.HomePodMini",
+      "identifier": "CE8FDBCE190F"
+    }
+  ],
+  "worker_exit_code": 0,
+  "control_path_verified": true,
+  "worker_stderr_tail": ""
+}

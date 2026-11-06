@@ -1,0 +1,11 @@
+{
+  "CMakeLists.txt": "f906180b1a44aa2f07733c7cdb2aef27a2f465eed3f973ff0014db297a017af6",
+  "core/CMakeLists.txt": "310b06f809fe8cc26691066e268d77529f7dc37df6025208b54929cd3a686bbc",
+  "core/README.md": "b58239fd2b7d42660cb5d5b723c6b4d03d3c47f74df71335a5daaffc6162cb8c",
+  "core/include/flow/core.hpp": "cc80791029982e4fd0d3cd920b7f1bcf50cdb4d63542035209b1e12354fac64c",
+  "core/src/core.cpp": "1abee0bddee26a5f03fa0a29cc5cc499c98380ad4368fd5f7493c7fa34c5c4d2",
+  "examples/offline_demo.cpp": "87a15957c4afb15bffe1b0bd7252c18cda80700e8ddf71b09f9ffb0bf1a69c57",
+  "tests/CMakeLists.txt": "3857cff134497b019467e048ebd5e3e1b9ffcede4c9e2fa67b20a8855266077e",
+  "tests/core_contract_tests.cpp": "fd52bd738c3c689f8a15ff39af026e2a1ebc68fbfc1b1824c1847105a1a80ce8",
+  "tests/verify_prototype.py": "90c1600f5e133b5200df5ed77b717bc82b6cd4da4ea7047934f9531071b00a79"
+}

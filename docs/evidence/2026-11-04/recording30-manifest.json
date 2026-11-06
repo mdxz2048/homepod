@@ -1,0 +1,259 @@
+{
+  "version": 1,
+  "kind": "generated_discrete_5.1_test",
+  "purpose": "simultaneous different-content pulses; acoustic onset alignment requires measurement",
+  "source_sha256": "58e6e5fbc33c6f03fb97e1a11bf0d24a0828a3038f057f7fb32945fad307f719",
+  "sample_rate": 44100,
+  "duration_seconds": 30,
+  "frames": 1323000,
+  "channel_order": [
+    "FL",
+    "FR",
+    "FC",
+    "LFE",
+    "BL",
+    "BR"
+  ],
+  "outputs": {
+    "front": "front.wav",
+    "rear-left": "rear-left.wav",
+    "rear-right": "rear-right.wav"
+  },
+  "events": [
+    {
+      "source_time_seconds": 2,
+      "roles": [
+        "front"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 3,
+      "roles": [
+        "rear-left"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 4,
+      "roles": [
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 6,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 7,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 8,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 9,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 10,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 11,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 12,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 13,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 14,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 15,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 16,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 17,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 18,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 19,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 20,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 21,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 22,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 23,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 24,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 25,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 26,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 27,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 28,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    }
+  ],
+  "frequencies_hz": {
+    "front": 701,
+    "rear-left": 1297,
+    "rear-right": 2011
+  },
+  "source_onsets_verified_within_one_sample": true,
+  "acoustic_sync_verified": false
+}

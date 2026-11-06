@@ -1,0 +1,9 @@
+tap-capture-probe (macOS 14.2+)
+  --help                       Show help; never captures
+  --capture --seconds 5         Explicit finite capture (1...10s)
+  --pid PID                    Include only selected PID (repeatable)
+  --exclude-pid PID            Exclude sender/App PID (repeatable)
+  --output /absolute/file.wav   Optional Float32 WAV (never overwritten)
+Default selection after --capture: all processes except this host and exclusions.
+Capture requires the bundled Info.plist and macOS system-audio permission.
+This probe never plays audio, changes output routing/volume, or starts AirPlay.

@@ -1,0 +1,32 @@
+warning: 'source': Source files for target ProcessTapCaptureTests should be located under 'Tests/ProcessTapCaptureTests', 'Tests', or a custom sources path can be set with the 'path' property in Package.swift
+Building for debugging...
+[0/8] Write sources
+[1/8] Write tap-capture-probe-entitlement.plist
+[3/8] Write swift-version-3CD7052B146186F2.txt
+[4/8] Compiling CaptureRing CaptureRing.c
+[6/12] Compiling ProcessTapCapture Models.swift
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/process-tap-p0/source/Sources/ProcessTapCapture/Models.swift:94:57: error: cannot find 'kAudioTimeStampHostTimeValid' in scope
+ 92 |     public let nowTimestamp: CaptureTimestamp
+ 93 |     public let timebase: CaptureTimebase
+ 94 |     public var hostTimeIsValid: Bool { timestampFlags & kAudioTimeStampHostTimeValid != 0 }
+    |                                                         `- error: cannot find 'kAudioTimeStampHostTimeValid' in scope
+ 95 |     public var sampleTimeIsValid: Bool { timestampFlags & kAudioTimeStampSampleTimeValid != 0 }
+ 96 | 
+
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/process-tap-p0/source/Sources/ProcessTapCapture/Models.swift:95:59: error: cannot find 'kAudioTimeStampSampleTimeValid' in scope
+ 93 |     public let timebase: CaptureTimebase
+ 94 |     public var hostTimeIsValid: Bool { timestampFlags & kAudioTimeStampHostTimeValid != 0 }
+ 95 |     public var sampleTimeIsValid: Bool { timestampFlags & kAudioTimeStampSampleTimeValid != 0 }
+    |                                                           `- error: cannot find 'kAudioTimeStampSampleTimeValid' in scope
+ 96 | 
+ 97 |     /// Allocates and converts on the consumer side, never inside the IOProc.
+[7/12] Compiling ProcessTapCapture CaptureSource.swift
+[8/12] Emitting module ProcessTapCapture
+[9/12] Compiling ProcessTapCapture HALCaptureBackend.swift
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/process-tap-p0/source/Sources/ProcessTapCapture/HALCaptureBackend.swift:58:76: warning: forming 'UnsafeMutableRawPointer' to a variable of type 'CFString'; this is likely incorrect because 'CFString' may contain an object reference.
+ 56 |         var address = property(kAudioTapPropertyUID)
+ 57 |         var size = UInt32(MemoryLayout<CFString>.size)
+ 58 |         try check(AudioObjectGetPropertyData(tap, &address, 0, nil, &size, &uid), "Read tap UID")
+    |                                                                            `- warning: forming 'UnsafeMutableRawPointer' to a variable of type 'CFString'; this is likely incorrect because 'CFString' may contain an object reference.
+ 59 |         tapUID = uid as String
+ 60 |         var asbd = AudioStreamBasicDescription()

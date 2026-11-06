@@ -1,0 +1,3 @@
+PASS: fragmented stdout, bounded stderr, graceful shutdown
+PASS: malformed/oversize/exit/timeout failures and stale-process isolation
+PASS: session filtering, start/stop terminal race, repeated session, oversized-request rollback

@@ -1,0 +1,33 @@
+name: HomePodFlow
+options:
+  bundleIdPrefix: com.homepodflow
+  deploymentTarget:
+    macOS: "15.0"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "15.0"
+    CODE_SIGN_STYLE: Automatic
+    CODE_SIGN_IDENTITY: "-"
+    ENABLE_HARDENED_RUNTIME: YES
+targets:
+  HomePodFlow:
+    type: application
+    platform: macOS
+    sources: [HomePodFlow]
+    info:
+      path: HomePodFlow-Info.plist
+      properties:
+        LSUIElement: true
+        CFBundleDisplayName: HomePod Flow
+        NSAudioCaptureUsageDescription: 将 Mac 播放的声音发送到你选择的音箱。
+        NSLocalNetworkUsageDescription: 查找并连接同一网络中的 HomePod 音箱。
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.homepodflow.mac
+        PRODUCT_NAME: HomePod Flow
+        GENERATE_INFOPLIST_FILE: NO
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 0.3.0
+    scheme:
+      testTargets: []

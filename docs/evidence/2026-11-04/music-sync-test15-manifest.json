@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "kind": "generated_discrete_5.1_test",
+  "purpose": "simultaneous different-content pulses; acoustic onset alignment requires measurement",
+  "source_sha256": "b4a835a0252a37bff6b1651618128ac8090e82febab3dd7397e916a5fb1af9b7",
+  "sample_rate": 44100,
+  "duration_seconds": 15,
+  "frames": 661500,
+  "channel_order": [
+    "FL",
+    "FR",
+    "FC",
+    "LFE",
+    "BL",
+    "BR"
+  ],
+  "outputs": {
+    "front": "front.wav",
+    "rear-left": "rear-left.wav",
+    "rear-right": "rear-right.wav"
+  },
+  "events": [
+    {
+      "source_time_seconds": 0.5,
+      "roles": [
+        "front"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 1.0,
+      "roles": [
+        "rear-left"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 1.5,
+      "roles": [
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 3,
+      "roles": [
+        "front",
+        "rear-left"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 4,
+      "roles": [
+        "front",
+        "rear-left"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 5,
+      "roles": [
+        "front",
+        "rear-left"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 6,
+      "roles": [
+        "front",
+        "rear-left"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 7,
+      "roles": [
+        "front",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 8,
+      "roles": [
+        "front",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 9,
+      "roles": [
+        "front",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 10,
+      "roles": [
+        "front",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 11,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 12,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 13,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    },
+    {
+      "source_time_seconds": 14,
+      "roles": [
+        "front",
+        "rear-left",
+        "rear-right"
+      ],
+      "expected_onset_difference_ms": 0
+    }
+  ],
+  "frequencies_hz": {
+    "front": 440,
+    "rear-left": 660,
+    "rear-right": 880
+  },
+  "source_onsets_verified_within_one_sample": true,
+  "acoustic_sync_verified": false
+}

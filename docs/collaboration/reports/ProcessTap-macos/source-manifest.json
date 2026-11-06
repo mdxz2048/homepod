@@ -1,0 +1,14 @@
+{
+  "README.md": "6f0ff8f8367e3558e26bcf3790e453fe949323ae5d64cec13047fdf65926c5f0",
+  "Package.swift": "e26f82255f6ce21b10190f27b651a1bfcac322c714fe750553bc548b63a84236",
+  "Tests/ProcessTapCaptureTests/IndependentPCMTests.swift": "bda7be24273d6bb20c7e3e27ccf32a931097dcbb180fdaa87090911be97e12a0",
+  "Tests/ProcessTapCaptureTests/CaptureTests.swift": "323ed05a99afe4a6bdc700e376f5adc7d041229d7d95c9e38dc21d0d9ee8fc6e",
+  "scripts/package-probe.sh": "102f5096426d89bd0418110eb01f7b6a275ecd6fcc28117261afed62227efddf",
+  "scripts/Info.plist": "2996cfc3cd61c37ba8789076c1350c6191d2e92d1818d8810ce41ed5cc3f1b14",
+  "Sources/TapCaptureProbe/TapCaptureProbe.swift": "77ebdcc02ba91ad58311eea60531473dc92e446f4ecabafd464717c7b189b628",
+  "Sources/CaptureRing/CaptureRing.c": "c2134d357cc0870ec5d048defa418aa643fd27215267e1f1358c7fbbbd6d7d08",
+  "Sources/CaptureRing/include/CaptureRing.h": "6242d01eb16a0d163a9de139509faace701dc0efbda96f22a5277dec9fdcb4f0",
+  "Sources/ProcessTapCapture/HALCaptureBackend.swift": "4713a88dca60bdc4bed751583703ca8b1625b1f89ab2c2ce3bdc66d994fcd233",
+  "Sources/ProcessTapCapture/Models.swift": "fe308e13621cd08f88ebe2fffad7b7e730f9917fc466704f2339969ab219a562",
+  "Sources/ProcessTapCapture/CaptureSource.swift": "6a37b94b5bdb7362160724c808170be2fbf6b855124d45b1bf4b5a903287e92a"
+}

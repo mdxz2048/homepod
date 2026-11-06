@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleIdentifier</key><string>com.homepodflow.tap-capture-probe</string>
+<key>CFBundleName</key><string>HomePod Flow Capture Probe</string>
+<key>CFBundleExecutable</key><string>tap-capture-probe</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleShortVersionString</key><string>0.1.0</string>
+<key>LSMinimumSystemVersion</key><string>14.2</string>
+<key>LSUIElement</key><true/>
+<key>NSAudioCaptureUsageDescription</key><string>仅在你明确启动采集探针时，录制所选应用或系统输出，用于验证音频采集格式与时间戳；不会自动播放或上传。</string>
+</dict></plist>

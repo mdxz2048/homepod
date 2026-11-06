@@ -1,0 +1,251 @@
+[
+  {
+    "end": "stop",
+    "status": "passed",
+    "events": [
+      {
+        "v": 1,
+        "id": "native-start",
+        "event": "accepted",
+        "session": "b3386153-599a-479c-8dbe-c037f0ec80ca",
+        "payload": {
+          "execution": "offline"
+        }
+      },
+      {
+        "v": 1,
+        "id": "native-start",
+        "event": "state",
+        "session": "b3386153-599a-479c-8dbe-c037f0ec80ca",
+        "payload": {
+          "state": "preparing",
+          "execution": "offline"
+        }
+      },
+      {
+        "v": 1,
+        "id": "native-start",
+        "event": "state",
+        "session": "b3386153-599a-479c-8dbe-c037f0ec80ca",
+        "payload": {
+          "state": "stopped"
+        }
+      },
+      {
+        "v": 1,
+        "id": "native-start",
+        "event": "result",
+        "session": "b3386153-599a-479c-8dbe-c037f0ec80ca",
+        "payload": {
+          "state": "stopped",
+          "report": {
+            "status": "failed",
+            "network_used": false,
+            "error": "CancelledError: ",
+            "cleanup_complete": true,
+            "native_core_used": true,
+            "streaming": true,
+            "playback_origin_ns": 33866122540208,
+            "epoch": 1,
+            "input_frames": 2646000,
+            "input_frames_read": 4224,
+            "input_read_calls": 12,
+            "input_peak_read_frames": 352,
+            "input_closed": true,
+            "input_eof": false,
+            "native_submit_calls": 12,
+            "native_submitted_frames": 4224,
+            "block_frames": 352,
+            "queue_capacity_frames": 1408,
+            "capacity_waits": 5,
+            "hub_stopped": true,
+            "group_failed": true,
+            "group_error": "CancelledError()",
+            "acoustic_sync_verified": false,
+            "outputs": [
+              {
+                "output_id": 0,
+                "native_frames": 4224,
+                "native_callbacks": 12,
+                "consumed_frames": 2816,
+                "queue_peak_frames": 1408,
+                "queue_current_frames": 0,
+                "buffer_current_frames": 0,
+                "eof_reads": 0,
+                "first_presentation_ns": 33866122540208,
+                "last_presentation_ns": 33866210340661,
+                "native_pcm_sha256": "3f0173b64958e1d376096bbaa4acc463c5e1b568880cab972185815c8d7ddd15",
+                "consumed_pcm_sha256": "257c48ab57e828da909a37b42aafc72fec113cb7037fbda35a5280549fd6807d"
+              },
+              {
+                "output_id": 1,
+                "native_frames": 4224,
+                "native_callbacks": 12,
+                "consumed_frames": 4224,
+                "queue_peak_frames": 1408,
+                "queue_current_frames": 0,
+                "buffer_current_frames": 0,
+                "eof_reads": 0,
+                "first_presentation_ns": 33866122540208,
+                "last_presentation_ns": 33866210340661,
+                "native_pcm_sha256": "5b36b518d2c4301cb363df8eb719163ac9127e5fc94425c9ca20807c56a2625d",
+                "consumed_pcm_sha256": "5b36b518d2c4301cb363df8eb719163ac9127e5fc94425c9ca20807c56a2625d"
+              },
+              {
+                "output_id": 2,
+                "native_frames": 4224,
+                "native_callbacks": 12,
+                "consumed_frames": 2816,
+                "queue_peak_frames": 1408,
+                "queue_current_frames": 0,
+                "buffer_current_frames": 0,
+                "eof_reads": 0,
+                "first_presentation_ns": 33866122540208,
+                "last_presentation_ns": 33866210340661,
+                "native_pcm_sha256": "a31831aa4ae30bed8e9bb7c10986499175ea838c432679fb40371d93f8f9c14d",
+                "consumed_pcm_sha256": "cf39894081a3638ebbb0b7f16fafa00c808f6e13ef0a20691f3670de8f8f48ee"
+              }
+            ]
+          },
+          "cleanup_complete": true
+        }
+      },
+      {
+        "v": 1,
+        "id": "native-stop",
+        "event": "result",
+        "session": "b3386153-599a-479c-8dbe-c037f0ec80ca",
+        "payload": {
+          "state": "stopped",
+          "already_stopped": false,
+          "cleanup_complete": true
+        }
+      },
+      {
+        "v": 1,
+        "id": "shutdown",
+        "event": "result",
+        "session": null,
+        "payload": {
+          "state": "shutdown",
+          "cleanup_complete": true
+        }
+      }
+    ],
+    "stderr": ""
+  },
+  {
+    "end": "eof",
+    "status": "passed",
+    "events": [
+      {
+        "v": 1,
+        "id": "native-start",
+        "event": "accepted",
+        "session": "6712a10d-56df-451d-abb4-339942e4bba5",
+        "payload": {
+          "execution": "offline"
+        }
+      },
+      {
+        "v": 1,
+        "id": "native-start",
+        "event": "state",
+        "session": "6712a10d-56df-451d-abb4-339942e4bba5",
+        "payload": {
+          "state": "preparing",
+          "execution": "offline"
+        }
+      },
+      {
+        "v": 1,
+        "id": "native-start",
+        "event": "state",
+        "session": "6712a10d-56df-451d-abb4-339942e4bba5",
+        "payload": {
+          "state": "stopped"
+        }
+      },
+      {
+        "v": 1,
+        "id": "native-start",
+        "event": "result",
+        "session": "6712a10d-56df-451d-abb4-339942e4bba5",
+        "payload": {
+          "state": "stopped",
+          "report": {
+            "status": "failed",
+            "network_used": false,
+            "error": "CancelledError: ",
+            "cleanup_complete": true,
+            "native_core_used": true,
+            "streaming": true,
+            "playback_origin_ns": 33866449814916,
+            "epoch": 1,
+            "input_frames": 2646000,
+            "input_frames_read": 4224,
+            "input_read_calls": 12,
+            "input_peak_read_frames": 352,
+            "input_closed": true,
+            "input_eof": false,
+            "native_submit_calls": 12,
+            "native_submitted_frames": 4224,
+            "block_frames": 352,
+            "queue_capacity_frames": 1408,
+            "capacity_waits": 5,
+            "hub_stopped": true,
+            "group_failed": true,
+            "group_error": "CancelledError()",
+            "acoustic_sync_verified": false,
+            "outputs": [
+              {
+                "output_id": 0,
+                "native_frames": 4224,
+                "native_callbacks": 12,
+                "consumed_frames": 2816,
+                "queue_peak_frames": 1408,
+                "queue_current_frames": 0,
+                "buffer_current_frames": 0,
+                "eof_reads": 0,
+                "first_presentation_ns": 33866449814916,
+                "last_presentation_ns": 33866537615369,
+                "native_pcm_sha256": "3f0173b64958e1d376096bbaa4acc463c5e1b568880cab972185815c8d7ddd15",
+                "consumed_pcm_sha256": "257c48ab57e828da909a37b42aafc72fec113cb7037fbda35a5280549fd6807d"
+              },
+              {
+                "output_id": 1,
+                "native_frames": 4224,
+                "native_callbacks": 12,
+                "consumed_frames": 4224,
+                "queue_peak_frames": 1408,
+                "queue_current_frames": 0,
+                "buffer_current_frames": 0,
+                "eof_reads": 0,
+                "first_presentation_ns": 33866449814916,
+                "last_presentation_ns": 33866537615369,
+                "native_pcm_sha256": "5b36b518d2c4301cb363df8eb719163ac9127e5fc94425c9ca20807c56a2625d",
+                "consumed_pcm_sha256": "5b36b518d2c4301cb363df8eb719163ac9127e5fc94425c9ca20807c56a2625d"
+              },
+              {
+                "output_id": 2,
+                "native_frames": 4224,
+                "native_callbacks": 12,
+                "consumed_frames": 2816,
+                "queue_peak_frames": 1408,
+                "queue_current_frames": 0,
+                "buffer_current_frames": 0,
+                "eof_reads": 0,
+                "first_presentation_ns": 33866449814916,
+                "last_presentation_ns": 33866537615369,
+                "native_pcm_sha256": "a31831aa4ae30bed8e9bb7c10986499175ea838c432679fb40371d93f8f9c14d",
+                "consumed_pcm_sha256": "cf39894081a3638ebbb0b7f16fafa00c808f6e13ef0a20691f3670de8f8f48ee"
+              }
+            ]
+          },
+          "cleanup_complete": true
+        }
+      }
+    ],
+    "stderr": ""
+  }
+]

@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "contract_id": "homepod-flow-core-c-abi-v1",
+  "abi_version": 1,
+  "frozen_on": "2026-11-05",
+  "status": "frozen-app-boundary",
+  "app_boundary": "C ABI bridge.h; core.hpp is C++ source API only",
+  "calling_convention": {
+    "windows": "cdecl",
+    "other": "platform C"
+  },
+  "snapshot_headers": [
+    {
+      "snapshot": "bridge.h",
+      "source": "core/include/flow/bridge.h",
+      "sha256": "3448489856d8b8ebbc9a8147fac56de3531313ff2cc8c9c9757c7c4af61618df",
+      "bytes": 2966
+    },
+    {
+      "snapshot": "core.hpp",
+      "source": "core/include/flow/core.hpp",
+      "sha256": "cc80791029982e4fd0d3cd920b7f1bcf50cdb4d63542035209b1e12354fac64c",
+      "bytes": 3616
+    }
+  ],
+  "symbols": [
+    {
+      "name": "flow_v1_abi_version",
+      "declaration": "FLOW_API uint32_t FLOW_CALL flow_v1_abi_version(void);"
+    },
+    {
+      "name": "flow_v1_create",
+      "declaration": "FLOW_API flow_v1_engine* FLOW_CALL flow_v1_create(uint32_t sample_rate, uint32_t channels, flow_v1_prepare_fn prepare_fn, flow_v1_enqueue_fn enqueue_fn, flow_v1_close_fn close_fn, void* user);"
+    },
+    {
+      "name": "flow_v1_add_output",
+      "declaration": "FLOW_API int32_t FLOW_CALL flow_v1_add_output(flow_v1_engine* engine, uint32_t output_id, const uint32_t* input_channels, uint32_t channels, uint32_t scheduled_start);"
+    },
+    {
+      "name": "flow_v1_prepare",
+      "declaration": "FLOW_API int32_t FLOW_CALL flow_v1_prepare(flow_v1_engine* engine);"
+    },
+    {
+      "name": "flow_v1_start",
+      "declaration": "FLOW_API int32_t FLOW_CALL flow_v1_start(flow_v1_engine* engine, uint64_t epoch, int64_t now_ns, int64_t lead_ns, int64_t* origin_ns);"
+    },
+    {
+      "name": "flow_v1_submit",
+      "declaration": "FLOW_API int32_t FLOW_CALL flow_v1_submit(flow_v1_engine* engine, uint64_t epoch, uint64_t first_frame, const float* samples, uint64_t sample_count);"
+    },
+    {
+      "name": "flow_v1_stop",
+      "declaration": "FLOW_API int32_t FLOW_CALL flow_v1_stop(flow_v1_engine* engine);"
+    },
+    {
+      "name": "flow_v1_last_error",
+      "declaration": "FLOW_API const char* FLOW_CALL flow_v1_last_error(const flow_v1_engine* engine);"
+    },
+    {
+      "name": "flow_v1_destroy",
+      "declaration": "FLOW_API void FLOW_CALL flow_v1_destroy(flow_v1_engine* engine);"
+    }
+  ],
+  "status_codes": {
+    "FLOW_V1_OK": 0,
+    "FLOW_V1_INVALID_ARGUMENT": 1,
+    "FLOW_V1_INVALID_STATE": 2,
+    "FLOW_V1_UNSUPPORTED": 3,
+    "FLOW_V1_PREPARE_FAILED": 4,
+    "FLOW_V1_WOULD_BLOCK": 5,
+    "FLOW_V1_TRANSPORT_FAILED": 6,
+    "FLOW_V1_TIMESTAMP_DISCONTINUITY": 7,
+    "FLOW_V1_INTERNAL_ERROR": 8
+  },
+  "callbacks": {
+    "flow_v1_prepare_fn": "int32_t(void*, uint32_t output_id, uint32_t sample_rate, uint32_t channels)",
+    "flow_v1_enqueue_fn": "int32_t(void*, uint32_t output_id, uint32_t sample_rate, uint32_t channels, uint64_t epoch, uint64_t first_frame, int64_t presentation_ns, const float*, uint64_t sample_count)",
+    "flow_v1_close_fn": "void(void*, uint32_t output_id)"
+  },
+  "semantics": {
+    "audio": "float32 interleaved finite [-1,1], sample_count across all channels",
+    "routing": "zero-based channel copy; repeated indices duplicate; unique output IDs",
+    "time": "host monotonic ns; origin=now+positive lead; block=origin+floor(frame*1e9/rate)",
+    "epoch": "fixed after start; initial frame 0; strictly contiguous",
+    "memory": "input not retained; enqueue samples borrowed until callback return; callbacks/user alive through destroy; last_error borrowed until next modifying call/destroy",
+    "threading": "serialized; callbacks no reentry/throw; C exceptions contained; not real-time safe",
+    "prepare_failure": "close all attempted outputs including failing output; return Idle",
+    "input_rejection": "no enqueue; preserve Running and next_frame",
+    "backpressure": "any enqueue failure including WouldBlock closes all outputs/Faulted; no retry; no physical atomicity",
+    "stop": "idempotent; close active outputs; Idle/reset time; C configured bindings retained",
+    "destroy": "null safe; closes before user/callbacks may be released",
+    "success": "backend acceptance, not acoustic playback or measured sync"
+  },
+  "compatibility": {
+    "existing_symbols": "remain exported with identical signatures/meaning",
+    "status_codes": "no renumber/reinterpret",
+    "callbacks": "no calling convention/order/lifetime/payload changes",
+    "binary_scope": "same OS, architecture and supported runtime deployment target",
+    "cpp": "source compatibility only; no cross-compiler STL/vtable ABI",
+    "breaking_change": "new versioned symbols/major; v1 remains supported; never silently replace"
+  },
+  "validation": {
+    "hashes": "live/snapshot header SHA256 equal recorded values",
+    "symbols": "symbols[].name must all remain exported",
+    "old_consumer": "compile and link once against baseline headers/library; retain binary; replace ONLY shared library then rerun baseline tests and verify actual loader path",
+    "functional": "old semantic tests plus additive streaming tests; ABI pass is not acoustic/timing proof"
+  },
+  "baseline_consumer": {
+    "platform": "macOS arm64",
+    "remote_path": "core-api-v1-baseline/flow_bridge_c_tests",
+    "sha256": "9d677488a19f76fb84238985fa726f3e9328838ff5ea6feb5aae58bd69c47aef",
+    "verification_owner": "root and independent QA; result pending"
+  }
+}

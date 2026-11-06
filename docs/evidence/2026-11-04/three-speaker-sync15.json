@@ -1,0 +1,69 @@
+{
+  "status": "sender_completed_unverified_acoustically",
+  "acoustic_sync_verified": false,
+  "test_type": "different-stream shared-timeline experiment",
+  "duration_seconds": 15,
+  "volume_percent": 50.0,
+  "receivers": [
+    {
+      "role": "front",
+      "name": "客厅",
+      "ip": "192.168.0.104"
+    },
+    {
+      "role": "rear-left",
+      "name": "HomePod mini小黑",
+      "ip": "192.168.0.113"
+    },
+    {
+      "role": "rear-right",
+      "name": "HomePod mini小白",
+      "ip": "192.168.0.111"
+    }
+  ],
+  "shared_timeline_adapter": true,
+  "audio_transport": "ALAC-verbatim",
+  "audio_file": null,
+  "source_5_1_sha256": "b4a835a0252a37bff6b1651618128ac8090e82febab3dd7397e916a5fb1af9b7",
+  "source_channel_order": [
+    "FL",
+    "FR",
+    "FC",
+    "LFE",
+    "BL",
+    "BR"
+  ],
+  "routed_files": {
+    "front": "C:\\Users\\MDXZ\\OneDrive\\文档\\ChatGPT\\homepod\\artifacts\\sync15\\front.wav",
+    "rear-left": "C:\\Users\\MDXZ\\OneDrive\\文档\\ChatGPT\\homepod\\artifacts\\sync15\\rear-left.wav",
+    "rear-right": "C:\\Users\\MDXZ\\OneDrive\\文档\\ChatGPT\\homepod\\artifacts\\sync15\\rear-right.wav"
+  },
+  "incoming_timing_packets": 31,
+  "incoming_control_packets": 177,
+  "shared_ntp_origin": 17191843734390397732,
+  "sample_rate": 44100,
+  "protocol_latency_samples": 66150,
+  "streams_prepared": 3,
+  "sender_stream_starts": [
+    {
+      "host": "192.168.0.104",
+      "monotonic_ns": 51985859000000,
+      "start_ts": 176522952664321
+    },
+    {
+      "host": "192.168.0.111",
+      "monotonic_ns": 51985859000000,
+      "start_ts": 176522952664321
+    },
+    {
+      "host": "192.168.0.113",
+      "monotonic_ns": 51985859000000,
+      "start_ts": 176522952664321
+    }
+  ],
+  "audio_packets": 6204,
+  "nonzero_audio_packets": 343,
+  "subjective_sync_confirmed_by_user": true,
+  "user_feedback": "耳朵听到的声音基本是同步的",
+  "measurement_status": "Subjective listening passed; microphone timing and long-duration drift not measured."
+}

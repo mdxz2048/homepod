@@ -1,0 +1,44 @@
+test_active_session_stop_is_ordered_and_stale_stop_cannot_touch_it (test_worker_acceptance.WorkerLifecycleAcceptance.test_active_session_stop_is_ordered_and_stale_stop_cannot_touch_it) ... Executing <Task pending name='Task-2' coro=<WorkerLifecycleAcceptance.test_active_session_stop_is_ordered_and_stale_stop_cannot_touch_it() running at /Users/lvzhipeng/Developer/HomePodSpatialRouter/worker-m4-validation/source/tests/test_worker_acceptance.py:119> cb=[_run_until_complete_cb() at /opt/homebrew/Cellar/python@3.12/3.12.16/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py:181] created at /opt/homebrew/Cellar/python@3.12/3.12.16/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py:100> took 0.735 seconds
+ok
+test_ended_session_uuid_cannot_be_reused (test_worker_acceptance.WorkerLifecycleAcceptance.test_ended_session_uuid_cannot_be_reused) ... ok
+test_eof_cancels_active_session_without_fabricated_shutdown_id (test_worker_acceptance.WorkerLifecycleAcceptance.test_eof_cancels_active_session_without_fabricated_shutdown_id) ... ok
+test_local_file_or_route_failure_is_rejected_before_accepted (test_worker_acceptance.WorkerLifecycleAcceptance.test_local_file_or_route_failure_is_rejected_before_accepted) ... ok
+test_slow_cancel_poison_cannot_report_clean_stop_or_restart (test_worker_acceptance.WorkerLifecycleAcceptance.test_slow_cancel_poison_cannot_report_clean_stop_or_restart) ... ok
+test_uncertain_cleanup_poisons_worker_and_refuses_next_start (test_worker_acceptance.WorkerLifecycleAcceptance.test_uncertain_cleanup_poisons_worker_and_refuses_next_start) ... ok
+test_duplicate_id_is_unassociated_and_cannot_reexecute (test_worker_acceptance.WorkerProcessAcceptance.test_duplicate_id_is_unassociated_and_cannot_reexecute) ... ok
+test_hello_import_does_not_load_native_or_emit_playback_states (test_worker_acceptance.WorkerProcessAcceptance.test_hello_import_does_not_load_native_or_emit_playback_states) ... ok
+test_oversized_and_bad_utf8_lines_drain_then_hello_recovers (test_worker_acceptance.WorkerProcessAcceptance.test_oversized_and_bad_utf8_lines_drain_then_hello_recovers) ... ok
+test_partial_final_line_at_eof_never_executes_command (test_worker_acceptance.WorkerProcessAcceptance.test_partial_final_line_at_eof_never_executes_command) ... ok
+test_shutdown_exits_cleanly_while_parent_keeps_stdin_open (test_worker_acceptance.WorkerProcessAcceptance.test_shutdown_exits_cleanly_while_parent_keeps_stdin_open) ... ok
+test_busy_inspect_and_scan_do_not_disturb_playback (test_worker_protocol.WorkerProtocolTests.test_busy_inspect_and_scan_do_not_disturb_playback) ... ok
+test_cleanup_uncertainty_poison_prevents_another_session (test_worker_protocol.WorkerProtocolTests.test_cleanup_uncertainty_poison_prevents_another_session) ... ok
+test_completed_session_uuid_is_never_reused (test_worker_protocol.WorkerProtocolTests.test_completed_session_uuid_is_never_reused) ... ok
+test_duplicate_active_id_does_not_terminal_or_cancel_original (test_worker_protocol.WorkerProtocolTests.test_duplicate_active_id_does_not_terminal_or_cancel_original) ... ok
+test_hello_is_honest_and_does_not_call_runner (test_worker_protocol.WorkerProtocolTests.test_hello_is_honest_and_does_not_call_runner) ... ok
+test_id_limit_is_bounded_but_shutdown_still_available (test_worker_protocol.WorkerProtocolTests.test_id_limit_is_bounded_but_shutdown_still_available) ... ok
+test_native_runner_never_manufactures_missing_hub_stop_evidence (test_worker_protocol.WorkerProtocolTests.test_native_runner_never_manufactures_missing_hub_stop_evidence) ... ok
+test_offline_completion_does_not_invent_streaming_state (test_worker_protocol.WorkerProtocolTests.test_offline_completion_does_not_invent_streaming_state) ... ok
+test_production_preflight_rejects_missing_files_before_accepted (test_worker_protocol.WorkerProtocolTests.test_production_preflight_rejects_missing_files_before_accepted) ... ok
+test_related_errors_keep_valid_session_correlation (test_worker_protocol.WorkerProtocolTests.test_related_errors_keep_valid_session_correlation) ... ok
+test_runner_failure_with_cleanup_is_terminal_and_reusable (test_worker_protocol.WorkerProtocolTests.test_runner_failure_with_cleanup_is_terminal_and_reusable) ... ok
+test_stop_during_terminal_finalization_does_not_cancel_cleanup_reporting (test_worker_protocol.WorkerProtocolTests.test_stop_during_terminal_finalization_does_not_cancel_cleanup_reporting) ... ok
+test_stop_stale_session_and_restart_after_confirmed_cleanup (test_worker_protocol.WorkerProtocolTests.test_stop_stale_session_and_restart_after_confirmed_cleanup) ... ok
+test_subprocess_bad_line_and_oversize_recover_to_valid_request (test_worker_protocol.WorkerProtocolTests.test_subprocess_bad_line_and_oversize_recover_to_valid_request) ... ok
+test_subprocess_eof_cleans_an_active_session (test_worker_protocol.WorkerProtocolTests.test_subprocess_eof_cleans_an_active_session) ... ok
+test_subprocess_eof_without_lf_never_executes_final_request (test_worker_protocol.WorkerProtocolTests.test_subprocess_eof_without_lf_never_executes_final_request) ... ok
+test_subprocess_shutdown_exits_even_when_stdin_stays_open (test_worker_protocol.WorkerProtocolTests.test_subprocess_shutdown_exits_even_when_stdin_stays_open) ... ok
+test_subprocess_stop_then_restart_and_json_stdout_only (test_worker_protocol.WorkerProtocolTests.test_subprocess_stop_then_restart_and_json_stdout_only) ... FAIL
+test_validation_rejects_nan_unknown_fields_and_noncanonical_inputs (test_worker_protocol.WorkerProtocolTests.test_validation_rejects_nan_unknown_fields_and_noncanonical_inputs) ... ok
+
+======================================================================
+FAIL: test_subprocess_stop_then_restart_and_json_stdout_only (test_worker_protocol.WorkerProtocolTests.test_subprocess_stop_then_restart_and_json_stdout_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lvzhipeng/Developer/HomePodSpatialRouter/worker-m4-validation/source/tests/test_worker_protocol.py", line 303, in test_subprocess_stop_then_restart_and_json_stdout_only
+    self.assertEqual(process.returncode, 0)
+AssertionError: -6 != 0
+
+----------------------------------------------------------------------
+Ran 30 tests in 2.513s
+
+FAILED (failures=1)

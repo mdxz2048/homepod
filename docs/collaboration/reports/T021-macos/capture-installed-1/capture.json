@@ -1,0 +1,66 @@
+{
+  "capture_cleanup_complete": true,
+  "capture_host_exited": true,
+  "input_closed": true,
+  "capture_frames": 133593,
+  "capture_blocks": 284,
+  "capture_first_source": {
+    "timebaseDenominator": 3,
+    "timebaseNumerator": 125,
+    "flags": 7,
+    "sourceSequence": 0,
+    "sourceRate": 48000,
+    "sampleTime": "-821.0",
+    "hostTime": 1667576545585,
+    "nowHostTime": 1667577285331,
+    "sourceChannels": 2,
+    "captureSession": "FFA3813C-0F9B-4AD9-8810-72A00AF9124F",
+    "droppedBlocksBefore": 0,
+    "sourceFrames": 512,
+    "nowFlags": 7,
+    "sourceFrameStart": 0,
+    "nowSampleTime": "658.0"
+  },
+  "capture_last_source": {
+    "sourceChannels": 2,
+    "nowFlags": 7,
+    "timebaseDenominator": 3,
+    "nowSampleTime": "145555.0",
+    "flags": 7,
+    "sourceSequence": 283,
+    "nowHostTime": 1667649733703,
+    "sampleTime": "144075.0",
+    "hostTime": 1667648993922,
+    "sourceFrames": 512,
+    "sourceRate": 48000,
+    "droppedBlocksBefore": 0,
+    "sourceFrameStart": 144896,
+    "timebaseNumerator": 125,
+    "captureSession": "FFA3813C-0F9B-4AD9-8810-72A00AF9124F"
+  },
+  "capture_last_error": null,
+  "capture_error_code": null,
+  "capture_error_message": "",
+  "capture_error_cleanup_reported": null,
+  "capture_exclusion_policy": {
+    "objectExcludedPIDs": [
+      24408
+    ],
+    "notRegisteredPIDs": [
+      24406,
+      24407
+    ],
+    "registrationMonitoring": true,
+    "policy": "fail_stop_on_registration_identity_or_object_change"
+  },
+  "converter_delay_known": false,
+  "capture_permission": "not_inferred",
+  "drain_complete": false,
+  "acoustic_sync_verified": false,
+  "errors": [],
+  "test_sound_runs": 2,
+  "nonzero_samples": 168017,
+  "peak": 0.010165544226765633,
+  "rms": 0.0013742015977597291,
+  "capture_verified": true
+}

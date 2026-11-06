@@ -1,0 +1,21 @@
+{
+  "same_process": true,
+  "volume_percent": 15,
+  "seconds_per_run": 3,
+  "runs": [
+    {
+      "run": 1,
+      "status": "stream_sender_completed_unverified_acoustically",
+      "cleanup_complete": true,
+      "patches_restored": true,
+      "remaining_tasks": []
+    },
+    {
+      "run": 2,
+      "status": "stream_sender_completed_unverified_acoustically",
+      "cleanup_complete": true,
+      "patches_restored": true,
+      "remaining_tasks": []
+    }
+  ]
+}

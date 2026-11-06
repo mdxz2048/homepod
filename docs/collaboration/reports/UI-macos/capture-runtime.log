@@ -1,0 +1,403 @@
+Timestamp               Ty Process[PID:TID]
+2026-11-05 14:46:14.673 Df HomePod Flow[14095:74d28] [com.apple.AppKit:Application] Handling Quit AppleEvent
+2026-11-05 14:46:14.673 Df HomePod Flow[14095:74d28] [com.apple.AppKit:Application] -[NSApplication _setShouldRestoreStateOnNextLaunch:] shouldRestore=0
+2026-11-05 14:46:14.673 Df HomePod Flow[14095:74d28] [com.apple.AppKit:Application] Checking whether app should terminate
+2026-11-05 14:46:14.673 Df HomePod Flow[14095:74d28] [com.apple.AppKit:Application] Asking app delegate whether applicationShouldTerminate:
+2026-11-05 14:46:14.673 Df HomePod Flow[14095:74d28] [com.apple.AppKit:Application] replyToApplicationShouldTerminate:YES
+2026-11-05 14:46:14.673 Df HomePod Flow[14095:74d28] [com.apple.AppKit:Application] App termination approved
+2026-11-05 14:46:14.673 Df HomePod Flow[14095:74d28] [com.apple.AppKit:Application] -[NSApplication _unsetShouldRestoreStateOnNextLaunch]
+2026-11-05 14:46:14.674 Df HomePod Flow[14095:74d28] [com.apple.AppKit:Application] -[NSApplication _setShouldRestoreStateOnNextLaunch:] shouldRestore=0
+2026-11-05 14:46:14.674 Df HomePod Flow[14095:74d28] [com.apple.AppKit:Application] terminate:
+2026-11-05 14:46:14.674 Df HomePod Flow[14095:74d28] [com.apple.AppKit:AutomaticTermination] void _NSDisableAutomaticTerminationAndLog(NSString *) Terminating
+2026-11-05 14:46:14.674 Df HomePod Flow[14095:74d28] [com.apple.AppKit:StateRestoration] -[NSApplication _pushPersistentStateTerminationGeneration] sPersistentStateTerminateStackHeight -> 1
+2026-11-05 14:46:14.674 Df HomePod Flow[14095:74d28] [com.apple.AppKit:Application] Attempting sudden termination (1st attempt)
+2026-11-05 14:46:14.674 Df HomePod Flow[14095:74d28] [com.apple.AppKit:Application] Termination commencing
+2026-11-05 14:46:14.674 Df HomePod Flow[14095:74d28] [com.apple.AppKit:Application] Attempting sudden termination (2nd attempt)
+2026-11-05 14:46:14.719 Df HomePod Flow[14095:74d89] [com.apple.xpc:connection] [0xa768f0500] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-05 14:46:14.719 Df HomePod Flow[14095:74d89] [com.apple.xpc:session] [0xa7693cd70] Session canceled.
+2026-11-05 14:46:14.720 Df HomePod Flow[14095:74d51] [com.apple.UIIntelligenceSupport:xpc] agent connection cancelled (details: Session manually canceled)
+2026-11-05 14:46:14.720 Df HomePod Flow[14095:74d51] [com.apple.xpc:session] [0xa7693cd70] Disposing of session
+2026-11-05 14:46:14.720 Df HomePod Flow[14095:74d28] [com.apple.AppKit:Application] Termination complete. Exiting without sudden termination.
+2026-11-05 14:46:14.721 Df HomePod Flow[14095:74d51] [com.apple.xpc:connection] [0xa768f0500] activating connection: mach=true listener=false peer=false name=com.apple.powerlog.plxpclogger.xpc
+2026-11-05 14:46:14.721 Df HomePod Flow[14095:74d28] [com.apple.CoreAnalytics:client] Entering exit handler.
+2026-11-05 14:46:14.721 Df HomePod Flow[14095:74d28] [com.apple.CoreAnalytics:client] Queueing exit procedure onto XPC queue. Any further messages sent will be discarded. activeSendTransactions=0
+2026-11-05 14:46:14.721 Df HomePod Flow[14095:74d8a] [com.apple.CoreAnalytics:client] Cancelling XPC connection. Any further reply handler invocations will not retry messages
+2026-11-05 14:46:14.721 Df HomePod Flow[14095:74d8a] [com.apple.xpc:connection] [0xa754583c0] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-05 14:46:14.721 Df HomePod Flow[14095:74d28] [com.apple.CoreAnalytics:client] Exiting exit handler.
+2026-11-05 14:46:14.721 Df HomePod Flow[14095:74d8a] [com.apple.CoreAnalytics:client] XPC connection invalidated (daemon unloaded/disabled)
+2026-11-05 14:46:53.614 A  HomePod Flow[14250:75e29] (libsystem_info.dylib) Retrieve User by ID
+2026-11-05 14:46:53.614 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0x100a56da0] activating connection: mach=true listener=false peer=false name=com.apple.cfprefsd.daemon
+2026-11-05 14:46:53.614 Df HomePod Flow[14250:75e65] [com.apple.xpc:connection] [0x100a57e60] activating connection: mach=true listener=false peer=false name=com.apple.cfprefsd.agent
+2026-11-05 14:46:53.618 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0x100a568f0] activating connection: mach=true listener=false peer=false name=com.apple.coreservices.launchservicesd
+2026-11-05 14:46:53.619 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4858000] activating connection: mach=true listener=false peer=false name=com.apple.pasteboard.1
+2026-11-05 14:46:53.619 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4858140] activating connection: mach=true listener=false peer=false name=com.apple.distributed_notifications@Uv3
+2026-11-05 14:46:53.621 Df HomePod Flow[14250:75e29] [com.apple.AppKit:AutomaticTermination] void _NSDisableAutomaticTerminationAndLog(NSString *) No windows open yet
+2026-11-05 14:46:53.621 A  HomePod Flow[14250:75e29] (TCC) TCCAccessRequest() IPC
+2026-11-05 14:46:53.621 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4858280] activating connection: mach=true listener=false peer=false name=com.apple.tccd.system
+2026-11-05 14:46:53.624 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4858280] invalidated after the last release of the connection object
+2026-11-05 14:46:53.624 Df HomePod Flow[14250:75e29] [com.apple.SkyLight:default] server port 0x0000380f, session port 0x0000380f
+2026-11-05 14:46:53.628 Df HomePod Flow[14250:75e29] [com.apple.SkyLight:default] New connection 0xbd1f3 main
+2026-11-05 14:46:53.630 Df HomePod Flow[14250:75e29] [com.apple.processmanager:front-35286506] CHECKIN: pid=14250
+2026-11-05 14:46:53.632 Df HomePod Flow[14250:75e29] [com.apple.processmanager:front-35286506] CHECKEDIN: pid=14250 asn=0x0-0xde0de foreground=0
+2026-11-05 14:46:53.632 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4858280] activating connection: mach=false listener=true peer=false name=(anonymous)
+2026-11-05 14:46:53.632 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4858280] Connection returned listener port: 0x4203
+2026-11-05 14:46:53.632 Df HomePod Flow[14250:75e65] [com.apple.xpc:connection] [0xab48b8000] activating connection: mach=false listener=false peer=true name=com.apple.xpc.anonymous.0xab4858280.peer[637].0xab48b8000
+2026-11-05 14:46:53.633 Df HomePod Flow[14250:75e29] [com.apple.processmanager:front-35286506] FRONTLOGGING: version 1
+2026-11-05 14:46:53.633 Df HomePod Flow[14250:75e29] [com.apple.processmanager:front-35286506] Registered, pid=14250 ASN=0x0,0xde0de
+2026-11-05 14:46:53.633 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab48583c0] activating connection: mach=true listener=false peer=false name=com.apple.analyticsd
+2026-11-05 14:46:53.634 Df HomePod Flow[14250:75e65] [com.apple.xpc:connection] [0xab4858500] activating connection: mach=true listener=false peer=false name=com.apple.lsd.mapdb
+2026-11-05 14:46:53.634 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4858280] Connection returned listener port: 0x4203
+2026-11-05 14:46:53.635 Df HomePod Flow[14250:75e29] [com.apple.processmanager:front-35286506] BringForward: pid=14250 asn=0x0-0xde0de bringForward=0 foreground=0 uiElement=1 launchedByLS=1 modifiersCount=1 allDisabled=0
+2026-11-05 14:46:53.635 Df HomePod Flow[14250:75e29] [com.apple.processmanager:front-35286506] BringFrontModifier: pid=14250 asn=0x0-0xde0de Modifier 0 hideAfter=0 hideOthers=0 dontMakeFrontmost=0 mouseDown=0/0 seed=0/0
+2026-11-05 14:46:53.636 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Appearance] Current system appearance, (HLTB: 1), (SLS: 0)
+2026-11-05 14:46:53.636 Df HomePod Flow[14250:75e6f] [com.apple.CoreAnalytics:client] Received configuration update from daemon (initial)
+2026-11-05 14:46:53.637 Df HomePod Flow[14250:75e29] (libMobileGestalt.dylib) No persisted cache on this platform.
+2026-11-05 14:46:53.638 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Appearance] Current system appearance, (HLTB: 1), (SLS: 0)
+2026-11-05 14:46:53.639 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Appearance] Post-registration system appearance: (HLTB: 1)
+2026-11-05 14:46:53.641 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:Common] FBSWorkspace: endpoint monitoring is disabled.
+2026-11-05 14:46:53.641 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:Common] FBSWorkspace: default shell endpoint is disabled.
+2026-11-05 14:46:53.641 Df HomePod Flow[14250:75e29] [com.apple.runningboard:connection] Initializing connection
+2026-11-05 14:46:53.641 Df HomePod Flow[14250:75e29] [com.apple.runningboard:process] Removing all cached process handles
+2026-11-05 14:46:53.641 Df HomePod Flow[14250:75e65] [com.apple.runningboard:connection] Sending handshake request attempt #1 to server
+2026-11-05 14:46:53.641 Df HomePod Flow[14250:75e65] [com.apple.runningboard:connection] Creating connection to com.apple.runningboard
+2026-11-05 14:46:53.641 Df HomePod Flow[14250:75e65] [com.apple.xpc:connection] [0xab4858640] activating connection: mach=true listener=false peer=false name=com.apple.runningboard
+2026-11-05 14:46:53.641 A  HomePod Flow[14250:75e6f] (RunningBoardServices) didChangeInheritances
+2026-11-05 14:46:53.641 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4858280] Connection returned listener port: 0x4203
+2026-11-05 14:46:53.642 Df HomePod Flow[14250:75e65] [com.apple.runningboard:connection] Handshake succeeded
+2026-11-05 14:46:53.642 Df HomePod Flow[14250:75e65] [com.apple.runningboard:connection] Identity resolved as app<application.com.homepodflow.mac.51531596.51532198.BB90E332-4415-4A3C-8B6D-AA19AE737A90(501)>
+2026-11-05 14:46:53.645 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4858280] Connection returned listener port: 0x4203
+2026-11-05 14:46:53.648 A  HomePod Flow[14250:75e66] (AppIntents) appintents:register process
+2026-11-05 14:46:53.649 Df HomePod Flow[14250:75e66] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:46:53.649 Df HomePod Flow[14250:75e66] [com.apple.xpc:connection] [0xab48588c0] activating connection: mach=true listener=false peer=false name=com.apple.linkd.autoShortcut
+2026-11-05 14:46:53.649 Df HomePod Flow[14250:75e66] [com.apple.appintents:Connection] Activated connection to linkd (ApplicationService)
+2026-11-05 14:46:53.649 Df HomePod Flow[14250:75e66] [com.apple.xpc:connection] [0xab4858a00] activating connection: mach=false listener=true peer=false name=(anonymous)
+2026-11-05 14:46:53.649 Df HomePod Flow[14250:75e66] [com.apple.xpc:connection] [0xab4858a00] Connection returned listener port: 0x6403
+2026-11-05 14:46:53.650 Df HomePod Flow[14250:75e65] [com.apple.xpc:connection] [0xab48588c0] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-05 14:46:53.650 Df HomePod Flow[14250:75e65] [com.apple.appintents:Connection] Process Instance Registry XPC connection has been interrupted
+2026-11-05 14:46:53.650 E  HomePod Flow[14250:75e66] [com.apple.appintents:Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:46:53.650 E  HomePod Flow[14250:75e66] [com.apple.AppKit:Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 UserInfo={NSDebugDescription=<private>}
+2026-11-05 14:46:53.650 Df HomePod Flow[14250:75e6f] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:46:53.650 A  HomePod Flow[14250:75e6f] (AppIntents) appintents:register process
+2026-11-05 14:46:53.650 Df HomePod Flow[14250:75e6f] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:46:53.650 Df HomePod Flow[14250:75e6f] [com.apple.xpc:connection] [0xab4858c80] activating connection: mach=true listener=false peer=false name=com.apple.linkd.autoShortcut
+2026-11-05 14:46:53.650 Df HomePod Flow[14250:75e6f] [com.apple.appintents:Connection] Activated connection to linkd (ApplicationService)
+2026-11-05 14:46:53.650 Df HomePod Flow[14250:75e6f] [com.apple.xpc:connection] [0xab4858a00] Connection returned listener port: 0x6403
+2026-11-05 14:46:53.650 Df HomePod Flow[14250:75e66] [com.apple.xpc:connection] [0xab4858c80] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-05 14:46:53.650 Df HomePod Flow[14250:75e66] [com.apple.appintents:Connection] Process Instance Registry XPC connection has been interrupted
+2026-11-05 14:46:53.651 E  HomePod Flow[14250:75e6f] [com.apple.appintents:Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:46:53.651 E  HomePod Flow[14250:75e6f] [com.apple.appintents:Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e65] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:46:53.651 A  HomePod Flow[14250:75e65] (AppIntents) appintents:register process
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e65] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e65] [com.apple.xpc:connection] [0xab4858f00] activating connection: mach=true listener=false peer=false name=com.apple.linkd.autoShortcut
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e65] [com.apple.appintents:Connection] Activated connection to linkd (ApplicationService)
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e65] [com.apple.xpc:connection] [0xab4858a00] Connection returned listener port: 0x6403
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e6f] [com.apple.xpc:connection] [0xab4858f00] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e6f] [com.apple.appintents:Connection] Process Instance Registry XPC connection has been interrupted
+2026-11-05 14:46:53.651 E  HomePod Flow[14250:75e65] [com.apple.appintents:Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:46:53.651 E  HomePod Flow[14250:75e65] [com.apple.appintents:Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e66] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:46:53.651 A  HomePod Flow[14250:75e66] (AppIntents) appintents:register process
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e66] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e66] [com.apple.xpc:connection] [0xab4859180] activating connection: mach=true listener=false peer=false name=com.apple.linkd.autoShortcut
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e66] [com.apple.appintents:Connection] Activated connection to linkd (ApplicationService)
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e66] [com.apple.xpc:connection] [0xab4858a00] Connection returned listener port: 0x6403
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e65] [com.apple.xpc:connection] [0xab4859180] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-05 14:46:53.651 Df HomePod Flow[14250:75e65] [com.apple.appintents:Connection] Process Instance Registry XPC connection has been interrupted
+2026-11-05 14:46:53.651 E  HomePod Flow[14250:75e65] [com.apple.appintents:Connection] Will NOT re-try to establish the connection
+2026-11-05 14:46:53.651 E  HomePod Flow[14250:75e66] [com.apple.appintents:Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:46:53.651 E  HomePod Flow[14250:75e66] [com.apple.appintents:Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:46:53.655 A  HomePod Flow[14250:75e65] (CoreFoundation) Loading Preferences From User CFPrefsD
+2026-11-05 14:46:53.655 Df HomePod Flow[14250:75e29] [com.apple.dt.xctest:Default] Registering for test daemon availability notify post.
+2026-11-05 14:46:53.655 Df HomePod Flow[14250:75e29] [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-11-05 14:46:53.655 Df HomePod Flow[14250:75e29] [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-11-05 14:46:53.656 Df HomePod Flow[14250:75e29] [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-11-05 14:46:53.734 A  HomePod Flow[14250:75e29] (CoreFoundation) Loading Preferences From System CFPrefsD
+2026-11-05 14:46:53.735 Df HomePod Flow[14250:75e29] (libMobileGestalt.dylib) couldn't load support library
+2026-11-05 14:46:53.735 Df HomePod Flow[14250:75e29] (libMobileGestalt.dylib) called dummy function!
+2026-11-05 14:46:53.736 Df HomePod Flow[14250:75e29] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.gms.availability.notification
+2026-11-05 14:46:53.736 Df HomePod Flow[14250:75e29] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.os-eligibility-domain.change.greymatter
+2026-11-05 14:46:53.736 Df HomePod Flow[14250:75e29] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.language.changed
+2026-11-05 14:46:53.736 Df HomePod Flow[14250:75e29] [com.apple.WritingTools:Default] isAvailable value changed: isMDMAllowed = true, gmAvailable (current) = false
+2026-11-05 14:46:53.737 A  HomePod Flow[14250:75e65] (RunningBoardServices) didChangeInheritances
+2026-11-05 14:46:53.738 A  HomePod Flow[14250:75e29] (CoreFoundation) Loading Preferences From User CFPrefsD
+2026-11-05 14:46:53.740 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4859400] activating connection: mach=true listener=false peer=false name=com.apple.coreservices.appleevents
+2026-11-05 14:46:53.740 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4858280] Connection returned listener port: 0x4203
+2026-11-05 14:46:53.740 Df HomePod Flow[14250:75e29] [com.apple.processmanager:front-35286506] SignalReady: pid=14250 asn=0x0-0xde0de
+2026-11-05 14:46:53.740 Df HomePod Flow[14250:75e29] [com.apple.processmanager:front-35286506] SIGNAL: pid=14250 asn=0x0x-0xde0de
+2026-11-05 14:46:53.741 A  HomePod Flow[14250:75e29] (CoreFoundation) Loading Preferences From System CFPrefsD
+2026-11-05 14:46:53.742 A  HomePod Flow[14250:75e29] (libsystem_info.dylib) Membership API: translate identifier
+2026-11-05 14:46:53.746 Df HomePod Flow[14250:75e29] [com.apple.AppKit:AutomaticTermination] void _NSDisableAutomaticTerminationAndLog(NSString *) Restoring windows
+2026-11-05 14:46:53.746 Df HomePod Flow[14250:75e29] [com.apple.AppKit:StateRestoration] -[NSApplication _reopenWindowsAsNecessaryIncludingRestorableState:withFullFidelity:completionHandler:] shouldRestoreState=1 hasPersistentStateToRestore=0 shouldStillRestoreStateAfterPrompting=0
+2026-11-05 14:46:53.746 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4859680] activating connection: mach=true listener=false peer=false name=com.apple.window_proxies
+2026-11-05 14:46:53.746 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4859680] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-05 14:46:53.746 Df HomePod Flow[14250:75e29] [com.apple.AppKit:AutomaticTermination] void _NSEnableAutomaticTerminationAndLog(NSString *) Restoring windows
+2026-11-05 14:46:53.749 A  HomePod Flow[14250:75e29] (CoreFoundation) Loading Preferences From User CFPrefsD
+2026-11-05 14:46:53.750 A  HomePod Flow[14250:75e29] (CoreFoundation) Loading Preferences From User CFPrefsD
+2026-11-05 14:46:53.758 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Appearance] NSApp cache appearance:
+-NSRequiresAquaSystemAppearance: 0
+-appearance: (null)
+-effectiveAppearance: <NSCompositeAppearance: 0xab54546e0
+ (
+    "<NSAquaAppearance: 0xab5454780>",
+    "<NSSystemAppearance: 0xab5454460>"
+)>
+2026-11-05 14:46:53.761 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4859a40] activating connection: mach=true listener=false peer=false name=com.apple.fonts
+2026-11-05 14:46:53.761 Df HomePod Flow[14250:75e65] [com.apple.xpc:connection] [0xab4859cc0] activating connection: mach=true listener=false peer=false name=com.apple.dock.fullscreen
+2026-11-05 14:46:53.763 Df HomePod Flow[14250:75e65] [com.apple.corespotlight:index] (<private>) deleteSearchableItemsWithDomainIdentifiers, protectionClass:(null), domainIdentifiers number:1
+2026-11-05 14:46:53.763 A  HomePod Flow[14250:75e65] (CoreSpotlight) delete-domains
+2026-11-05 14:46:53.763 Df HomePod Flow[14250:75e66] [com.apple.corespotlight:index] CSInlineDonation:<private>: Skipping donation (feature flag disabled)
+2026-11-05 14:46:53.763 Df HomePod Flow[14250:75e66] (CoreSpotlight) sConnectionName: com.apple.spotlight.IndexAgent
+2026-11-05 14:46:53.763 Df HomePod Flow[14250:75e66] (CoreSpotlight) Start service name com.apple.spotlight.IndexAgent
+2026-11-05 14:46:53.763 Df HomePod Flow[14250:75e66] [com.apple.xpc:connection] [0xab4859b80] activating connection: mach=true listener=false peer=false name=com.apple.spotlight.IndexAgent
+2026-11-05 14:46:53.763 Df HomePod Flow[14250:75e29] [com.apple.BoardServices:XPCErrors] [C:1] Alloc com.apple.controlcenter.statusitems
+2026-11-05 14:46:53.763 Df HomePod Flow[14250:75e29] [com.apple.xpc:connection] [0xab4859f40] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-11-05 14:46:53.763 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:Common] FBSWorkspace registering source: <private>
+2026-11-05 14:46:53.763 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:Common] FBSWorkspace connected to endpoint : <private>
+2026-11-05 14:46:53.763 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0xab5456bc0 <private>> attempting immediate handshake from activate
+2026-11-05 14:46:53.764 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0xab5456bc0 <private>> sent handshake
+2026-11-05 14:46:53.764 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneExtension] Realizing settings extension __NSStatusItemSceneHostSettings__ on FBSSceneSettings
+2026-11-05 14:46:53.764 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneExtension] Realizing settings extension __NSStatusItemSceneClientSettings__ on FBSSceneClientSettings
+2026-11-05 14:46:53.764 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneExtension] Realizing settings extension FBSSceneSettingsCore on FBSSceneSettings
+2026-11-05 14:46:53.765 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneExtension] Realizing settings extension FBSSceneClientSettingsCore on FBSSceneClientSettings
+2026-11-05 14:46:53.765 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:Common] Requesting scene <FBSScene: 0xab5457020; com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34> from com.apple.controlcenter.statusitems
+2026-11-05 14:46:53.765 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneExtension] Realizing settings extension FBSSceneTransitionContextCore on FBSSceneTransitionContext
+2026-11-05 14:46:53.766 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneExtension] Realizing settings extension __NSHostedViewSceneSettings__ on FBSSceneSettings
+2026-11-05 14:46:53.766 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneExtension] Realizing settings extension __NSClientHostedViewSceneSettings__ on FBSSceneClientSettings
+2026-11-05 14:46:53.766 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneExtension] Realizing settings extension __NSStatusItemAuxiliaryViewSceneSettings__ on FBSSceneSettings
+2026-11-05 14:46:53.766 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneExtension] Realizing settings extension __NSClientStatusItemAuxiliaryViewSceneSettings__ on FBSSceneClientSettings
+2026-11-05 14:46:53.767 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:Common] Requesting scene <FBSScene: 0xab5456e40; com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34-Aux[1]-NSStatusItemView> from com.apple.controlcenter.statusitems
+2026-11-05 14:46:53.768 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34-Aux[1]-NSStatusItemView] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:46:53.768 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34-Aux[1]-NSStatusItemView] Dropping transition context because the scene is reconnecting
+2026-11-05 14:46:53.768 A  HomePod Flow[14250:75e66] (RunningBoardServices) didChangeInheritances
+2026-11-05 14:46:53.771 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34-Aux[1]-NSStatusItemView] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:46:53.771 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34-Aux[1]-NSStatusItemView] Dropping transition context because the scene is reconnecting
+2026-11-05 14:46:53.771 Df HomePod Flow[14250:75e6f] [com.apple.FrontBoard:Common] Request for <FBSScene: 0xab5457020; com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34> complete!
+2026-11-05 14:46:53.772 Df HomePod Flow[14250:75e6f] [com.apple.FrontBoard:Common] Request for <FBSScene: 0xab5456e40; com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34-Aux[1]-NSStatusItemView> complete!
+2026-11-05 14:46:53.773 Df HomePod Flow[14250:75e66] [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0xab5456bc0 <private>> Reconnecting scene com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34
+2026-11-05 14:46:53.773 Df HomePod Flow[14250:75e66] [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0xab5456bc0 <private>> Reconnecting scene com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34-Aux[1]-NSStatusItemView
+2026-11-05 14:46:53.778 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34-Aux[1]-NSStatusItemView] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:46:53.781 Df HomePod Flow[14250:75e66] [com.apple.BoardServices:XPCErrors] [C:2] Alloc <private>
+2026-11-05 14:46:53.781 Df HomePod Flow[14250:75e66] [com.apple.xpc:connection] [0xab485a080] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-11-05 14:46:53.781 E  HomePod Flow[14250:75e29] [com.apple.AppKit:General] <private>
+2026-11-05 14:46:53.782 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34-Aux[1]-NSStatusItemView] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:46:53.795 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34-Aux[1]-NSStatusItemView] Received action(s) in scene-update: NSSceneFenceAction
+2026-11-05 14:46:53.798 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34-Aux[1]-NSStatusItemView] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:46:53.799 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34-Aux[1]-NSStatusItemView] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:46:53.802 Df HomePod Flow[14250:75e29] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:7831FA7F-2604-4661-8449-7290D92BCD34] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:46:53.881 A  HomePod Flow[14250:75e65] (CoreSpotlight) end-index-batch
+2026-11-05 14:46:53.881 Df HomePod Flow[14250:75e65] [com.apple.corespotlight:index] *warn* MailCS ======%%% _setMailMessageAttributes skip:1
+2026-11-05 14:46:53.882 A  HomePod Flow[14250:75e65] (CoreSpotlight) index-items
+2026-11-05 14:46:53.882 Df HomePod Flow[14250:75e65] [com.apple.corespotlight:index] CSInlineDonation:<private>: Skipping donation (feature flag disabled)
+2026-11-05 14:46:58.757 Df HomePod Flow[14250:75e29] [com.apple.AppKit:AutomaticTermination] void _updateToReflectAutomaticTerminationState(void) Setting _kLSApplicationWouldBeTerminatedByTALKey=1
+2026-11-05 14:47:03.337 Df HomePod Flow[14250:75eeb] [com.apple.launchservices:db] NotifyToken::RegisterDispatch(user.uid.501.com.apple.LaunchServices.database) fired for session key <private>
+2026-11-05 14:47:04.703 Df HomePod Flow[14250:75eeb] [com.apple.launchservices:default] LSExceptions shared instance invalidated for timeout.
+2026-11-05 14:47:08.062 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Application] Handling Quit AppleEvent
+2026-11-05 14:47:08.062 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Application] -[NSApplication _setShouldRestoreStateOnNextLaunch:] shouldRestore=0
+2026-11-05 14:47:08.062 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Application] Checking whether app should terminate
+2026-11-05 14:47:08.062 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Application] Asking app delegate whether applicationShouldTerminate:
+2026-11-05 14:47:08.062 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Application] replyToApplicationShouldTerminate:YES
+2026-11-05 14:47:08.063 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Application] App termination approved
+2026-11-05 14:47:08.063 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Application] -[NSApplication _unsetShouldRestoreStateOnNextLaunch]
+2026-11-05 14:47:08.063 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Application] -[NSApplication _setShouldRestoreStateOnNextLaunch:] shouldRestore=0
+2026-11-05 14:47:08.063 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Application] terminate:
+2026-11-05 14:47:08.063 Df HomePod Flow[14250:75e29] [com.apple.AppKit:AutomaticTermination] void _NSDisableAutomaticTerminationAndLog(NSString *) Terminating
+2026-11-05 14:47:08.063 Df HomePod Flow[14250:75e29] [com.apple.AppKit:StateRestoration] -[NSApplication _pushPersistentStateTerminationGeneration] sPersistentStateTerminateStackHeight -> 1
+2026-11-05 14:47:08.063 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Application] Attempting sudden termination (1st attempt)
+2026-11-05 14:47:08.063 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Application] Termination commencing
+2026-11-05 14:47:08.063 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Application] Attempting sudden termination (2nd attempt)
+2026-11-05 14:47:08.070 Df HomePod Flow[14250:75e29] [com.apple.AppKit:Application] Termination complete. Exiting without sudden termination.
+2026-11-05 14:47:08.071 Df HomePod Flow[14250:75eeb] [com.apple.xpc:connection] [0xab485a1c0] activating connection: mach=true listener=false peer=false name=com.apple.powerlog.plxpclogger.xpc
+2026-11-05 14:47:08.071 Df HomePod Flow[14250:75e29] [com.apple.CoreAnalytics:client] Entering exit handler.
+2026-11-05 14:47:08.071 Df HomePod Flow[14250:75e29] [com.apple.CoreAnalytics:client] Queueing exit procedure onto XPC queue. Any further messages sent will be discarded. activeSendTransactions=0
+2026-11-05 14:47:08.071 Df HomePod Flow[14250:75e65] [com.apple.CoreAnalytics:client] Cancelling XPC connection. Any further reply handler invocations will not retry messages
+2026-11-05 14:47:08.071 Df HomePod Flow[14250:75e65] [com.apple.xpc:connection] [0xab48583c0] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-05 14:47:08.071 Df HomePod Flow[14250:75e29] [com.apple.CoreAnalytics:client] Exiting exit handler.
+2026-11-05 14:47:08.703 A  HomePod Flow[14254:75f86] (libsystem_info.dylib) Retrieve User by ID
+2026-11-05 14:47:08.705 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0x10513ee30] activating connection: mach=true listener=false peer=false name=com.apple.cfprefsd.daemon
+2026-11-05 14:47:08.705 Df HomePod Flow[14254:75f8c] [com.apple.xpc:connection] [0x10513fef0] activating connection: mach=true listener=false peer=false name=com.apple.cfprefsd.agent
+2026-11-05 14:47:08.710 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0x10513e910] activating connection: mach=true listener=false peer=false name=com.apple.coreservices.launchservicesd
+2026-11-05 14:47:08.711 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4854000] activating connection: mach=true listener=false peer=false name=com.apple.pasteboard.1
+2026-11-05 14:47:08.711 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4854140] activating connection: mach=true listener=false peer=false name=com.apple.distributed_notifications@Uv3
+2026-11-05 14:47:08.715 Df HomePod Flow[14254:75f86] [com.apple.AppKit:AutomaticTermination] void _NSDisableAutomaticTerminationAndLog(NSString *) No windows open yet
+2026-11-05 14:47:08.715 A  HomePod Flow[14254:75f86] (TCC) TCCAccessRequest() IPC
+2026-11-05 14:47:08.715 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4854280] activating connection: mach=true listener=false peer=false name=com.apple.tccd.system
+2026-11-05 14:47:08.719 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4854280] invalidated after the last release of the connection object
+2026-11-05 14:47:08.720 Df HomePod Flow[14254:75f86] [com.apple.SkyLight:default] server port 0x00003107, session port 0x00003107
+2026-11-05 14:47:08.728 Df HomePod Flow[14254:75f86] [com.apple.SkyLight:default] New connection 0xf564b main
+2026-11-05 14:47:08.731 Df HomePod Flow[14254:75f86] [com.apple.processmanager:front-35286506] CHECKIN: pid=14254
+2026-11-05 14:47:08.734 Df HomePod Flow[14254:75f86] [com.apple.processmanager:front-35286506] CHECKEDIN: pid=14254 asn=0x0-0xe00e0 foreground=0
+2026-11-05 14:47:08.734 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4854280] activating connection: mach=false listener=true peer=false name=(anonymous)
+2026-11-05 14:47:08.734 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4854280] Connection returned listener port: 0x5303
+2026-11-05 14:47:08.734 Df HomePod Flow[14254:75f8c] [com.apple.xpc:connection] [0xab48b4000] activating connection: mach=false listener=false peer=true name=com.apple.xpc.anonymous.0xab4854280.peer[637].0xab48b4000
+2026-11-05 14:47:08.736 Df HomePod Flow[14254:75f86] [com.apple.processmanager:front-35286506] FRONTLOGGING: version 1
+2026-11-05 14:47:08.736 Df HomePod Flow[14254:75f86] [com.apple.processmanager:front-35286506] Registered, pid=14254 ASN=0x0,0xe00e0
+2026-11-05 14:47:08.736 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab48543c0] activating connection: mach=true listener=false peer=false name=com.apple.analyticsd
+2026-11-05 14:47:08.736 Df HomePod Flow[14254:75f8c] [com.apple.xpc:connection] [0xab4854500] activating connection: mach=true listener=false peer=false name=com.apple.lsd.mapdb
+2026-11-05 14:47:08.737 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4854280] Connection returned listener port: 0x5303
+2026-11-05 14:47:08.738 Df HomePod Flow[14254:75f86] [com.apple.processmanager:front-35286506] BringForward: pid=14254 asn=0x0-0xe00e0 bringForward=0 foreground=0 uiElement=1 launchedByLS=1 modifiersCount=1 allDisabled=0
+2026-11-05 14:47:08.738 Df HomePod Flow[14254:75f86] [com.apple.processmanager:front-35286506] BringFrontModifier: pid=14254 asn=0x0-0xe00e0 Modifier 0 hideAfter=0 hideOthers=0 dontMakeFrontmost=0 mouseDown=0/0 seed=0/0
+2026-11-05 14:47:08.738 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Appearance] Current system appearance, (HLTB: 1), (SLS: 0)
+2026-11-05 14:47:08.740 Df HomePod Flow[14254:75f8d] [com.apple.CoreAnalytics:client] Received configuration update from daemon (initial)
+2026-11-05 14:47:08.740 Df HomePod Flow[14254:75f86] (libMobileGestalt.dylib) No persisted cache on this platform.
+2026-11-05 14:47:08.741 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Appearance] Current system appearance, (HLTB: 1), (SLS: 0)
+2026-11-05 14:47:08.742 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Appearance] Post-registration system appearance: (HLTB: 1)
+2026-11-05 14:47:08.744 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:Common] FBSWorkspace: endpoint monitoring is disabled.
+2026-11-05 14:47:08.744 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:Common] FBSWorkspace: default shell endpoint is disabled.
+2026-11-05 14:47:08.744 Df HomePod Flow[14254:75f86] [com.apple.runningboard:connection] Initializing connection
+2026-11-05 14:47:08.744 Df HomePod Flow[14254:75f86] [com.apple.runningboard:process] Removing all cached process handles
+2026-11-05 14:47:08.744 Df HomePod Flow[14254:75f8c] [com.apple.runningboard:connection] Sending handshake request attempt #1 to server
+2026-11-05 14:47:08.744 Df HomePod Flow[14254:75f8c] [com.apple.runningboard:connection] Creating connection to com.apple.runningboard
+2026-11-05 14:47:08.744 Df HomePod Flow[14254:75f8c] [com.apple.xpc:connection] [0xab4854780] activating connection: mach=true listener=false peer=false name=com.apple.runningboard
+2026-11-05 14:47:08.745 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4854280] Connection returned listener port: 0x5303
+2026-11-05 14:47:08.745 A  HomePod Flow[14254:75f8d] (RunningBoardServices) didChangeInheritances
+2026-11-05 14:47:08.745 Df HomePod Flow[14254:75f8c] [com.apple.runningboard:connection] Handshake succeeded
+2026-11-05 14:47:08.745 Df HomePod Flow[14254:75f8c] [com.apple.runningboard:connection] Identity resolved as app<application.com.homepodflow.mac.51531596.51532198.04734A48-ACDA-4800-BDCA-D934FE646D02(501)>
+2026-11-05 14:47:08.750 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4854280] Connection returned listener port: 0x5303
+2026-11-05 14:47:08.754 A  HomePod Flow[14254:75f8c] (AppIntents) appintents:register process
+2026-11-05 14:47:08.755 Df HomePod Flow[14254:75f8c] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:47:08.755 Df HomePod Flow[14254:75f8c] [com.apple.xpc:connection] [0xab4854640] activating connection: mach=true listener=false peer=false name=com.apple.linkd.autoShortcut
+2026-11-05 14:47:08.755 Df HomePod Flow[14254:75f8c] [com.apple.appintents:Connection] Activated connection to linkd (ApplicationService)
+2026-11-05 14:47:08.755 Df HomePod Flow[14254:75f8c] [com.apple.xpc:connection] [0xab4854a00] activating connection: mach=false listener=true peer=false name=(anonymous)
+2026-11-05 14:47:08.755 Df HomePod Flow[14254:75f8c] [com.apple.xpc:connection] [0xab4854a00] Connection returned listener port: 0x6a03
+2026-11-05 14:47:08.756 Df HomePod Flow[14254:75f8d] [com.apple.xpc:connection] [0xab4854640] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-05 14:47:08.756 Df HomePod Flow[14254:75f8d] [com.apple.appintents:Connection] Process Instance Registry XPC connection has been interrupted
+2026-11-05 14:47:08.756 Df HomePod Flow[14254:75f8d] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:47:08.756 A  HomePod Flow[14254:75f8d] (AppIntents) appintents:register process
+2026-11-05 14:47:08.756 E  HomePod Flow[14254:75f8c] [com.apple.appintents:Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:47:08.756 E  HomePod Flow[14254:75f8c] [com.apple.AppKit:Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 UserInfo={NSDebugDescription=<private>}
+2026-11-05 14:47:08.756 Df HomePod Flow[14254:75f8d] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:47:08.756 Df HomePod Flow[14254:75f8d] [com.apple.xpc:connection] [0xab4854c80] activating connection: mach=true listener=false peer=false name=com.apple.linkd.autoShortcut
+2026-11-05 14:47:08.756 Df HomePod Flow[14254:75f8d] [com.apple.appintents:Connection] Activated connection to linkd (ApplicationService)
+2026-11-05 14:47:08.756 Df HomePod Flow[14254:75f8d] [com.apple.xpc:connection] [0xab4854a00] Connection returned listener port: 0x6a03
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8c] [com.apple.xpc:connection] [0xab4854c80] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8c] [com.apple.appintents:Connection] Process Instance Registry XPC connection has been interrupted
+2026-11-05 14:47:08.757 E  HomePod Flow[14254:75f8d] [com.apple.appintents:Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:47:08.757 E  HomePod Flow[14254:75f8d] [com.apple.appintents:Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8c] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:47:08.757 A  HomePod Flow[14254:75f8c] (AppIntents) appintents:register process
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8c] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8c] [com.apple.xpc:connection] [0xab4854f00] activating connection: mach=true listener=false peer=false name=com.apple.linkd.autoShortcut
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8c] [com.apple.appintents:Connection] Activated connection to linkd (ApplicationService)
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8c] [com.apple.xpc:connection] [0xab4854a00] Connection returned listener port: 0x6a03
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8d] [com.apple.xpc:connection] [0xab4854f00] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8d] [com.apple.appintents:Connection] Process Instance Registry XPC connection has been interrupted
+2026-11-05 14:47:08.757 E  HomePod Flow[14254:75f8c] [com.apple.appintents:Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:47:08.757 E  HomePod Flow[14254:75f8c] [com.apple.appintents:Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8d] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:47:08.757 A  HomePod Flow[14254:75f8d] (AppIntents) appintents:register process
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8d] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8d] [com.apple.xpc:connection] [0xab4855180] activating connection: mach=true listener=false peer=false name=com.apple.linkd.autoShortcut
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8d] [com.apple.appintents:Connection] Activated connection to linkd (ApplicationService)
+2026-11-05 14:47:08.757 Df HomePod Flow[14254:75f8d] [com.apple.xpc:connection] [0xab4854a00] Connection returned listener port: 0x6a03
+2026-11-05 14:47:08.758 Df HomePod Flow[14254:75f8c] [com.apple.xpc:connection] [0xab4855180] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-05 14:47:08.758 Df HomePod Flow[14254:75f8c] [com.apple.appintents:Connection] Process Instance Registry XPC connection has been interrupted
+2026-11-05 14:47:08.758 E  HomePod Flow[14254:75f8c] [com.apple.appintents:Connection] Will NOT re-try to establish the connection
+2026-11-05 14:47:08.758 E  HomePod Flow[14254:75f8d] [com.apple.appintents:Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:47:08.758 E  HomePod Flow[14254:75f8d] [com.apple.appintents:Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-05 14:47:08.758 A  HomePod Flow[14254:75f8d] (CoreFoundation) Loading Preferences From User CFPrefsD
+2026-11-05 14:47:08.759 Df HomePod Flow[14254:75f86] [com.apple.dt.xctest:Default] Registering for test daemon availability notify post.
+2026-11-05 14:47:08.759 Df HomePod Flow[14254:75f86] [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-11-05 14:47:08.759 Df HomePod Flow[14254:75f86] [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-11-05 14:47:08.759 Df HomePod Flow[14254:75f86] [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-11-05 14:47:08.779 A  HomePod Flow[14254:75f86] (CoreFoundation) Loading Preferences From System CFPrefsD
+2026-11-05 14:47:08.779 Df HomePod Flow[14254:75f86] (libMobileGestalt.dylib) couldn't load support library
+2026-11-05 14:47:08.779 Df HomePod Flow[14254:75f86] (libMobileGestalt.dylib) called dummy function!
+2026-11-05 14:47:08.780 Df HomePod Flow[14254:75f86] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.gms.availability.notification
+2026-11-05 14:47:08.780 Df HomePod Flow[14254:75f86] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.os-eligibility-domain.change.greymatter
+2026-11-05 14:47:08.780 Df HomePod Flow[14254:75f86] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.language.changed
+2026-11-05 14:47:08.780 Df HomePod Flow[14254:75f86] [com.apple.WritingTools:Default] isAvailable value changed: isMDMAllowed = true, gmAvailable (current) = false
+2026-11-05 14:47:08.781 A  HomePod Flow[14254:75f86] (CoreFoundation) Loading Preferences From User CFPrefsD
+2026-11-05 14:47:08.782 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4855400] activating connection: mach=true listener=false peer=false name=com.apple.coreservices.appleevents
+2026-11-05 14:47:08.783 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4854280] Connection returned listener port: 0x5303
+2026-11-05 14:47:08.783 Df HomePod Flow[14254:75f86] [com.apple.processmanager:front-35286506] SignalReady: pid=14254 asn=0x0-0xe00e0
+2026-11-05 14:47:08.783 Df HomePod Flow[14254:75f86] [com.apple.processmanager:front-35286506] SIGNAL: pid=14254 asn=0x0x-0xe00e0
+2026-11-05 14:47:08.784 A  HomePod Flow[14254:75f86] (CoreFoundation) Loading Preferences From System CFPrefsD
+2026-11-05 14:47:08.785 A  HomePod Flow[14254:75f86] (libsystem_info.dylib) Membership API: translate identifier
+2026-11-05 14:47:08.787 A  HomePod Flow[14254:75f8c] (RunningBoardServices) didChangeInheritances
+2026-11-05 14:47:08.789 Df HomePod Flow[14254:75f86] [com.apple.AppKit:AutomaticTermination] void _NSDisableAutomaticTerminationAndLog(NSString *) Restoring windows
+2026-11-05 14:47:08.789 Df HomePod Flow[14254:75f86] [com.apple.AppKit:StateRestoration] -[NSApplication _reopenWindowsAsNecessaryIncludingRestorableState:withFullFidelity:completionHandler:] shouldRestoreState=1 hasPersistentStateToRestore=0 shouldStillRestoreStateAfterPrompting=0
+2026-11-05 14:47:08.789 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4855680] activating connection: mach=true listener=false peer=false name=com.apple.window_proxies
+2026-11-05 14:47:08.789 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4855680] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-05 14:47:08.789 Df HomePod Flow[14254:75f86] [com.apple.AppKit:AutomaticTermination] void _NSEnableAutomaticTerminationAndLog(NSString *) Restoring windows
+2026-11-05 14:47:08.792 A  HomePod Flow[14254:75f86] (CoreFoundation) Loading Preferences From User CFPrefsD
+2026-11-05 14:47:08.792 A  HomePod Flow[14254:75f86] (CoreFoundation) Loading Preferences From User CFPrefsD
+2026-11-05 14:47:08.800 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Appearance] NSApp cache appearance:
+-NSRequiresAquaSystemAppearance: 0
+-appearance: (null)
+-effectiveAppearance: <NSCompositeAppearance: 0xab5450460
+ (
+    "<NSAquaAppearance: 0xab54506e0>",
+    "<NSSystemAppearance: 0xab5450640>"
+)>
+2026-11-05 14:47:08.803 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4855a40] activating connection: mach=true listener=false peer=false name=com.apple.fonts
+2026-11-05 14:47:08.803 Df HomePod Flow[14254:75f93] [com.apple.xpc:connection] [0xab4855cc0] activating connection: mach=true listener=false peer=false name=com.apple.dock.fullscreen
+2026-11-05 14:47:08.804 Df HomePod Flow[14254:75f93] [com.apple.corespotlight:index] (<private>) deleteSearchableItemsWithDomainIdentifiers, protectionClass:(null), domainIdentifiers number:1
+2026-11-05 14:47:08.804 A  HomePod Flow[14254:75f93] (CoreSpotlight) delete-domains
+2026-11-05 14:47:08.804 Df HomePod Flow[14254:75f8d] [com.apple.corespotlight:index] CSInlineDonation:<private>: Skipping donation (feature flag disabled)
+2026-11-05 14:47:08.804 Df HomePod Flow[14254:75f8d] (CoreSpotlight) sConnectionName: com.apple.spotlight.IndexAgent
+2026-11-05 14:47:08.804 Df HomePod Flow[14254:75f8d] (CoreSpotlight) Start service name com.apple.spotlight.IndexAgent
+2026-11-05 14:47:08.804 Df HomePod Flow[14254:75f8d] [com.apple.xpc:connection] [0xab4855b80] activating connection: mach=true listener=false peer=false name=com.apple.spotlight.IndexAgent
+2026-11-05 14:47:08.805 Df HomePod Flow[14254:75f86] [com.apple.BoardServices:XPCErrors] [C:1] Alloc com.apple.controlcenter.statusitems
+2026-11-05 14:47:08.805 Df HomePod Flow[14254:75f86] [com.apple.xpc:connection] [0xab4855e00] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-11-05 14:47:08.805 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:Common] FBSWorkspace registering source: <private>
+2026-11-05 14:47:08.805 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:Common] FBSWorkspace connected to endpoint : <private>
+2026-11-05 14:47:08.805 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0xab5452d00 <private>> attempting immediate handshake from activate
+2026-11-05 14:47:08.805 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0xab5452d00 <private>> sent handshake
+2026-11-05 14:47:08.805 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneExtension] Realizing settings extension __NSStatusItemSceneHostSettings__ on FBSSceneSettings
+2026-11-05 14:47:08.805 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneExtension] Realizing settings extension __NSStatusItemSceneClientSettings__ on FBSSceneClientSettings
+2026-11-05 14:47:08.806 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneExtension] Realizing settings extension FBSSceneSettingsCore on FBSSceneSettings
+2026-11-05 14:47:08.806 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneExtension] Realizing settings extension FBSSceneClientSettingsCore on FBSSceneClientSettings
+2026-11-05 14:47:08.806 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:Common] Requesting scene <FBSScene: 0xab5453020; com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87> from com.apple.controlcenter.statusitems
+2026-11-05 14:47:08.807 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneExtension] Realizing settings extension FBSSceneTransitionContextCore on FBSSceneTransitionContext
+2026-11-05 14:47:08.807 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneExtension] Realizing settings extension __NSHostedViewSceneSettings__ on FBSSceneSettings
+2026-11-05 14:47:08.807 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneExtension] Realizing settings extension __NSClientHostedViewSceneSettings__ on FBSSceneClientSettings
+2026-11-05 14:47:08.807 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneExtension] Realizing settings extension __NSStatusItemAuxiliaryViewSceneSettings__ on FBSSceneSettings
+2026-11-05 14:47:08.807 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneExtension] Realizing settings extension __NSClientStatusItemAuxiliaryViewSceneSettings__ on FBSSceneClientSettings
+2026-11-05 14:47:08.808 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:Common] Requesting scene <FBSScene: 0xab5452c60; com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87-Aux[1]-NSStatusItemView> from com.apple.controlcenter.statusitems
+2026-11-05 14:47:08.809 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87-Aux[1]-NSStatusItemView] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:47:08.809 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87-Aux[1]-NSStatusItemView] Dropping transition context because the scene is reconnecting
+2026-11-05 14:47:08.810 A  HomePod Flow[14254:75f93] (RunningBoardServices) didChangeInheritances
+2026-11-05 14:47:08.811 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87-Aux[1]-NSStatusItemView] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:47:08.811 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87-Aux[1]-NSStatusItemView] Dropping transition context because the scene is reconnecting
+2026-11-05 14:47:08.812 Df HomePod Flow[14254:75f93] [com.apple.FrontBoard:Common] Request for <FBSScene: 0xab5453020; com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87> complete!
+2026-11-05 14:47:08.813 Df HomePod Flow[14254:75f93] [com.apple.FrontBoard:Common] Request for <FBSScene: 0xab5452c60; com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87-Aux[1]-NSStatusItemView> complete!
+2026-11-05 14:47:08.814 Df HomePod Flow[14254:75f93] [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0xab5452d00 <private>> Reconnecting scene com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87
+2026-11-05 14:47:08.814 Df HomePod Flow[14254:75f93] [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0xab5452d00 <private>> Reconnecting scene com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87-Aux[1]-NSStatusItemView
+2026-11-05 14:47:08.815 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87-Aux[1]-NSStatusItemView] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:47:08.818 Df HomePod Flow[14254:75f93] [com.apple.BoardServices:XPCErrors] [C:2] Alloc <private>
+2026-11-05 14:47:08.818 Df HomePod Flow[14254:75f93] [com.apple.xpc:connection] [0xab4856080] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-11-05 14:47:08.819 E  HomePod Flow[14254:75f86] [com.apple.AppKit:General] <private>
+2026-11-05 14:47:08.819 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87-Aux[1]-NSStatusItemView] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:47:08.829 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87-Aux[1]-NSStatusItemView] Received action(s) in scene-update: NSSceneFenceAction
+2026-11-05 14:47:08.832 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87-Aux[1]-NSStatusItemView] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:47:08.833 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87-Aux[1]-NSStatusItemView] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:47:08.836 Df HomePod Flow[14254:75f86] [com.apple.FrontBoard:SceneClient] [com.apple.controlcenter:DCC910F8-2C73-4BE7-AA2D-35A469D1CB87] Sending action(s) in update: NSSceneFenceAction
+2026-11-05 14:47:08.934 A  HomePod Flow[14254:75f93] (CoreSpotlight) end-index-batch
+2026-11-05 14:47:08.934 Df HomePod Flow[14254:75f93] [com.apple.corespotlight:index] *warn* MailCS ======%%% _setMailMessageAttributes skip:1
+2026-11-05 14:47:08.934 A  HomePod Flow[14254:75f93] (CoreSpotlight) index-items
+2026-11-05 14:47:08.934 Df HomePod Flow[14254:75f93] [com.apple.corespotlight:index] CSInlineDonation:<private>: Skipping donation (feature flag disabled)
+2026-11-05 14:47:13.799 Df HomePod Flow[14254:75f86] [com.apple.AppKit:AutomaticTermination] void _updateToReflectAutomaticTerminationState(void) Setting _kLSApplicationWouldBeTerminatedByTALKey=1
+2026-11-05 14:47:19.341 Df HomePod Flow[14254:75f94] [com.apple.launchservices:db] NotifyToken::RegisterDispatch(user.uid.501.com.apple.LaunchServices.database) fired for session key <private>
+2026-11-05 14:47:19.770 Df HomePod Flow[14254:76001] [com.apple.launchservices:default] LSExceptions shared instance invalidated for timeout.
+2026-11-05 14:47:24.020 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Application] Handling Quit AppleEvent
+2026-11-05 14:47:24.020 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Application] -[NSApplication _setShouldRestoreStateOnNextLaunch:] shouldRestore=0
+2026-11-05 14:47:24.020 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Application] Checking whether app should terminate
+2026-11-05 14:47:24.020 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Application] Asking app delegate whether applicationShouldTerminate:
+2026-11-05 14:47:24.020 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Application] replyToApplicationShouldTerminate:YES
+2026-11-05 14:47:24.020 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Application] App termination approved
+2026-11-05 14:47:24.020 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Application] -[NSApplication _unsetShouldRestoreStateOnNextLaunch]
+2026-11-05 14:47:24.020 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Application] -[NSApplication _setShouldRestoreStateOnNextLaunch:] shouldRestore=0
+2026-11-05 14:47:24.020 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Application] terminate:
+2026-11-05 14:47:24.020 Df HomePod Flow[14254:75f86] [com.apple.AppKit:AutomaticTermination] void _NSDisableAutomaticTerminationAndLog(NSString *) Terminating
+2026-11-05 14:47:24.020 Df HomePod Flow[14254:75f86] [com.apple.AppKit:StateRestoration] -[NSApplication _pushPersistentStateTerminationGeneration] sPersistentStateTerminateStackHeight -> 1
+2026-11-05 14:47:24.021 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Application] Attempting sudden termination (1st attempt)
+2026-11-05 14:47:24.021 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Application] Termination commencing
+2026-11-05 14:47:24.021 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Application] Attempting sudden termination (2nd attempt)
+2026-11-05 14:47:24.026 Df HomePod Flow[14254:75f86] [com.apple.AppKit:Application] Termination complete. Exiting without sudden termination.
+2026-11-05 14:47:24.026 Df HomePod Flow[14254:75f86] [com.apple.CoreAnalytics:client] Entering exit handler.
+2026-11-05 14:47:24.026 Df HomePod Flow[14254:75f86] [com.apple.CoreAnalytics:client] Queueing exit procedure onto XPC queue. Any further messages sent will be discarded. activeSendTransactions=0
+2026-11-05 14:47:24.026 Df HomePod Flow[14254:75f94] [com.apple.xpc:connection] [0xab48561c0] activating connection: mach=true listener=false peer=false name=com.apple.powerlog.plxpclogger.xpc
+2026-11-05 14:47:24.026 Df HomePod Flow[14254:76001] [com.apple.CoreAnalytics:client] Cancelling XPC connection. Any further reply handler invocations will not retry messages
+2026-11-05 14:47:24.026 Df HomePod Flow[14254:76001] [com.apple.xpc:connection] [0xab48543c0] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-05 14:47:24.026 Df HomePod Flow[14254:75f86] [com.apple.CoreAnalytics:client] Exiting exit handler.

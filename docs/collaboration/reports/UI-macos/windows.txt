@@ -1,0 +1,6 @@
+["kCGWindowMemoryUsage": 2368, "kCGWindowBounds": {
+    Height = 606;
+    Width = 864;
+    X = 324;
+    Y = 177;
+}, "kCGWindowNumber": 530, "kCGWindowSharingState": 0, "kCGWindowOwnerPID": 14095, "kCGWindowOwnerName": HomePod Flow, "kCGWindowStoreType": 1, "kCGWindowIsOnscreen": 1, "kCGWindowAlpha": 1, "kCGWindowLayer": 0]

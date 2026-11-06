@@ -1,0 +1,3 @@
+add_executable(flow_core_contract_tests core_contract_tests.cpp)
+target_link_libraries(flow_core_contract_tests PRIVATE flow::core)
+add_test(NAME flow_core_contract_tests COMMAND flow_core_contract_tests)

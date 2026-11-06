@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleIdentifier</key><string>com.homepodflow.tap-capture-host</string>
+<key>CFBundleName</key><string>HomePod Flow System Audio</string>
+<key>CFBundleExecutable</key><string>tap-capture-host</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleShortVersionString</key><string>0.1.0</string>
+<key>LSMinimumSystemVersion</key><string>14.2</string>
+<key>LSUIElement</key><true/>
+<key>NSAudioCaptureUsageDescription</key><string>仅在你开启 HomePod Flow 时采集系统输出，并发送至你选择的音箱；停止后关闭采集，不自动录音或上传。</string>
+</dict></plist>

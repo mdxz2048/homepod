@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-05",
+  "purpose": "Non-audible preflight for M1 device testing",
+  "windows_multicast_discovery": [
+    {"name": "客厅", "address": "192.168.0.104"},
+    {"name": "HomePod mini小白", "address": "192.168.0.115"},
+    {"name": "MacBook Pro", "address": "192.168.0.108"}
+  ],
+  "black_mini_discovered": false,
+  "mac_python_multicast_discovery": [],
+  "mac_python_tcp7000": [
+    {"host": "192.168.0.104", "errno": 65, "error": "No route to host"},
+    {"host": "192.168.0.115", "errno": 65, "error": "No route to host"}
+  ],
+  "mac_route_lookup_192_168_0_104": {"exit_code": 0, "interface": "en0", "flags": "UP,HOST,DONE,LLINFO,WASCLONED,IFSCOPE,IFREF"},
+  "interpretation": "Mac Python cannot currently reach receivers although OS route lookup succeeds. Local-network privacy permission or network policy/state needs checking; cause is not proven. Failure to discover black mini is not proof it is powered off.",
+  "user_action_requested": "Check both minis are powered and Mac local-network permission prompts/settings.",
+  "playback_attempted": false,
+  "acoustic_sync_verified": false
+}

@@ -1,0 +1,23 @@
+{
+  "status": "sender_completed_unverified_acoustically",
+  "acoustic_sync_verified": false,
+  "test_type": "single-output connectivity",
+  "duration_seconds": 4,
+  "volume_percent": 50.0,
+  "receivers": [
+    {
+      "role": "front",
+      "name": "客厅",
+      "ip": "192.168.0.104"
+    }
+  ],
+  "shared_timeline_adapter": false,
+  "audio_transport": "ALAC-verbatim",
+  "audio_file": "artifacts/speech-padded.wav",
+  "incoming_timing_packets": 4,
+  "incoming_control_packets": 0,
+  "audio_packets": 636,
+  "nonzero_audio_packets": 102,
+  "audible_output_confirmed_by_user": true,
+  "confirmation": "User heard the ALAC speech test; multi-output sync remains untested."
+}

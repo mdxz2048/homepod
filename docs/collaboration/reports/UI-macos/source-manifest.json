@@ -1,0 +1,14 @@
+{
+  "project.yml": "6e1d05d3dbdc546dc0a6c6b331ebb7bbb6018aaa68663398b46fb2a035e31ce2",
+  "README.md": "18254c3c9e3f729c2b1c6df6b3ca0755e9112de33575f925ce5c4272019d72b5",
+  "Tests/StateChecks.swift": "e3d96e193b9773cb64808724a18784d4fbb35c4fe240286df78b5402e6fc0f9f",
+  "HomePodFlow/DebugCapture.swift": "7cddd3b98a0e3c0f8bbf80d9e03f94de305311269b8ff95819555e9d343b4efc",
+  "HomePodFlow/HomePodFlowApp.swift": "bbfa47534c9419d39048199c3d750042765de39a64a8a16c2dfd6ecc9b128ab4",
+  "HomePodFlow/Style.swift": "3c2c678a1d6de62a1ff37f0a40ce372bad2e46eb02326b3f3fa15a1e3fb43088",
+  "HomePodFlow/Models/RoomLayout.swift": "9f9d3f237cbfa4b08105cac3ecbc8ce05bef5c479e9f375c1ad54483698dc6c1",
+  "HomePodFlow/State/AppState.swift": "46d4f8811cb790d4594d8d75fbdd6700d6461bc6694473034279305f76feea0b",
+  "HomePodFlow/Views/RoomCanvas.swift": "38f82bfa1d30d655d53f15c3865850f00eae2e308f27596149800d396abed6f7",
+  "HomePodFlow/Views/MenuPopoverView.swift": "c64476483f204b4646a341a908a5b5d3f3a3fc330aedb0efe9d9e871caa2cb34",
+  "HomePodFlow/Views/SettingsRootView.swift": "9eadeb218c4613fce9d9c5e18d33cb94356dca74060321eba6356bf404564fb9",
+  "HomePodFlow/Services/RouterService.swift": "5eb372227846651d4dc16b42c6f6a0bc347f090642ed29aee2e35dfdeda8faf4"
+}

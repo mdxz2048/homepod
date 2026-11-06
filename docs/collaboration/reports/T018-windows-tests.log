@@ -1,0 +1,36 @@
+test_active_session_stop_is_ordered_and_stale_stop_cannot_touch_it (test_worker_acceptance.WorkerLifecycleAcceptance) ... Executing <Task pending name='Task-1' coro=<IsolatedAsyncioTestCase._asyncioLoopRunner() running at C:\Python310\lib\unittest\async_case.py:102> created at C:\Python310\lib\unittest\async_case.py:118> took 1.438 seconds
+ok
+test_ended_session_uuid_cannot_be_reused (test_worker_acceptance.WorkerLifecycleAcceptance) ... ok
+test_eof_cancels_active_session_without_fabricated_shutdown_id (test_worker_acceptance.WorkerLifecycleAcceptance) ... ok
+test_local_file_or_route_failure_is_rejected_before_accepted (test_worker_acceptance.WorkerLifecycleAcceptance) ... ok
+test_slow_cancel_poison_cannot_report_clean_stop_or_restart (test_worker_acceptance.WorkerLifecycleAcceptance) ... ok
+test_uncertain_cleanup_poisons_worker_and_refuses_next_start (test_worker_acceptance.WorkerLifecycleAcceptance) ... ok
+test_duplicate_id_is_unassociated_and_cannot_reexecute (test_worker_acceptance.WorkerProcessAcceptance) ... ok
+test_hello_import_does_not_load_native_or_emit_playback_states (test_worker_acceptance.WorkerProcessAcceptance) ... ok
+test_oversized_and_bad_utf8_lines_drain_then_hello_recovers (test_worker_acceptance.WorkerProcessAcceptance) ... ok
+test_partial_final_line_at_eof_never_executes_command (test_worker_acceptance.WorkerProcessAcceptance) ... ok
+test_shutdown_exits_cleanly_while_parent_keeps_stdin_open (test_worker_acceptance.WorkerProcessAcceptance) ... ok
+test_busy_inspect_and_scan_do_not_disturb_playback (test_worker_protocol.WorkerProtocolTests) ... ok
+test_cleanup_uncertainty_poison_prevents_another_session (test_worker_protocol.WorkerProtocolTests) ... ok
+test_completed_session_uuid_is_never_reused (test_worker_protocol.WorkerProtocolTests) ... ok
+test_duplicate_active_id_does_not_terminal_or_cancel_original (test_worker_protocol.WorkerProtocolTests) ... ok
+test_hello_is_honest_and_does_not_call_runner (test_worker_protocol.WorkerProtocolTests) ... ok
+test_id_limit_is_bounded_but_shutdown_still_available (test_worker_protocol.WorkerProtocolTests) ... ok
+test_native_runner_never_manufactures_missing_hub_stop_evidence (test_worker_protocol.WorkerProtocolTests) ... ok
+test_offline_completion_does_not_invent_streaming_state (test_worker_protocol.WorkerProtocolTests) ... ok
+test_production_preflight_rejects_missing_files_before_accepted (test_worker_protocol.WorkerProtocolTests) ... ok
+test_related_errors_keep_valid_session_correlation (test_worker_protocol.WorkerProtocolTests) ... ok
+test_runner_failure_with_cleanup_is_terminal_and_reusable (test_worker_protocol.WorkerProtocolTests) ... ok
+test_stop_during_terminal_finalization_does_not_cancel_cleanup_reporting (test_worker_protocol.WorkerProtocolTests) ... ok
+test_stop_stale_session_and_restart_after_confirmed_cleanup (test_worker_protocol.WorkerProtocolTests) ... ok
+test_subprocess_bad_line_and_oversize_recover_to_valid_request (test_worker_protocol.WorkerProtocolTests) ... ok
+test_subprocess_eof_cleans_an_active_session (test_worker_protocol.WorkerProtocolTests) ... ok
+test_subprocess_eof_without_lf_never_executes_final_request (test_worker_protocol.WorkerProtocolTests) ... ok
+test_subprocess_shutdown_exits_even_when_stdin_stays_open (test_worker_protocol.WorkerProtocolTests) ... ok
+test_subprocess_stop_then_restart_and_json_stdout_only (test_worker_protocol.WorkerProtocolTests) ... ok
+test_validation_rejects_nan_unknown_fields_and_noncanonical_inputs (test_worker_protocol.WorkerProtocolTests) ... ok
+
+----------------------------------------------------------------------
+Ran 30 tests in 4.437s
+
+OK

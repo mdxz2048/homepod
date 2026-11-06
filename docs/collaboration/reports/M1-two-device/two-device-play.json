@@ -1,0 +1,71 @@
+{
+  "status": "sender_completed_unverified_acoustically",
+  "acoustic_sync_verified": false,
+  "command": "play",
+  "input_sample_rate": 44100,
+  "input_channels": 2,
+  "input_frames": 132300,
+  "routes": {
+    "0": [
+      0,
+      0
+    ],
+    "1": [
+      1,
+      1
+    ]
+  },
+  "native_library": "/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build/core/libflow_bridge.dylib",
+  "volume_percent": 15.0,
+  "native_core_used": true,
+  "playback_origin_ns": 17376331798208,
+  "epoch": 1,
+  "frames": 132300,
+  "outputs": [
+    {
+      "output_id": 0,
+      "channels": 2,
+      "frames": 132300,
+      "pcm_sha256": "403c7ad8b05e3523cb7bc4b355f29796e7d9e0d12ac0ab6947835efef1a45a26",
+      "first_presentation_ns": 17376331798208,
+      "last_block_frame": 132000,
+      "blocks": 376
+    },
+    {
+      "output_id": 1,
+      "channels": 2,
+      "frames": 132300,
+      "pcm_sha256": "fc54607ef6fa98633acff42705623291325b2e7744d77f22bb310c44e44fd694",
+      "first_presentation_ns": 17376331798208,
+      "last_block_frame": 132000,
+      "blocks": 376
+    }
+  ],
+  "send_origin_ns": 17374831798208,
+  "protocol_latency_samples": 66150,
+  "protocol_sample_rate": 44100,
+  "shared_start_ts": 176525048878660,
+  "prepared_receivers": 2,
+  "anchor_uncertainty_ns": 25542,
+  "stream_releases": [
+    {
+      "output_id": 0,
+      "monotonic_ns": 17374833392166,
+      "start_ts": 176525048878660,
+      "first_rtp": 66150
+    },
+    {
+      "output_id": 1,
+      "monotonic_ns": 17374834416958,
+      "start_ts": 176525048878660,
+      "first_rtp": 66150
+    }
+  ],
+  "audio_packets": 1128,
+  "nonzero_packets": 752,
+  "frames_consumed": {
+    "0": 132300,
+    "1": 132300
+  },
+  "cleanup_complete": true
+}

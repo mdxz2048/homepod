@@ -1,0 +1,42 @@
+{
+  "recorded_at": "2026-11-05T02:48:58.995512+00:00",
+  "test": "new native-core bridge, two physical receivers",
+  "runs": [
+    {
+      "report": "two-device-play.json",
+      "seconds": 3,
+      "volume_percent": 15,
+      "subjective_feedback": "not provided; user requested louder longer retest"
+    },
+    {
+      "report": "two-device-play-10s.json",
+      "seconds": 10,
+      "volume_percent": 100,
+      "subjective_feedback": "两台都响，听起来基本同步",
+      "feedback_type": "explicit user listening confirmation, not quantitative measurement"
+    }
+  ],
+  "receivers": {
+    "0": {
+      "role": "front",
+      "name": "客厅",
+      "ip": "192.168.0.104",
+      "frequency_hz": 440
+    },
+    "1": {
+      "role": "right rear",
+      "name": "HomePod mini小白",
+      "ip": "192.168.0.115",
+      "frequency_hz": 660
+    }
+  },
+  "black_mini": "powered off by user; two receiver scope explicitly authorized",
+  "python": "3.12.16 (main, Oct 25 2026, 18:24:37) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "pyatv": "0.18.0",
+  "srptools": "1.0.1",
+  "remote_source_manifest_drift": [],
+  "native_library_sha256": "cf0c342e9eae808765bb7d8f4f217ebf9e790228cffbf4077da24275e609173e",
+  "volume_after_setup_patch_present": true,
+  "console_capture": "Each CLI stdout consisted of its JSON report; no dedicated debug log was enabled. No console error appeared.",
+  "acoustic_recording": "not captured"
+}

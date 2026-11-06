@@ -1,0 +1,11 @@
+Building for production...
+[0/6] Write sources
+[2/6] Write swift-version-3CD7052B146186F2.txt
+[3/6] Compiling CaptureRing CaptureRing.c
+[5/7] Compiling ProcessTapCapture CaptureSource.swift
+[6/8] Compiling TapCaptureProbe TapCaptureProbe.swift
+[6/8] Write Objects.LinkFileList
+[7/8] Linking tap-capture-probe
+Build complete! (4.69s)
+../TapCaptureProbe.app: replacing existing signature
+Built ../TapCaptureProbe.app; packaging did not start capture.

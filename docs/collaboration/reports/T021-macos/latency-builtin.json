@@ -1,0 +1,41 @@
+{
+  "acoustic_measured" : false,
+  "audio_started" : false,
+  "default_output_changed" : false,
+  "devices" : [
+    {
+      "audio_unit_bind_status" : 0,
+      "audio_unit_create_status" : 0,
+      "audio_unit_initialize_status" : 0,
+      "audio_unit_latency_ms" : 0.36281179138321995,
+      "audio_unit_latency_status" : 0,
+      "buffer_frames" : 512,
+      "buffer_ms" : 10.666666666666666,
+      "buffer_status" : 0,
+      "chromium_style_static_latency_ms" : 16.196145124716555,
+      "default_output" : true,
+      "device_latency_frames" : 70,
+      "device_latency_ms" : 1.4583333333333333,
+      "device_latency_status" : 0,
+      "id" : 72,
+      "name" : "MacBook Pro扬声器",
+      "rate_status" : 0,
+      "safety_offset_frames" : 74,
+      "safety_offset_ms" : 1.5416666666666667,
+      "safety_status" : 0,
+      "sample_rate" : 48000,
+      "streams" : [
+        {
+          "global_scope_status" : 0,
+          "id" : 73,
+          "latency_frames_global_scope" : 690,
+          "latency_frames_output_scope" : 690,
+          "output_scope_status" : 0
+        }
+      ],
+      "uid" : "BuiltInSpeakerDevice"
+    }
+  ],
+  "note" : "System-reported components. Static sum follows current Chromium source; excludes callback hostTime lead and browser queues. Not a measurement of browser A\/V offset or acoustic end-to-end delay.",
+  "timestamp_utc" : "2026-11-06T06:14:59Z"
+}

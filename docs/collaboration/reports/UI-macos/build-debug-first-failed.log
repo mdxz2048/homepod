@@ -1,0 +1,419 @@
+Command line invocation:
+    /Applications/Xcode-26.6.0.app/Contents/Developer/usr/bin/xcodebuild -project HomePodFlow.xcodeproj -scheme HomePodFlow -configuration Debug -derivedDataPath ../DerivedData CODE_SIGN_IDENTITY=- clean build
+
+Build settings from command line:
+    CODE_SIGN_IDENTITY = -
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00006000-000870A034D8801E, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00006000-000870A034D8801E, name:My Mac }
+{ platform:macOS, name:Any Mac }
+note: Using codesigning identity override: -
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+** CLEAN SUCCEEDED **
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00006000-000870A034D8801E, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00006000-000870A034D8801E, name:My Mac }
+{ platform:macOS, name:Any Mac }
+note: Using codesigning identity override: -
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (1 target)
+    Target 'HomePodFlow' in project 'HomePodFlow' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: d491fd952b347e62425d89f8e01540c7
+Build description path: /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/XCBuildData/d491fd952b347e62425d89f8e01540c7.xcbuilddata
+CreateBuildDirectory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow.xcodeproj
+    builtin-create-build-directory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products
+
+ClangStatCache /Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/SDKStatCaches.noindex/macosx26.5-25F70-e0ccf0f438feb004bd3f7bd7c992e944.sdkstatcache
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow.xcodeproj
+    /Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk -o /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/SDKStatCaches.noindex/macosx26.5-25F70-e0ccf0f438feb004bd3f7bd7c992e944.sdkstatcache
+
+CreateBuildDirectory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow.xcodeproj
+    builtin-create-build-directory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex
+
+CreateBuildDirectory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow.xcodeproj
+    builtin-create-build-directory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+CreateBuildDirectory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/ExplicitPrecompiledModules
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow.xcodeproj
+    builtin-create-build-directory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+CreateBuildDirectory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Debug
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow.xcodeproj
+    builtin-create-build-directory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Debug
+
+CreateBuildDirectory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow.xcodeproj
+    builtin-create-build-directory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow-7d2f7f0d8b4a5fbee1d0b5964dc5bf7f-VFS/all-product-headers.yaml
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow.xcodeproj
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow-7d2f7f0d8b4a5fbee1d0b5964dc5bf7f-VFS/all-product-headers.yaml
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow.hmap (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow.hmap
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/empty-HomePod\ Flow.plist (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/empty-HomePod\ Flow.plist
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlow-OutputFileMap.json (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlow-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod\ Flow.LinkFileList (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod\ Flow.LinkFileList
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod\ Flow.SwiftConstValuesFileList (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod\ Flow.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod\ Flow.SwiftFileList (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod\ Flow.SwiftFileList
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlow_const_extract_protocols.json (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlow_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow.DependencyStaticMetadataFileList (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow.DependencyMetadataFileList (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow.DependencyMetadataFileList
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-project-headers.hmap (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-project-headers.hmap
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-own-target-headers.hmap (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-own-target-headers.hmap
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-generated-files.hmap (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-generated-files.hmap
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-all-target-headers.hmap (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-all-target-headers.hmap
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-all-non-framework-target-headers.hmap (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-DebugDylibPath-normal-arm64.txt (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-DebugDylibInstallName-normal-arm64.txt (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-DebugDylibInstallName-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/DerivedSources/Entitlements.plist (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    write-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/DerivedSources/Entitlements.plist
+
+MkDir /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod\ Flow.app/Contents/MacOS (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    /bin/mkdir -p /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod\ Flow.app/Contents/MacOS
+
+MkDir /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod\ Flow.app/Contents (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    /bin/mkdir -p /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod\ Flow.app/Contents
+
+MkDir /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod\ Flow.app (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    /bin/mkdir -p /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod\ Flow.app
+
+ProcessProductPackaging "" /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow.app.xcent (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    
+    Entitlements:
+    
+    {
+    "com.apple.security.get-task-allow" = 1;
+}
+    
+    builtin-productPackagingUtility -entitlements -format xml -o /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow.app.xcent
+
+ProcessProductPackagingDER /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow.app.xcent /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow.app.xcent.der (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    /usr/bin/derq query -f xml -i /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow.app.xcent -o /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow.app.xcent.der --raw
+
+Ld /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod\ Flow.app/Contents/MacOS/__preview.dylib normal (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    /Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos15.0 -dynamiclib -isysroot /Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk -O0 -L/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug -F/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug -install_name @rpath/HomePod\ Flow.debug.dylib -rdynamic -Xlinker -no_deduplicate -Xlinker -dependency_info -Xlinker /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod\ Flow_dependency_info.dat -Xlinker -no_adhoc_codesign -o /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod\ Flow.app/Contents/MacOS/__preview.dylib
+
+ProcessInfoPlistFile /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod\ Flow.app/Contents/Info.plist /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/empty-HomePod\ Flow.plist (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    builtin-infoPlistUtility /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/empty-HomePod\ Flow.plist -producttype com.apple.product-type.application -genpkginfo /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod\ Flow.app/Contents/PkgInfo -expandbuildsettings -platform macosx -o /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod\ Flow.app/Contents/Info.plist
+
+SwiftDriver HomePodFlow normal arm64 com.apple.xcode.tools.swift.compiler (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    builtin-SwiftDriver -- /Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name HomePod_Flow -Onone @/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod\ Flow.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk -target arm64-apple-macos15.0 -g -module-cache-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug -F /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/SDKStatCaches.noindex/macosx26.5-25F70-e0ccf0f438feb004bd3f7bd7c992e944.sdkstatcache -output-file-map /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlow-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlow_const_extract_protocols.json -Xcc -iquote -Xcc /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-generated-files.hmap -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-own-target-headers.hmap -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-all-target-headers.hmap -Xcc -iquote -Xcc /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-project-headers.hmap -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/include -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/DerivedSources-normal/arm64 -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/DerivedSources/arm64 -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow-Swift.h -working-directory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source -experimental-emit-module-separately -disable-cmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/ptrauth-5WPHXUZHPNOIA15SUDGU05LJ7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_SwiftConcurrencyShims-2IXXEQILF718KBLCI7VOQWDHC.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_Builtin_float-CVHD3H6B6JRD4ZDNCQIVD77CR.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_Builtin_stdarg-8X9QMZEKO2Y0KXJF4M8UQOXSF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_Builtin_stddef-DFRCFC5DDTFLVI03EUJMFJ47Q.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_Builtin_stdbool-7LES5VYQO3M3EDMHWKOD7X61X.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_AvailabilityInternal-F589QS88P74KOOSCU2Z1AOW4M.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/DeveloperToolsSupport-80VURRC8YW4DHCZDADO90EJSD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/SwiftShims-V8JEBKL5HMP6OB5CTESCA4YM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/ptrcheck-DSAFY7LGCZP4L9TQGUN577DQT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_DarwinFoundation1-CPWMNJNT0AIRE6F3Z82TZJ635.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_DarwinFoundation2-82K96WY8P2DZZLW0TS6V43Q6C.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_Builtin_limits-8FRS9ONWJI9JDWR9TTO5JL2HE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/sys_types-CMJAGNNM0J6FI4AHO7EXT2NA5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_Builtin_stdint-CYRLGZJ38YYVBR4V7SKOUWCUO.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_Builtin_tgmath-7HAA9MH24LBZH2IJZZBEOU5OU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_Builtin_intrinsics-DAG2C3INJO4IE2WNIA8B0QKR6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/OpenGL-4X6OJWJYW0F9UAH6Q54Z0SLC0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/libDER-9S7IKO5F62XBTM1G25PRDBYB5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_DarwinFoundation3-CR48R9Z4K8D1FHOAZ7LN3BJ8Q.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_Builtin_stdatomic-CKC2GZEI1YZFSSESXC3H5HPPA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/_Builtin_inttypes-E677YCAMKVA5FEDMIOW1GP001.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/Darwin-EMW02GB3SQ6GB96Y2HLGRIECQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/simd-2F7U2915YI9A7Y1853NXYGYQ9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/libkern-5J703YGHF71SO5FJ2OCZJ11PW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/CUPS-WQMPGHTJGCTXSM378CT7T52G.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/launch-57VK1SG638YQXZHQ9YRR44G0T.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/MachO-AUPFFZWX7HX780V9YSGZBR77H.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/ObjectiveC-6P3ZFL699JCLZ6XQ6MLY7VRCR.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/Spatial-COKQQTK9XVR7RD2J6V1NB1IZN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/os_object-71E1UMSJ29W3ZNIAOUWXGFJX5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/os_workgroup-9E2OCRTD61DAMA4OJIFLTAC93.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/Dispatch-F3V8CKYHEFX578V7TJREUJT97.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/XPC-3YLEIAY18C58D1OFQL19M5F4O.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/CoreFoundation-6LOF3X2S43PA8DS0XH8CHJ8QU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/os-BQW8C276Y2MXAIZ74CHU0HLRM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/IOKit-9X1JMZOEU8K35648TUUEQW3LU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/ColorSync-7ODLGVEZCWS6FFXBZLGTQ6C16.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/CFNetwork-8AUG2VKKXOD7UTJ48UGQ0IMEB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/Security-7HPC9WIUDAZ40SN79UXLIGJX3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/DiskArbitration-DS0VBJAP4Z0RM18O95LU6VMN9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/CoreGraphics-25CDSICKOJSR7F3GNY82AJHVF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/CoreServices-EGV1QLVMR57JNF7FOQ8FPP4XE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/ImageIO-2QHY16R05055RWV3LH2DZ7CCN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/CoreText-3Z1QNCRMOOPGEDCXA8Y7MQFLW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/Foundation-133RYEDDUKXYZ9D00OX6VE9WK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/DataDetection-4ZIPL7PGLSDYZPS9DXDXL0BS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/CoreData-3NCOZ1Z657ZNZ09SKJ5J4ZDYV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/IOSurface-5EWWZFB95Q9VT2RMZ6U51JO81.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/Symbols-56SLLYVXGQ4D2WSU687H0OGUW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/Accessibility-MJBL1OP8ZQBDV44OOLK6R0MZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/OSLog-E1QH4HWAVEYCOG1RV1OBBQ5BG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/ApplicationServices-97I7T7I5N65B756PR854C9WPI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/UniformTypeIdentifiers-F25X2QFAUJQ1P2VMKP5M3PLOK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/CoreTransferable-3N982AGXLLNMN87I13AQ37BOP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/Metal-ASSCT4OS9ACFWTRSKGGSJW24T.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/CoreVideo-21YZ1ITJ242RNYFM2C2AJI5CE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/QuartzCore-8KJI4WFBX4WK37IKZZ881N8Q0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/CoreImage-EQOJZA6VZUIXREPJ87TYNY6VZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/SwiftUICore-7BC3L41YFTNVBFTSA5OQHYR65.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/AppKit-CF97FLR88KAXVDBORWOM32MAL.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/SwiftUI-E5761RTRSPHL9P53N8OH3TO76.pcm
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ HomePod_Flow (in target 'HomePodFlow' from project 'HomePodFlow')
+
+EmitSwiftModule normal arm64 (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    
+
+SwiftCompile normal arm64 Compiling\ SettingsRootView.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Views/SettingsRootView.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+SwiftCompile normal arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Views/SettingsRootView.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    
+
+SwiftCompile normal arm64 Compiling\ RoomLayout.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Models/RoomLayout.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+
+SwiftCompile normal arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Models/RoomLayout.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    
+
+SwiftCompile normal arm64 Compiling\ Style.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Style.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+
+SwiftCompile normal arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Style.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    
+
+SwiftCompile normal arm64 Compiling\ RouterService.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Services/RouterService.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+
+SwiftCompile normal arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Services/RouterService.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    
+
+SwiftCompile normal arm64 Compiling\ MenuPopoverView.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Views/MenuPopoverView.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+
+SwiftCompile normal arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Views/MenuPopoverView.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    
+
+SwiftCompile normal arm64 Compiling\ RoomCanvas.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Views/RoomCanvas.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+SwiftCompile normal arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Views/RoomCanvas.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    
+
+SwiftCompile normal arm64 Compiling\ HomePodFlowApp.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/HomePodFlowApp.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+Failed frontend command:
+/Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/State/AppState.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/DebugCapture.swift -primary-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/HomePodFlowApp.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Views/MenuPopoverView.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Views/RoomCanvas.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Models/RoomLayout.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Services/RouterService.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Views/SettingsRootView.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/Style.swift -emit-dependencies-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlowApp.d -emit-const-values-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlowApp.swiftconstvalues -emit-reference-dependencies-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlowApp.swiftdeps -serialize-diagnostics-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlowApp.dia -target arm64-apple-macos15.0 -load-resolved-plugin /Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libFoundationMacros.dylib\#/Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#FoundationMacros -load-resolved-plugin /Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libObservationMacros.dylib\#/Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#ObservationMacros -load-resolved-plugin /Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libPreviewsMacros.dylib\#/Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#PreviewsMacros -load-resolved-plugin /Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#/Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#SwiftMacros -load-resolved-plugin /Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libSwiftUIMacros.dylib\#/Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#SwiftUIMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow-dependencies-1.json -debug-module-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow.swiftmodule -Xllvm -aarch64-use-tbi -enable-objc-interop -stack-check -sdk /Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk -I /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug -F /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=5 -module-cache-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -swift-version 6 -Onone -D DEBUG -serialize-debugging-options -const-gather-protocols-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlow_const_extract_protocols.json -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source -enable-anonymous-context-mangled-names -file-compilation-dir /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/SDKStatCaches.noindex/macosx26.5-25F70-e0ccf0f438feb004bd3f7bd7c992e944.sdkstatcache -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/swift-overrides.hmap -Xcc -iquote -Xcc /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-generated-files.hmap -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-own-target-headers.hmap -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-all-target-headers.hmap -Xcc -iquote -Xcc /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-project-headers.hmap -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/include -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/DerivedSources-normal/arm64 -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/DerivedSources/arm64 -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/DerivedSources -Xcc -DDEBUG\=1 -no-auto-bridging-header-chaining -module-name HomePod_Flow -frontend-parseable-output -disable-clang-spi -clang-target arm64-apple-macos26.5 -target-sdk-version 26.5 -target-sdk-name macosx26.5 -in-process-plugin-server-path /Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -o /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlowApp.o -index-unit-output-path /HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlowApp.o -index-store-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Index.noindex/DataStore -index-system-modules
+
+SwiftCompile normal arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/HomePodFlowApp.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/HomePodFlowApp.swift:20:9: error: closure containing control flow statement cannot be used with result builder 'SceneBuilder'
+        if Self.showInspectionWindow {
+        ^
+SwiftUI.SceneBuilder:2:30: note: struct 'SceneBuilder' declared here
+@resultBuilder public struct SceneBuilder {
+                             ^
+
+SwiftCompile normal arm64 Compiling\ AppState.swift,\ DebugCapture.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/State/AppState.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/DebugCapture.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+
+SwiftCompile normal arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/State/AppState.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    
+
+SwiftCompile normal arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/DebugCapture.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for HomePod_Flow (in target 'HomePodFlow' from project 'HomePodFlow')
+
+SwiftDriver\ Compilation\ Requirements HomePodFlow normal arm64 com.apple.xcode.tools.swift.compiler (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name HomePod_Flow -Onone @/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod\ Flow.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk -target arm64-apple-macos15.0 -g -module-cache-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug -F /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/SDKStatCaches.noindex/macosx26.5-25F70-e0ccf0f438feb004bd3f7bd7c992e944.sdkstatcache -output-file-map /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlow-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePodFlow_const_extract_protocols.json -Xcc -iquote -Xcc /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-generated-files.hmap -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-own-target-headers.hmap -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-all-target-headers.hmap -Xcc -iquote -Xcc /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/HomePod\ Flow-project-headers.hmap -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/include -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/DerivedSources-normal/arm64 -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/DerivedSources/arm64 -Xcc -I/Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow-Swift.h -working-directory /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling RouterService.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+
+SwiftMergeGeneratedHeaders /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/DerivedSources/HomePod_Flow-Swift.h /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow-Swift.h (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    builtin-swiftHeaderTool -arch arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow-Swift.h -o /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/DerivedSources/HomePod_Flow-Swift.h
+
+Copy /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod_Flow.swiftmodule/arm64-apple-macos.swiftmodule /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow.swiftmodule (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow.swiftmodule /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod_Flow.swiftmodule/arm64-apple-macos.swiftmodule
+
+Copy /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod_Flow.swiftmodule/arm64-apple-macos.swiftdoc /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow.swiftdoc (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow.swiftdoc /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod_Flow.swiftmodule/arm64-apple-macos.swiftdoc
+
+Copy /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod_Flow.swiftmodule/arm64-apple-macos.abi.json /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow.abi.json (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow.abi.json /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod_Flow.swiftmodule/arm64-apple-macos.abi.json
+
+Copy /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod_Flow.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow.swiftsourceinfo (in target 'HomePodFlow' from project 'HomePodFlow')
+    cd /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Intermediates.noindex/HomePodFlow.build/Debug/HomePodFlow.build/Objects-normal/arm64/HomePod_Flow.swiftsourceinfo /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/DerivedData/Build/Products/Debug/HomePod_Flow.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
+
+SwiftDriverJobDiscovery normal arm64 Compiling RoomLayout.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+
+SwiftDriverJobDiscovery normal arm64 Compiling Style.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+
+note: Disabling hardened runtime with ad-hoc codesigning. (in target 'HomePodFlow' from project 'HomePodFlow')
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ HomePodFlowApp.swift /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/HomePodFlowApp.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+	SwiftCompile normal arm64 /Users/lvzhipeng/Developer/HomePodSpatialRouter/ui-m3-validation/source/HomePodFlow/HomePodFlowApp.swift (in target 'HomePodFlow' from project 'HomePodFlow')
+	Building project HomePodFlow with scheme HomePodFlow and configuration Debug
+(3 failures)

@@ -1,0 +1,47 @@
+[
+  {
+    "name": "cinema",
+    "files_ready": true,
+    "settings_method": "AppKit view cache fallback; compositor/vibrancy may be absent\n"
+  },
+  {
+    "name": "homepod",
+    "files_ready": true,
+    "settings_method": "AppKit view cache fallback; compositor/vibrancy may be absent\n"
+  },
+  {
+    "name": "mini",
+    "files_ready": true,
+    "settings_method": "AppKit view cache fallback; compositor/vibrancy may be absent\n"
+  },
+  {
+    "name": "moved",
+    "files_ready": true,
+    "settings_method": "AppKit view cache fallback; compositor/vibrancy may be absent\n"
+  },
+  {
+    "name": "sync",
+    "files_ready": true,
+    "settings_method": "AppKit view cache fallback; compositor/vibrancy may be absent\n"
+  },
+  {
+    "name": "audio",
+    "files_ready": true,
+    "settings_method": "AppKit view cache fallback; compositor/vibrancy may be absent\n"
+  },
+  {
+    "name": "playback",
+    "files_ready": true,
+    "settings_method": "AppKit view cache fallback; compositor/vibrancy may be absent\n"
+  },
+  {
+    "name": "general",
+    "files_ready": true,
+    "settings_method": "AppKit view cache fallback; compositor/vibrancy may be absent\n"
+  },
+  {
+    "name": "about",
+    "files_ready": true,
+    "settings_method": "AppKit view cache fallback; compositor/vibrancy may be absent\n"
+  }
+]

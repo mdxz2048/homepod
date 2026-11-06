@@ -1,0 +1,17 @@
+.venv/
+vendor/
+__pycache__/
+artifacts/
+build/
+cmake-build-*/
+.build/
+.swiftpm/
+.DS_Store
+DerivedData/
+*.xcuserstate
+xcuserdata/
+runtime.json
+.env
+.env.*
+*.p12
+*.pfx

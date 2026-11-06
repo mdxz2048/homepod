@@ -1,0 +1,79 @@
+{
+  "status": "stream_sender_completed_unverified_acoustically",
+  "volume_percent": 15,
+  "streaming": true,
+  "acoustic_sync_verified": false,
+  "playback_origin_ns": 29192917937958,
+  "send_origin_ns": 29191417937958,
+  "shared_start_ts": 176525569987400,
+  "protocol_latency_samples": 66150,
+  "protocol_sample_rate": 44100,
+  "prepared_receivers": 2,
+  "anchor_uncertainty_ns": 21833,
+  "stream_releases": [
+    {
+      "output_id": 0,
+      "monotonic_ns": 29191420308666,
+      "start_ts": 176525569987400,
+      "first_rtp": 66150
+    },
+    {
+      "output_id": 1,
+      "monotonic_ns": 29191427605375,
+      "start_ts": 176525569987400,
+      "first_rtp": 66150
+    }
+  ],
+  "audio_packets": 1128,
+  "nonzero_packets": 752,
+  "cleanup_complete": true,
+  "native_core_used": true,
+  "epoch": 1,
+  "input_frames": 132300,
+  "input_frames_read": 132300,
+  "input_read_calls": 376,
+  "input_peak_read_frames": 352,
+  "input_closed": true,
+  "input_eof": true,
+  "native_submit_calls": 376,
+  "native_submitted_frames": 132300,
+  "block_frames": 352,
+  "queue_capacity_frames": 1408,
+  "capacity_waits": 0,
+  "hub_stopped": true,
+  "group_failed": false,
+  "group_error": null,
+  "outputs": [
+    {
+      "output_id": 0,
+      "native_frames": 132300,
+      "native_callbacks": 376,
+      "consumed_frames": 132300,
+      "queue_peak_frames": 352,
+      "queue_current_frames": 0,
+      "buffer_current_frames": 0,
+      "eof_reads": 189,
+      "first_presentation_ns": 29192917937958,
+      "last_presentation_ns": 29195911135236,
+      "native_pcm_sha256": "403c7ad8b05e3523cb7bc4b355f29796e7d9e0d12ac0ab6947835efef1a45a26",
+      "consumed_pcm_sha256": "403c7ad8b05e3523cb7bc4b355f29796e7d9e0d12ac0ab6947835efef1a45a26"
+    },
+    {
+      "output_id": 1,
+      "native_frames": 132300,
+      "native_callbacks": 376,
+      "consumed_frames": 132300,
+      "queue_peak_frames": 704,
+      "queue_current_frames": 0,
+      "buffer_current_frames": 0,
+      "eof_reads": 189,
+      "first_presentation_ns": 29192917937958,
+      "last_presentation_ns": 29195911135236,
+      "native_pcm_sha256": "fc54607ef6fa98633acff42705623291325b2e7744d77f22bb310c44e44fd694",
+      "consumed_pcm_sha256": "fc54607ef6fa98633acff42705623291325b2e7744d77f22bb310c44e44fd694"
+    }
+  ],
+  "run": 2,
+  "patches_restored": true,
+  "remaining_async_tasks": []
+}

@@ -1,0 +1,511 @@
+{
+  "test": "system_audio_to_homepods",
+  "volume_percent": 15,
+  "acoustic_sync_verified": false,
+  "cycles": [
+    {
+      "session": "591a8498-f1c7-4c2a-8dfd-fa80e74080ab",
+      "requested_seconds": 30,
+      "streaming_ns": 70273864755958,
+      "stop_requested_ns": 70303865264625,
+      "terminal": {
+        "state": "stopped",
+        "cleanup_complete": true,
+        "report": {
+          "session": "591a8498-f1c7-4c2a-8dfd-fa80e74080ab",
+          "status": "failed",
+          "live": true,
+          "volume_percent": 15,
+          "acoustic_sync_verified": false,
+          "input_closed": true,
+          "hub_stopped": true,
+          "cleanup_complete": true,
+          "shared_start_ts": 176528874139621,
+          "send_origin_ns": 70273849223458,
+          "playback_origin_ns": 70275349223458,
+          "protocol_latency_samples": 66150,
+          "protocol_sample_rate": 44100,
+          "prepared_receivers": 2,
+          "anchor_uncertainty_ns": 11209,
+          "capture_to_receipt_uncertainty_ns": null,
+          "converter_delay_known": false,
+          "stream_releases": [
+            {
+              "output_id": 1,
+              "monotonic_ns": 70273850457625,
+              "start_ts": 176528874139621,
+              "first_rtp": 66150
+            },
+            {
+              "output_id": 2,
+              "monotonic_ns": 70273855671041,
+              "start_ts": 176528874139621,
+              "first_rtp": 66150
+            }
+          ],
+          "audio_packets": 7521,
+          "nonzero_packets": 3530,
+          "error_type": "CancelledError",
+          "native_core_used": true,
+          "input_frames": 1346284,
+          "native_submitted_frames": 1324057,
+          "input_peak_frames": 23050,
+          "input_capacity_frames": 88200,
+          "native_submit_calls": 5629,
+          "group_failed": false,
+          "first_receipt_ns": 70273349223458,
+          "clock_anchor": "python_first_pcm_receipt_not_native_host_time",
+          "outputs": [
+            {
+              "output_id": 1,
+              "native_frames": 1324057,
+              "consumed_frames": 1323872,
+              "queue_peak_frames": 1293,
+              "queue_capacity_frames": 1408,
+              "first_presentation_ns": 70275349223458,
+              "native_pcm_sha256": "5ff42f3c20850c7f099347998394ee9143248e9c183df87ee2979b3de319658d",
+              "consumed_pcm_sha256": "6dd07c66e4c1f3c02285073167c0fac8a412069085389333198060d1e04bfad1"
+            },
+            {
+              "output_id": 2,
+              "native_frames": 1324057,
+              "consumed_frames": 1323520,
+              "queue_peak_frames": 1293,
+              "queue_capacity_frames": 1408,
+              "first_presentation_ns": 70275349223458,
+              "native_pcm_sha256": "5ff42f3c20850c7f099347998394ee9143248e9c183df87ee2979b3de319658d",
+              "consumed_pcm_sha256": "316449874bc6251f95f8cb73b58bb130e647583a4c8c09a85446252863a945fb"
+            }
+          ],
+          "capture_cleanup_complete": true,
+          "capture_host_exited": true,
+          "capture_frames": 1346284,
+          "capture_blocks": 2862,
+          "capture_first_source": {
+            "nowSampleTime": "55634.0",
+            "nowHostTime": 1686560297594,
+            "nowFlags": 7,
+            "timebaseNumerator": 125,
+            "sampleTime": "54155.0",
+            "sourceSequence": 0,
+            "flags": 7,
+            "hostTime": 1686559557938,
+            "sourceChannels": 2,
+            "sourceFrames": 512,
+            "sourceRate": 48000,
+            "sourceFrameStart": 0,
+            "timebaseDenominator": 3,
+            "droppedBlocksBefore": 0,
+            "captureSession": "B3F7E447-1128-4779-8686-5398666015A5"
+          },
+          "capture_last_source": {
+            "sourceFrames": 512,
+            "nowSampleTime": "1520466.0",
+            "sourceFrameStart": 1464832,
+            "droppedBlocksBefore": 0,
+            "sourceRate": 48000,
+            "nowHostTime": 1687292715141,
+            "sourceSequence": 2861,
+            "hostTime": 1687291975796,
+            "timebaseNumerator": 125,
+            "sampleTime": "1518987.0",
+            "captureSession": "B3F7E447-1128-4779-8686-5398666015A5",
+            "timebaseDenominator": 3,
+            "nowFlags": 7,
+            "sourceChannels": 2,
+            "flags": 7
+          },
+          "capture_last_error": null,
+          "capture_error_code": null,
+          "capture_error_message": "",
+          "capture_error_cleanup_reported": null,
+          "capture_exclusion_policy": {
+            "policy": "fail_stop_on_registration_identity_or_object_change",
+            "notRegisteredPIDs": [
+              24765,
+              24767
+            ],
+            "objectExcludedPIDs": [
+              24770
+            ],
+            "registrationMonitoring": true
+          },
+          "capture_permission": "not_inferred",
+          "drain_complete": false
+        }
+      },
+      "stop": {
+        "state": "stopped",
+        "already_stopped": false,
+        "cleanup_complete": true
+      },
+      "stop_confirmed_ns": 70304747928375,
+      "local_sound_runs": 15
+    },
+    {
+      "session": "4ed1315b-f404-48c1-b482-c89db05e378d",
+      "requested_seconds": 10
+    }
+  ],
+  "events": [
+    {
+      "received_ns": 70266369761958,
+      "v": 1,
+      "id": "8f764713-ebac-4c44-b22c-36743f92cfd8",
+      "event": "result",
+      "session": null,
+      "payload": {
+        "protocol_version": 1,
+        "core_abi_version": 1,
+        "commands": [
+          "hello",
+          "scan",
+          "start",
+          "stop",
+          "shutdown"
+        ],
+        "worker_pid": 24767,
+        "capabilities": {
+          "system_audio": true,
+          "live": true,
+          "capture": true,
+          "stereo_pair": false,
+          "realtime_volume": false,
+          "av_offset": false
+        },
+        "worker_poisoned": false
+      }
+    },
+    {
+      "received_ns": 70266748117791,
+      "v": 1,
+      "id": "b585999a-97f9-4d54-a0a7-a8f7822462e5",
+      "event": "result",
+      "session": null,
+      "payload": {
+        "devices": [
+          {
+            "name": "\u5ba2\u5385",
+            "address": "192.168.0.104",
+            "model": "DeviceModel.HomePodGen2",
+            "identifier": "361AC6F1EFBF"
+          },
+          {
+            "name": "HomePod mini\u5c0f\u767d",
+            "address": "192.168.0.113",
+            "model": "DeviceModel.HomePodMini",
+            "identifier": "CE8FDBCE190F"
+          }
+        ]
+      }
+    },
+    {
+      "received_ns": 70266750922375,
+      "v": 1,
+      "id": "f7078aaa-9f94-479d-a7d0-d0d3227d3e87",
+      "event": "accepted",
+      "session": "591a8498-f1c7-4c2a-8dfd-fa80e74080ab",
+      "payload": {
+        "execution": "system_audio",
+        "actual_mode": "same_stereo"
+      }
+    },
+    {
+      "received_ns": 70266759988750,
+      "v": 1,
+      "id": "f7078aaa-9f94-479d-a7d0-d0d3227d3e87",
+      "event": "state",
+      "session": "591a8498-f1c7-4c2a-8dfd-fa80e74080ab",
+      "payload": {
+        "state": "preparing",
+        "execution": "system_audio",
+        "actual_mode": "same_stereo",
+        "acoustic_sync_verified": false
+      }
+    },
+    {
+      "received_ns": 70269250623708,
+      "v": 1,
+      "id": "f7078aaa-9f94-479d-a7d0-d0d3227d3e87",
+      "event": "state",
+      "session": "591a8498-f1c7-4c2a-8dfd-fa80e74080ab",
+      "payload": {
+        "state": "capturing",
+        "execution": "system_audio",
+        "actual_mode": "same_stereo",
+        "acoustic_sync_verified": false
+      }
+    },
+    {
+      "received_ns": 70273864503875,
+      "v": 1,
+      "id": "f7078aaa-9f94-479d-a7d0-d0d3227d3e87",
+      "event": "state",
+      "session": "591a8498-f1c7-4c2a-8dfd-fa80e74080ab",
+      "payload": {
+        "state": "streaming",
+        "execution": "system_audio",
+        "actual_mode": "same_stereo",
+        "acoustic_sync_verified": false
+      }
+    },
+    {
+      "received_ns": 70304747495250,
+      "v": 1,
+      "id": "f7078aaa-9f94-479d-a7d0-d0d3227d3e87",
+      "event": "state",
+      "session": "591a8498-f1c7-4c2a-8dfd-fa80e74080ab",
+      "payload": {
+        "state": "stopped"
+      }
+    },
+    {
+      "received_ns": 70304747653166,
+      "v": 1,
+      "id": "f7078aaa-9f94-479d-a7d0-d0d3227d3e87",
+      "event": "result",
+      "session": "591a8498-f1c7-4c2a-8dfd-fa80e74080ab",
+      "payload": {
+        "state": "stopped",
+        "cleanup_complete": true,
+        "report": {
+          "session": "591a8498-f1c7-4c2a-8dfd-fa80e74080ab",
+          "status": "failed",
+          "live": true,
+          "volume_percent": 15,
+          "acoustic_sync_verified": false,
+          "input_closed": true,
+          "hub_stopped": true,
+          "cleanup_complete": true,
+          "shared_start_ts": 176528874139621,
+          "send_origin_ns": 70273849223458,
+          "playback_origin_ns": 70275349223458,
+          "protocol_latency_samples": 66150,
+          "protocol_sample_rate": 44100,
+          "prepared_receivers": 2,
+          "anchor_uncertainty_ns": 11209,
+          "capture_to_receipt_uncertainty_ns": null,
+          "converter_delay_known": false,
+          "stream_releases": [
+            {
+              "output_id": 1,
+              "monotonic_ns": 70273850457625,
+              "start_ts": 176528874139621,
+              "first_rtp": 66150
+            },
+            {
+              "output_id": 2,
+              "monotonic_ns": 70273855671041,
+              "start_ts": 176528874139621,
+              "first_rtp": 66150
+            }
+          ],
+          "audio_packets": 7521,
+          "nonzero_packets": 3530,
+          "error_type": "CancelledError",
+          "native_core_used": true,
+          "input_frames": 1346284,
+          "native_submitted_frames": 1324057,
+          "input_peak_frames": 23050,
+          "input_capacity_frames": 88200,
+          "native_submit_calls": 5629,
+          "group_failed": false,
+          "first_receipt_ns": 70273349223458,
+          "clock_anchor": "python_first_pcm_receipt_not_native_host_time",
+          "outputs": [
+            {
+              "output_id": 1,
+              "native_frames": 1324057,
+              "consumed_frames": 1323872,
+              "queue_peak_frames": 1293,
+              "queue_capacity_frames": 1408,
+              "first_presentation_ns": 70275349223458,
+              "native_pcm_sha256": "5ff42f3c20850c7f099347998394ee9143248e9c183df87ee2979b3de319658d",
+              "consumed_pcm_sha256": "6dd07c66e4c1f3c02285073167c0fac8a412069085389333198060d1e04bfad1"
+            },
+            {
+              "output_id": 2,
+              "native_frames": 1324057,
+              "consumed_frames": 1323520,
+              "queue_peak_frames": 1293,
+              "queue_capacity_frames": 1408,
+              "first_presentation_ns": 70275349223458,
+              "native_pcm_sha256": "5ff42f3c20850c7f099347998394ee9143248e9c183df87ee2979b3de319658d",
+              "consumed_pcm_sha256": "316449874bc6251f95f8cb73b58bb130e647583a4c8c09a85446252863a945fb"
+            }
+          ],
+          "capture_cleanup_complete": true,
+          "capture_host_exited": true,
+          "capture_frames": 1346284,
+          "capture_blocks": 2862,
+          "capture_first_source": {
+            "nowSampleTime": "55634.0",
+            "nowHostTime": 1686560297594,
+            "nowFlags": 7,
+            "timebaseNumerator": 125,
+            "sampleTime": "54155.0",
+            "sourceSequence": 0,
+            "flags": 7,
+            "hostTime": 1686559557938,
+            "sourceChannels": 2,
+            "sourceFrames": 512,
+            "sourceRate": 48000,
+            "sourceFrameStart": 0,
+            "timebaseDenominator": 3,
+            "droppedBlocksBefore": 0,
+            "captureSession": "B3F7E447-1128-4779-8686-5398666015A5"
+          },
+          "capture_last_source": {
+            "sourceFrames": 512,
+            "nowSampleTime": "1520466.0",
+            "sourceFrameStart": 1464832,
+            "droppedBlocksBefore": 0,
+            "sourceRate": 48000,
+            "nowHostTime": 1687292715141,
+            "sourceSequence": 2861,
+            "hostTime": 1687291975796,
+            "timebaseNumerator": 125,
+            "sampleTime": "1518987.0",
+            "captureSession": "B3F7E447-1128-4779-8686-5398666015A5",
+            "timebaseDenominator": 3,
+            "nowFlags": 7,
+            "sourceChannels": 2,
+            "flags": 7
+          },
+          "capture_last_error": null,
+          "capture_error_code": null,
+          "capture_error_message": "",
+          "capture_error_cleanup_reported": null,
+          "capture_exclusion_policy": {
+            "policy": "fail_stop_on_registration_identity_or_object_change",
+            "notRegisteredPIDs": [
+              24765,
+              24767
+            ],
+            "objectExcludedPIDs": [
+              24770
+            ],
+            "registrationMonitoring": true
+          },
+          "capture_permission": "not_inferred",
+          "drain_complete": false
+        }
+      }
+    },
+    {
+      "received_ns": 70304747888833,
+      "v": 1,
+      "id": "e6e8edc1-857c-423a-94f8-21aeae93d7cc",
+      "event": "result",
+      "session": "591a8498-f1c7-4c2a-8dfd-fa80e74080ab",
+      "payload": {
+        "state": "stopped",
+        "already_stopped": false,
+        "cleanup_complete": true
+      }
+    },
+    {
+      "received_ns": 70307657284791,
+      "v": 1,
+      "id": "d0dea734-b6c8-496b-a343-8110cab04c77",
+      "event": "accepted",
+      "session": "4ed1315b-f404-48c1-b482-c89db05e378d",
+      "payload": {
+        "execution": "system_audio",
+        "actual_mode": "same_stereo"
+      }
+    },
+    {
+      "received_ns": 70307657325750,
+      "v": 1,
+      "id": "d0dea734-b6c8-496b-a343-8110cab04c77",
+      "event": "state",
+      "session": "4ed1315b-f404-48c1-b482-c89db05e378d",
+      "payload": {
+        "state": "preparing",
+        "execution": "system_audio",
+        "actual_mode": "same_stereo",
+        "acoustic_sync_verified": false
+      }
+    },
+    {
+      "received_ns": 70309488477125,
+      "v": 1,
+      "id": "d0dea734-b6c8-496b-a343-8110cab04c77",
+      "event": "state",
+      "session": "4ed1315b-f404-48c1-b482-c89db05e378d",
+      "payload": {
+        "state": "capturing",
+        "execution": "system_audio",
+        "actual_mode": "same_stereo",
+        "acoustic_sync_verified": false
+      }
+    },
+    {
+      "received_ns": 70309670845708,
+      "v": 1,
+      "id": "d0dea734-b6c8-496b-a343-8110cab04c77",
+      "event": "state",
+      "session": "4ed1315b-f404-48c1-b482-c89db05e378d",
+      "payload": {
+        "state": "failed"
+      }
+    },
+    {
+      "received_ns": 70309670858333,
+      "v": 1,
+      "id": "d0dea734-b6c8-496b-a343-8110cab04c77",
+      "event": "error",
+      "session": "4ed1315b-f404-48c1-b482-c89db05e378d",
+      "payload": {
+        "code": "operation_failed",
+        "message": "system session failed (ProtocolError)",
+        "cleanup_complete": true
+      }
+    },
+    {
+      "received_ns": 70309671569916,
+      "v": 1,
+      "id": "32c25e3c-d73c-4d55-8bd9-8fb50b84db65",
+      "event": "result",
+      "session": "4ed1315b-f404-48c1-b482-c89db05e378d",
+      "payload": {
+        "state": "stopped",
+        "already_stopped": true,
+        "cleanup_complete": true
+      }
+    },
+    {
+      "received_ns": 70309671892375,
+      "v": 1,
+      "id": "1618a39d-86fd-43a9-9569-288a2c8a85a7",
+      "event": "result",
+      "session": null,
+      "payload": {
+        "state": "shutdown",
+        "cleanup_complete": true
+      }
+    }
+  ],
+  "errors": [
+    {
+      "type": "RuntimeError",
+      "message": "worker error: {\"code\": \"operation_failed\", \"message\": \"system session failed (ProtocolError)\", \"cleanup_complete\": true}"
+    }
+  ],
+  "devices": [
+    {
+      "name": "\u5ba2\u5385",
+      "address": "192.168.0.104",
+      "model": "DeviceModel.HomePodGen2",
+      "identifier": "361AC6F1EFBF"
+    },
+    {
+      "name": "HomePod mini\u5c0f\u767d",
+      "address": "192.168.0.113",
+      "model": "DeviceModel.HomePodMini",
+      "identifier": "CE8FDBCE190F"
+    }
+  ],
+  "worker_stderr_tail": ""
+}

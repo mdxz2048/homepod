@@ -1,0 +1,92 @@
+{
+  "date": "2026-11-04",
+  "timezone": "Asia/Shanghai",
+  "python": "3.10.0",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "packages": {
+    "pyatv": "0.18.0",
+    "srptools": "1.0.1",
+    "miniaudio": "1.71",
+    "av": "17.1.0",
+    "numpy": "2.2.6",
+    "scipy": "1.15.3",
+    "matplotlib": "3.10.9"
+  },
+  "code_sha256": {
+    "sync_probe.py": "ea3c7c5807c40d6e280131180bc3952d5cd2fdd97810e54bc2dcc32e09454d48",
+    "alac_adapter.py": "ffb2b854b74d5b00105d39e4450fc8c92532c75f2d15eabb7daacf077d81fcd7",
+    "prepare_51.py": "581d81e8e60a19a91fdc826a5e4dfdbb8eaf359c5ea8ebd9707ba433de36eac8",
+    "prepare_downloaded51.py": "5ea905f2ecb4b0dd99c2deee427a7b8c17720910dcf4071512cbddeed713eba8",
+    "prepare_music51.py": "2587472c295e36e7d9e61b635161afeef9ffc45b0dd0e803fa70ffdf07c3da31",
+    "prepare_positions.py": "16fa9cdb6edaf65b061552fd68567d671cbbe0d9582d6f992eab3d0430b9db7e",
+    "prepare_sync_pulses.py": "e337f212b0b8083199b2e3cea2c9f279c8a56f715f6d12c4287a63fd8121d4f3",
+    "inspect_recording.py": "90fe7ab0a865eaabb6c5f5c6ea3c2cd81a6ea863096fd4adf0303c5cf36293be",
+    "requirements.txt": "1ddc2cbbffca709f198c39ff05967106f674b520c8fbb2426bf815f8d44d8108",
+    "requirements-analysis.txt": "b94166af4a736184db65c73e62e687e0c4a4889bdbeec79639564480fa99694e"
+  },
+  "recording": {
+    "path": "C:\\Users\\MDXZ\\OneDrive\\xwechat_files\\wxid_2039670396812_191d\\temp\\RWTemp\\2026-11\\9e20f478899dc29eb19741386f9343c8\\中铁卓越城13号楼 3.m4a",
+    "bytes": 573385,
+    "sha256": "f56a2da67831d1a3e9269acba9c3dee0222e31dfc44142e0bcdc6e05f71e85b0"
+  },
+  "evidence_files": [
+    {
+      "file": "single-homepod-audible.json",
+      "original": "artifacts/confirmed-speech-test.json",
+      "sha256": "8fb6f5a277cf41159b390ecde5083ade2e920cdf76b7ff784607c4dbff8b5549"
+    },
+    {
+      "file": "independent-minis-audible.json",
+      "original": "artifacts/confirmed-independent-rears.json",
+      "sha256": "d1f0e543e186aba21e3580f08ae0529874511e0dd15bf9370f840f907a2d0726"
+    },
+    {
+      "file": "three-speaker-sync15.json",
+      "original": "artifacts/three-speaker-sync15.json",
+      "sha256": "c425e04219ce56f56b7563a4804a146b635a800f2007a14af04278257c45481a"
+    },
+    {
+      "file": "sync-recording30-sender.json",
+      "original": "artifacts/sync-recording30/sender-report.json",
+      "sha256": "752a66d3170651fc17529b834255177e0baa8b2dc64f9ef06f76b18ebad76b47"
+    },
+    {
+      "file": "music60-sender.json",
+      "original": "artifacts/last_run.json",
+      "sha256": "641c0bb54977ee4dd5c028a3970b15f33f5816de669fb44e157b14f48aedb9a7"
+    },
+    {
+      "file": "music51-manifest.json",
+      "original": "artifacts/music51/manifest.json",
+      "sha256": "0d05ae02c6df928d26bd82341208dfd283e67a6f5455190e948f97e7b5de2115"
+    },
+    {
+      "file": "sintel-source-integrity.json",
+      "original": "artifacts/downloaded51/integrity.json",
+      "sha256": "79efa5abbf4c974fb13ed94a18a5776ef96bff573774092f64058c9245e2d007"
+    },
+    {
+      "file": "music-sync-test15-manifest.json",
+      "original": "artifacts/sync15/manifest.json",
+      "sha256": "085736b708475ae7de5ba96c85fed3ddd22dc1588353edb3704df0329f4cef44"
+    },
+    {
+      "file": "recording30-manifest.json",
+      "original": "artifacts/sync-recording30/manifest.json",
+      "sha256": "84b61b070ab7758a39b89265fe03c1b1bf463c04d09f6bc3cda71ad29539ed46"
+    },
+    {
+      "file": "recording-inspection-preliminary.json",
+      "original": "artifacts/recording-analysis/inspection.json",
+      "sha256": "e6c56f6ef66d6c1b90fc9524abb480901f8ec4b4c92fd5b7b176b2ddca03b2bb"
+    },
+    {
+      "file": "recording-onsets-exploratory-not-validated.json",
+      "original": "artifacts/recording-analysis/onset-thresholds.json",
+      "sha256": "362af2af3d9a4ac39a2312ae4824390b932f6c9772ef6a4af72eacd4472e22c3"
+    }
+  ],
+  "notes": "Exploratory recording results are not validated acoustic timing measurements.",
+  "code_snapshot_directory": "source",
+  "documentation": "../../HomePod_Spatial_Router_实现方案与测试记录_2026-11-04.md"
+}

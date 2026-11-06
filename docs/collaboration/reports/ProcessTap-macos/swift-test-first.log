@@ -1,0 +1,121 @@
+[0/1] Planning build
+Building for debugging...
+[0/10] /Users/lvzhipeng/Developer/HomePodSpatialRouter/process-tap-p0/source/.build/arm64-apple-macosx/debug/ProcessTapCapturePackageTests.derived/runner.swift
+[1/11] Write sources
+[5/11] Write swift-version-3CD7052B146186F2.txt
+[7/14] Emitting module ProcessTapCapture
+[8/14] Compiling ProcessTapCapture Models.swift
+[9/14] Compiling ProcessTapCapture HALCaptureBackend.swift
+[10/15] Compiling ProcessTapCapture CaptureSource.swift
+[11/19] Compiling TapCaptureProbe TapCaptureProbe.swift
+[12/19] Emitting module TapCaptureProbe
+[12/19] Write Objects.LinkFileList
+[13/19] Linking tap-capture-probe
+[14/19] Applying tap-capture-probe
+[16/19] Emitting module ProcessTapCaptureTests
+[17/19] Compiling ProcessTapCaptureTests CaptureTests.swift
+macro expansion #require:2:3: error: call can throw, but it is not marked with 'try' and the error is not handled
+`- /Users/lvzhipeng/Developer/HomePodSpatialRouter/process-tap-p0/source/Tests/ProcessTapCaptureTests/CaptureTests.swift:74:50: note: expanded code originates here
+ 72 |     #expect(capture.state == .running)
+ 73 |     backend.push([0.25, -0.5])
+ 74 |     let block = try #require(capture.readBlock())
+    |                     `- note: in expansion of macro 'require' here
+    +--- macro expansion #require --------------------------------------
+    |1 | Testing.__checkFunctionCall(capture.self,calling: {
+    |2 |   $0.readBlock()
+    |  |   `- error: call can throw, but it is not marked with 'try' and the error is not handled
+    |3 | },expression: .__fromFunctionCall(.__fromSyntaxNode("capture"),"readBlock"),comments: [],isRequired: true,sourceLocation: Testing.SourceLocation.__here()).__required()
+    +-------------------------------------------------------------------
+ 75 |     #expect(block.sessionID == firstSession)
+ 76 |     #expect(block.frames == 1 && block.format.sampleRate == 48000)
+
+macro expansion #require:2:3: error: call can throw, but it is not marked with 'try' and the error is not handled
+`- /Users/lvzhipeng/Developer/HomePodSpatialRouter/process-tap-p0/source/Tests/ProcessTapCaptureTests/CaptureTests.swift:127:49: note: expanded code originates here
+125 |     backend.push([1, 1]); backend.push([2, 2]); backend.push([3, 3])
+126 |     #expect(source.droppedBlocks == 1)
+127 |     let first = try #require(source.readBlock())
+    |                     `- note: in expansion of macro 'require' here
+    +--- macro expansion #require --------------------------------------
+    |1 | Testing.__checkFunctionCall(source.self,calling: {
+    |2 |   $0.readBlock()
+    |  |   `- error: call can throw, but it is not marked with 'try' and the error is not handled
+    |3 | },expression: .__fromFunctionCall(.__fromSyntaxNode("source"),"readBlock"),comments: [],isRequired: true,sourceLocation: Testing.SourceLocation.__here()).__required()
+    +-------------------------------------------------------------------
+128 |     let second = try #require(source.readBlock())
+129 |     #expect(first.callbackSequence == 0 && second.callbackSequence == 1)
+
+macro expansion #require:2:3: error: call can throw, but it is not marked with 'try' and the error is not handled
+`- /Users/lvzhipeng/Developer/HomePodSpatialRouter/process-tap-p0/source/Tests/ProcessTapCaptureTests/CaptureTests.swift:128:50: note: expanded code originates here
+126 |     #expect(source.droppedBlocks == 1)
+127 |     let first = try #require(source.readBlock())
+128 |     let second = try #require(source.readBlock())
+    |                      `- note: in expansion of macro 'require' here
+    +--- macro expansion #require --------------------------------------
+    |1 | Testing.__checkFunctionCall(source.self,calling: {
+    |2 |   $0.readBlock()
+    |  |   `- error: call can throw, but it is not marked with 'try' and the error is not handled
+    |3 | },expression: .__fromFunctionCall(.__fromSyntaxNode("source"),"readBlock"),comments: [],isRequired: true,sourceLocation: Testing.SourceLocation.__here()).__required()
+    +-------------------------------------------------------------------
+129 |     #expect(first.callbackSequence == 0 && second.callbackSequence == 1)
+130 |     backend.push([4, 4])
+
+macro expansion #require:2:3: error: call can throw, but it is not marked with 'try' and the error is not handled
+`- /Users/lvzhipeng/Developer/HomePodSpatialRouter/process-tap-p0/source/Tests/ProcessTapCaptureTests/CaptureTests.swift:131:49: note: expanded code originates here
+129 |     #expect(first.callbackSequence == 0 && second.callbackSequence == 1)
+130 |     backend.push([4, 4])
+131 |     let after = try #require(source.readBlock())
+    |                     `- note: in expansion of macro 'require' here
+    +--- macro expansion #require --------------------------------------
+    |1 | Testing.__checkFunctionCall(source.self,calling: {
+    |2 |   $0.readBlock()
+    |  |   `- error: call can throw, but it is not marked with 'try' and the error is not handled
+    |3 | },expression: .__fromFunctionCall(.__fromSyntaxNode("source"),"readBlock"),comments: [],isRequired: true,sourceLocation: Testing.SourceLocation.__here()).__required()
+    +-------------------------------------------------------------------
+132 |     #expect(after.callbackSequence == 3 && after.droppedBlocksBefore == 1)
+133 |     #expect(try after.interleavedFloat32() == [4, 4])
+
+macro expansion #require:2:3: error: call can throw, but it is not marked with 'try' and the error is not handled
+`- /Users/lvzhipeng/Developer/HomePodSpatialRouter/process-tap-p0/source/Tests/ProcessTapCaptureTests/CaptureTests.swift:175:49: note: expanded code originates here
+173 |     try source.start(configuration: .init())
+174 |     backend.push([.nan, .infinity])
+175 |     let block = try #require(source.readBlock())
+    |                     `- note: in expansion of macro 'require' here
+    +--- macro expansion #require --------------------------------------
+    |1 | Testing.__checkFunctionCall(source.self,calling: {
+    |2 |   $0.readBlock()
+    |  |   `- error: call can throw, but it is not marked with 'try' and the error is not handled
+    |3 | },expression: .__fromFunctionCall(.__fromSyntaxNode("source"),"readBlock"),comments: [],isRequired: true,sourceLocation: Testing.SourceLocation.__here()).__required()
+    +-------------------------------------------------------------------
+176 |     #expect(throws: (any Error).self) { try block.interleavedFloat32() }
+177 |     try source.stop()
+
+macro expansion #require:2:3: error: call can throw, but it is not marked with 'try' and the error is not handled
+`- /Users/lvzhipeng/Developer/HomePodSpatialRouter/process-tap-p0/source/Tests/ProcessTapCaptureTests/CaptureTests.swift:184:49: note: expanded code originates here
+182 |     try source.start(configuration: .init())
+183 |     backend.push([0.5, 0.5], sampleTime: .nan)
+184 |     let block = try #require(source.readBlock())
+    |                     `- note: in expansion of macro 'require' here
+    +--- macro expansion #require --------------------------------------
+    |1 | Testing.__checkFunctionCall(source.self,calling: {
+    |2 |   $0.readBlock()
+    |  |   `- error: call can throw, but it is not marked with 'try' and the error is not handled
+    |3 | },expression: .__fromFunctionCall(.__fromSyntaxNode("source"),"readBlock"),comments: [],isRequired: true,sourceLocation: Testing.SourceLocation.__here()).__required()
+    +-------------------------------------------------------------------
+185 |     #expect(!block.sampleTimeIsValid && block.sampleTime.isNaN)
+186 |     #expect(!block.nowTimestamp.sampleTimeIsValid && block.nowTimestamp.sampleTime.isNaN)
+
+macro expansion #require:2:3: error: call can throw, but it is not marked with 'try' and the error is not handled
+`- /Users/lvzhipeng/Developer/HomePodSpatialRouter/process-tap-p0/source/Tests/ProcessTapCaptureTests/CaptureTests.swift:232:49: note: expanded code originates here
+230 |         }
+231 |     }
+232 |     let block = try #require(source.readBlock())
+    |                     `- note: in expansion of macro 'require' here
+    +--- macro expansion #require --------------------------------------
+    |1 | Testing.__checkFunctionCall(source.self,calling: {
+    |2 |   $0.readBlock()
+    |  |   `- error: call can throw, but it is not marked with 'try' and the error is not handled
+    |3 | },expression: .__fromFunctionCall(.__fromSyntaxNode("source"),"readBlock"),comments: [],isRequired: true,sourceLocation: Testing.SourceLocation.__here()).__required()
+    +-------------------------------------------------------------------
+233 |     #expect(block.buffers.count == 2 && block.bufferChannels == [1, 1])
+234 |     #expect(try block.interleavedFloat32() == [0.25, -0.25, 0.5, -0.5])
+error: fatalError

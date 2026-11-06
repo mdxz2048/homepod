@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-05",
+  "kind": "pre-core-refactor-content-baseline",
+  "git_baseline": "repository has no initial tracked project commit; this manifest fixes original source hashes",
+  "files": {
+    "sync_probe.py": {
+      "bytes": 15303,
+      "sha256": "ea3c7c5807c40d6e280131180bc3952d5cd2fdd97810e54bc2dcc32e09454d48"
+    },
+    "alac_adapter.py": {
+      "bytes": 2393,
+      "sha256": "ffb2b854b74d5b00105d39e4450fc8c92532c75f2d15eabb7daacf077d81fcd7"
+    },
+    "requirements.txt": {
+      "bytes": 30,
+      "sha256": "1ddc2cbbffca709f198c39ff05967106f674b520c8fbb2426bf815f8d44d8108"
+    },
+    "prepare_51.py": {
+      "bytes": 7094,
+      "sha256": "581d81e8e60a19a91fdc826a5e4dfdbb8eaf359c5ea8ebd9707ba433de36eac8"
+    },
+    "prepare_positions.py": {
+      "bytes": 3102,
+      "sha256": "16fa9cdb6edaf65b061552fd68567d671cbbe0d9582d6f992eab3d0430b9db7e"
+    },
+    "prepare_sync_pulses.py": {
+      "bytes": 3653,
+      "sha256": "e337f212b0b8083199b2e3cea2c9f279c8a56f715f6d12c4287a63fd8121d4f3"
+    },
+    "prepare_music51.py": {
+      "bytes": 4087,
+      "sha256": "2587472c295e36e7d9e61b635161afeef9ffc45b0dd0e803fa70ffdf07c3da31"
+    },
+    "prepare_downloaded51.py": {
+      "bytes": 5583,
+      "sha256": "5ea905f2ecb4b0dd99c2deee427a7b8c17720910dcf4071512cbddeed713eba8"
+    },
+    "inspect_recording.py": {
+      "bytes": 2697,
+      "sha256": "90fe7ab0a865eaabb6c5f5c6ea3c2cd81a6ea863096fd4adf0303c5cf36293be"
+    },
+    "docs/HomePod_Spatial_Router_实现方案与测试记录_2026-11-04.md": {
+      "bytes": 22370,
+      "sha256": "890a14a89dd04b3b3e28a1eb4a53585f3f14c5c1223a2fa777ed71b69b4cec3c"
+    }
+  }
+}

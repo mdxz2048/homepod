@@ -1,0 +1,7 @@
+{
+  "source": "sintel-master-51-complete.flac",
+  "expected_pcm_md5": "481d9f9497a298cfd4837fb6d5c6d9a7",
+  "decoded_pcm_md5": "481d9f9497a298cfd4837fb6d5c6d9a7",
+  "frames": 42624000,
+  "verified": true
+}

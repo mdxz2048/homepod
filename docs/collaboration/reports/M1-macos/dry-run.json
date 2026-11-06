@@ -1,0 +1,71 @@
+{
+  "status": "offline_dry_run_completed",
+  "acoustic_sync_verified": false,
+  "command": "dry-run",
+  "input_sample_rate": 44100,
+  "input_channels": 3,
+  "input_frames": 44100,
+  "routes": {
+    "0": [
+      0,
+      0
+    ],
+    "1": [
+      1,
+      1
+    ],
+    "2": [
+      2,
+      2
+    ]
+  },
+  "native_library": "/Users/lvzhipeng/Developer/HomePodSpatialRouter/core-m1-validation/build/core/libflow_bridge.dylib",
+  "native_core_used": true,
+  "playback_origin_ns": 16237599279208,
+  "epoch": 1,
+  "frames": 44100,
+  "outputs": [
+    {
+      "output_id": 0,
+      "channels": 2,
+      "frames": 44100,
+      "pcm_sha256": "2dc4e9dedc2f8c20861eaf8d63a2abdf802e6df8e9c336938dac46758ff5baea",
+      "first_presentation_ns": 16237599279208,
+      "last_block_frame": 44000,
+      "blocks": 126
+    },
+    {
+      "output_id": 1,
+      "channels": 2,
+      "frames": 44100,
+      "pcm_sha256": "e59a5adabc28b92dc0ad5bbdb9255bc4148c09801c69e6f67ebfbd7e90549635",
+      "first_presentation_ns": 16237599279208,
+      "last_block_frame": 44000,
+      "blocks": 126
+    },
+    {
+      "output_id": 2,
+      "channels": 2,
+      "frames": 44100,
+      "pcm_sha256": "cb73c6b13dcc5e0e5d4fcc9000bac98a08470944b7c2cfe4262dc1b5d2b81e17",
+      "first_presentation_ns": 16237599279208,
+      "last_block_frame": 44000,
+      "blocks": 126
+    }
+  ],
+  "network_used": false,
+  "audio_source_consumed": {
+    "0": {
+      "frames": 44100,
+      "pcm_sha256": "2dc4e9dedc2f8c20861eaf8d63a2abdf802e6df8e9c336938dac46758ff5baea"
+    },
+    "1": {
+      "frames": 44100,
+      "pcm_sha256": "e59a5adabc28b92dc0ad5bbdb9255bc4148c09801c69e6f67ebfbd7e90549635"
+    },
+    "2": {
+      "frames": 44100,
+      "pcm_sha256": "cb73c6b13dcc5e0e5d4fcc9000bac98a08470944b7c2cfe4262dc1b5d2b81e17"
+    }
+  }
+}

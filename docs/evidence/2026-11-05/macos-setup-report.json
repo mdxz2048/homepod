@@ -1,0 +1,38 @@
+{
+  "python": "3.12.16",
+  "packages": {
+    "pyatv": "0.18.0",
+    "srptools": "1.0.1",
+    "miniaudio": "1.71",
+    "av": "19.0.2",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  },
+  "swiftui_compile": {
+    "exit_code": 0,
+    "output": ""
+  },
+  "adhoc_codesign": {
+    "exit_code": 0,
+    "output": "/Users/lvzhipeng/Developer/HomePodSpatialRouter/setup/ToolchainProbe.app: replacing existing signature\n"
+  },
+  "codesign_verify": {
+    "exit_code": 0,
+    "output": "/Users/lvzhipeng/Developer/HomePodSpatialRouter/setup/ToolchainProbe.app: valid on disk\n/Users/lvzhipeng/Developer/HomePodSpatialRouter/setup/ToolchainProbe.app: satisfies its Designated Requirement\n"
+  },
+  "ffmpeg_alac": {
+    "exit_code": 0,
+    "output": ""
+  },
+  "pyav_decode": {
+    "codec": "alac",
+    "frames": 8820
+  },
+  "discovered_receivers": [
+    {
+      "name": "客厅",
+      "ip": "192.168.0.104",
+      "model": "DeviceModel.HomePodGen2"
+    }
+  ]
+}

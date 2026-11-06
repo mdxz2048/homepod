@@ -1,0 +1,1 @@
+AppKit view cache; active temporary host, not system menu popover

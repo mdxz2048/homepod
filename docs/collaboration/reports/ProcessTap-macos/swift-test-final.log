@@ -1,0 +1,58 @@
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[3/8] Write swift-version-3CD7052B146186F2.txt
+[5/11] Emitting module ProcessTapCapture
+[6/11] Compiling ProcessTapCapture CaptureSource.swift
+[7/11] Compiling ProcessTapCapture Models.swift
+[8/12] Compiling ProcessTapCapture HALCaptureBackend.swift
+[9/18] Compiling ProcessTapCaptureTests IndependentPCMTests.swift
+[10/18] Emitting module TapCaptureProbe
+[11/18] Compiling TapCaptureProbe TapCaptureProbe.swift
+[11/18] Write Objects.LinkFileList
+[12/18] Linking tap-capture-probe
+[13/18] Applying tap-capture-probe
+[15/18] Compiling ProcessTapCaptureTests CaptureTests.swift
+[16/18] Emitting module ProcessTapCaptureTests
+[17/20] Compiling ProcessTapCapturePackageTests runner.swift
+[18/20] Emitting module ProcessTapCapturePackageTests
+[18/20] Write Objects.LinkFileList
+[19/20] Linking ProcessTapCapturePackageTests
+Build complete! (2.63s)
+Test Suite 'All tests' started at 2026-11-05 19:55:59.991.
+Test Suite 'All tests' passed at 2026-11-05 19:55:59.993.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test scopedFailureStillStops() started.
+◇ Test timestampBackwardsAndUnexpectedJumpFailStop() started.
+◇ Test rejectsUnsupportedFormatAndOversizedMemoryBudget() started.
+◇ Test boundedOverflowIdentifiesGap() started.
+◇ Test scopedTaskCancellationStillStops() started.
+◇ Test independentContradictoryFloatAndIntegerFormatIsRejected() started.
+◇ Test partialStartRollsBackInReverse() started.
+◇ Test nonFinitePCMIsRejectedOnConsumerSide() started.
+◇ Test independentBigEndianPCMAndInvalidTimestampFlagsRemainHonest() started.
+◇ Test callbackFaultStopsOutsideRealTime() started.
+◇ Test missingCallbackPointersFailStop() started.
+◇ Test invalidSampleTimestampIsNotVerified() started.
+◇ Test planarRingPreservesAndInterleavesChannels() started.
+◇ Test normalLifecycleAndSessionIdentity() started.
+◇ Test cleanupFailurePreservesDependencyChain() started.
+✔ Test independentContradictoryFloatAndIntegerFormatIsRejected() passed after 0.001 seconds.
+✔ Test timestampBackwardsAndUnexpectedJumpFailStop() passed after 0.001 seconds.
+✔ Test independentBigEndianPCMAndInvalidTimestampFlagsRemainHonest() passed after 0.001 seconds.
+✔ Test boundedOverflowIdentifiesGap() passed after 0.001 seconds.
+✔ Test rejectsUnsupportedFormatAndOversizedMemoryBudget() passed after 0.001 seconds.
+✔ Test scopedFailureStillStops() passed after 0.001 seconds.
+✔ Test partialStartRollsBackInReverse() passed after 0.001 seconds.
+✔ Test nonFinitePCMIsRejectedOnConsumerSide() passed after 0.001 seconds.
+✔ Test planarRingPreservesAndInterleavesChannels() passed after 0.001 seconds.
+✔ Test missingCallbackPointersFailStop() passed after 0.001 seconds.
+✔ Test callbackFaultStopsOutsideRealTime() passed after 0.001 seconds.
+✔ Test normalLifecycleAndSessionIdentity() passed after 0.001 seconds.
+✔ Test invalidSampleTimestampIsNotVerified() passed after 0.001 seconds.
+✔ Test cleanupFailurePreservesDependencyChain() passed after 0.001 seconds.
+✔ Test scopedTaskCancellationStillStops() passed after 0.004 seconds.
+✔ Test run with 15 tests in 0 suites passed after 0.004 seconds.
