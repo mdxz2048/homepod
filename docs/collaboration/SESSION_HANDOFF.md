@@ -38,7 +38,8 @@
 - 7 设备 dev bundle 曾安装并完成 Gate 1：mono/stereo/3.0/4.0/5.1 side/5.1 back/7.1 全部枚举；通道数、ASBD、UseChannelDescriptions 布局、element 名称、每设备 hfla/hflr 隔离均通过；AudioUnit create/init 全 0。
 - 8ch device Tap 传输通过：channels=8、bytesPerFrame=32、481 回调/246272 帧、timestamp flags=7；样本仍为 0 仅因 CLI 无 TCC，尚未在授权 GUI 进程验证逐通道非零。
 - 用户认为 7 个设备过多，产品默认收敛为 3 个可见设备（stereo/5.1 side/7.1）；mono/3.0/4.0/5.1 back 标记 `IsHidden`，仍可按 UID 使用。
-- dev family bundle 已从 `/Library/Audio/Plug-Ins/HAL/HomePodFlowAudioFamily.driver` 卸载；因未重启，7 个 dev 设备仍在 coreaudiod 内存中，下一次重启后消失。当前系统只剩 stereo bundle。
+- dev family bundle 已从磁盘卸载；因未重启，7 个 dev 设备仍在 coreaudiod 内存中。
+- 随后已安装 production family 到 `/Library/Audio/Plug-Ins/HAL/HomePodFlowAudioFamily.driver`（binary SHA `bdfa251e084451e20e15b2e786ded58909743e37ef3ecfa361df71dbc5163d8c`，codesign 通过），并把原 stereo bundle 移到 `live-validation/virtual-driver-backup-stereo-sixth/HomePodFlowAudio.driver`。**需要重启一次**：重启后应为 3 个可见设备（stereo/5.1 side/7.1），mono/3.0/4.0/5.1 back 标记 hidden；重启前 coreaudiod 仍是旧 stereo + 7 个 dev 设备。
 - 证据见 `reports/VirtualAudio-2026-11-06/Family-driver-runtime-2026-11-06.md`。
 
 仍未实现/未验：产品 Input 的真实 Tap 采集、ring、48k→44.1k 转换与 HPCM；App 身份下的 TCC；WriteMix 转发（当前 sink，若 Tap 产品化成立则不必改，但要保留系统 Tap 兜底）；源 render time/延迟校准、Chrome/Safari 采用、声学音画；恢复 helper/lease 跨进程事务/自动默认输出接管；6/8ch；正式签名与自包含安装包。
