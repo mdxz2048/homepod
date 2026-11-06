@@ -1,0 +1,71 @@
+[0/1] Planning build
+Building for debugging...
+[0/9] Write sources
+[2/9] Write swift-version-3CD7052B146186F2.txt
+[3/9] Compiling HALInputConstants HALInputConstants.c
+[5/14] Compiling VirtualAudioInput Models.swift
+[6/14] Emitting module VirtualAudioInput
+[7/14] Compiling VirtualAudioInput HALVirtualDeviceBackend.swift
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/HALVirtualDeviceBackend.swift:51:72: warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<CFString>'; this is likely incorrect because 'Optional<CFString>' may contain an object reference.
+ 49 |         var raw: CFString?
+ 50 |         var size = UInt32(MemoryLayout<CFString?>.size)
+ 51 |         let status = AudioObjectGetPropertyData(id, &a, 0, nil, &size, &raw)
+    |                                                                        `- warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<CFString>'; this is likely incorrect because 'Optional<CFString>' may contain an object reference.
+ 52 |         guard status == noErr else { throw InputFailure.hal(operation: "string \(selector)", status: status) }
+ 53 |         guard size == MemoryLayout<CFString?>.size, let raw else { throw InputFailure.invalidProperty("missing string") }
+[8/14] Compiling VirtualAudioInput Control.swift
+[9/14] Compiling VirtualAudioInput Recovery.swift
+[10/18] Emitting module VirtualAudioInputCLI
+[11/18] Compiling VirtualAudioInputCLI main.swift
+[11/18] Write Objects.LinkFileList
+[12/18] Linking virtual-audio-input
+[13/18] Applying virtual-audio-input
+[15/18] Compiling VirtualAudioInputTests VirtualAudioInputTests.swift
+[16/18] Emitting module VirtualAudioInputTests
+[17/20] Emitting module VirtualAudioInputPackageTests
+[18/20] Compiling VirtualAudioInputPackageTests runner.swift
+[18/20] Write Objects.LinkFileList
+[19/20] Linking VirtualAudioInputPackageTests
+Build complete! (9.12s)
+Test Suite 'All tests' started at 2026-11-06 15:01:35.908.
+Test Suite 'VirtualAudioInputPackageTests.xctest' started at 2026-11-06 15:01:35.909.
+Test Suite 'ControlChecks' started at 2026-11-06 15:01:35.909.
+Test Case '-[VirtualAudioInputTests.ControlChecks testDefaultTakeoverBlockedWithoutIndependentHelper]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testDefaultTakeoverBlockedWithoutIndependentHelper]' passed (0.003 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testDiscoveryIsReadOnlyAndStartNeverPretendsReady]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testDiscoveryIsReadOnlyAndStartNeverPretendsReady]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testDriverRaceAndExternalRevisionDoNotConfirmSuccess]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testDriverRaceAndExternalRevisionDoNotConfirmSuccess]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testFailedJournalDoesNotSwitchOutput]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testFailedJournalDoesNotSwitchOutput]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testFileJournalRejectsStaleOwnerAndPersistsForNextProcess]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testFileJournalRejectsStaleOwnerAndPersistsForNextProcess]' passed (0.003 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testJournalBeforeSwitchAndRestoreLeavesSystemRoleAlone]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testJournalBeforeSwitchAndRestoreLeavesSystemRoleAlone]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testLatencyWriteConfirmsRevisionButNotCalibration]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testLatencyWriteConfirmsRevisionButNotCalibration]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testMissingOriginalRequiresVerifiedFallbackAndRetainsJournalOnFailure]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testMissingOriginalRequiresVerifiedFallbackAndRetainsJournalOnFailure]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testOversizedJournalIsRejectedByBoundedRead]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testOversizedJournalIsRejectedByBoundedRead]' passed (0.001 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testRunningStaleAndOutOfRangeNeverWrite]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testRunningStaleAndOutOfRangeNeverWrite]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testUserOverrideIsPreservedAndOldOwnerCannotRestore]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testUserOverrideIsPreservedAndOldOwnerCannotRestore]' passed (0.000 seconds).
+Test Suite 'ControlChecks' passed at 2026-11-06 15:01:35.918.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.009 (0.009) seconds
+Test Suite 'FormatChecks' started at 2026-11-06 15:01:35.918.
+Test Case '-[VirtualAudioInputTests.FormatChecks testDescriptorRoundTripKeepsUnverifiedCaptureAndSourceProvenance]' started.
+Test Case '-[VirtualAudioInputTests.FormatChecks testDescriptorRoundTripKeepsUnverifiedCaptureAndSourceProvenance]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.FormatChecks testRejectsLabelCountAndNonFiniteRate]' started.
+Test Case '-[VirtualAudioInputTests.FormatChecks testRejectsLabelCountAndNonFiniteRate]' passed (0.000 seconds).
+Test Suite 'FormatChecks' passed at 2026-11-06 15:01:35.919.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'VirtualAudioInputPackageTests.xctest' passed at 2026-11-06 15:01:35.919.
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.009 (0.010) seconds
+Test Suite 'All tests' passed at 2026-11-06 15:01:35.919.
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.009 (0.011) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

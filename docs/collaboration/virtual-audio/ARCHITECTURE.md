@@ -1,6 +1,6 @@
 # 虚拟音频入口架构与实施边界
 
-日期：2026-11-06。阶段：立体声可证伪原型；正式主路径尚未通过。具体接口见 [CONTRACT.md v0.2](CONTRACT.md)。
+日期：2026-11-06。阶段：立体声可证伪原型；正式主路径尚未通过。具体接口见 [CONTRACT.md v0.3](CONTRACT.md)。
 
 ## 产品目标与当前事实
 
@@ -33,6 +33,8 @@ App controller → prepare / latency revision / output takeover lease
 浏览器看见的是虚拟输出端点。driver给真实渲染时钟，stream latency单处给下游预算；发送端须保持真实样本与该预算对应。不能把普通扬声器属性写成2秒，也不能先给hostTime加2秒又上报2秒。
 
 兼容审查已纠正首版scope遗漏：Chromium查询stream latency时保留output scope，故该selector须兼容global/output两scope同值查询与通知；仍只计一次延迟，其余属性保持各自严格scope矩阵。源码依据不替代目标浏览器实测。
+
+目标Mac的driver remote service加载后，HAL枚举仍遇UnknownProperty，故v0.3补充RelatedDevices、自有对象方向查询和device input latency/safety零值兼容。设备依然没有input stream，零值查询不能被解释为新增麦克风或loopback输入能力；错误码尚未单独定位缺失selector，需保留失败诊断与下一候选实际结果。
 
 现有链路以Python receipt为起点、RAOP协商latency加500ms建立共同呈现。它证明不同音箱计划同步，不自动证明对应源render的端到端延迟。新输入应保留源host clock，量化render→Tap/转换→receipt，再对齐计划呈现；未知误差标注，不拿2秒巧合当校准。
 

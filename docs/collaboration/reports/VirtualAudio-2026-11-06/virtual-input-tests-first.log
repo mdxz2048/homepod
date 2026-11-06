@@ -1,0 +1,27 @@
+Building for debugging...
+[0/12] /Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioInput/.build/arm64-apple-macosx/debug/VirtualAudioInputPackageTests.derived/runner.swift
+[1/12] Write sources
+[1/12] Write virtual-audio-input-entitlement.plist
+[2/12] Write sources
+[6/12] Write swift-version-3CD7052B146186F2.txt
+[8/17] Emitting module VirtualAudioInput
+[9/17] Compiling VirtualAudioInput Models.swift
+[10/17] Compiling VirtualAudioInput Recovery.swift
+[11/17] Compiling VirtualAudioInput Control.swift
+[12/17] Compiling VirtualAudioInput HALVirtualDeviceBackend.swift
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/HALVirtualDeviceBackend.swift:56:39: error: cannot convert value of type 'Int32' to expected argument type 'AudioObjectID' (aka 'UInt32')
+ 54 |     }
+ 55 |     private func deviceID() throws -> AudioObjectID {
+ 56 |         let ids: [UInt32] = try array(kAudioObjectSystemObject, kAudioHardwarePropertyDevices, UInt32(0))
+    |                                       `- error: cannot convert value of type 'Int32' to expected argument type 'AudioObjectID' (aka 'UInt32')
+ 57 |         // A disappearing unrelated device must not turn an absent project driver into fake readiness.
+ 58 |         let matches = ids.filter { (try? string($0, kAudioDevicePropertyDeviceUID)) == VirtualIdentity.deviceUID }
+
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/HALVirtualDeviceBackend.swift:129:35: error: cannot find 'kAudioDevicePropertyZeroTimeStampPeriod' in scope
+127 |         let safety = try read(id, kAudioDevicePropertySafetyOffset, UInt32(0), scope: kAudioObjectPropertyScopeOutput)
+128 |         let buffer = try read(id, kAudioDevicePropertyBufferFrameSize, UInt32(0))
+129 |         let period = try read(id, kAudioDevicePropertyZeroTimeStampPeriod, UInt32(0))
+    |                                   `- error: cannot find 'kAudioDevicePropertyZeroTimeStampPeriod' in scope
+130 |         let range = try read(id, kAudioDevicePropertyBufferFrameSizeRange, AudioValueRange())
+131 |         guard deviceLatency == 0, safety == 0, buffer == 512, period == 16_384,
+error: fatalError

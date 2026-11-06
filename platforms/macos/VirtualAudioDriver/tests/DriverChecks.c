@@ -43,11 +43,66 @@ static void CheckLatencyScope(AudioObjectPropertyScope scope, Boolean expected) 
     assert(GetData(Driver(),kFlowObjectOutputStream,0,&address,0,NULL,sizeof(value),&written,&value)==wanted);
     if (expected) assert(!settable && size==sizeof(UInt32) && written==sizeof(UInt32) && value==96000);
 }
+/* This list covers the original sample's output-device initialization properties,
+ * excluding optional artwork and non-existent input-channel layout. It is not a
+ * substitute for the actual HAL's initialization query sequence. */
+static void CheckInitializationProperties(void) {
+    const AudioObjectPropertySelector pluginSelectors[] = {
+        kAudioPlugInPropertyBundleID,kAudioPlugInPropertyDeviceList,kAudioPlugInPropertyResourceBundle,kAudioPlugInPropertyBoxList
+    };
+    const AudioObjectPropertySelector deviceGlobal[] = {
+        kAudioObjectPropertyBaseClass,kAudioObjectPropertyClass,kAudioObjectPropertyOwner,
+        kAudioObjectPropertyName,kAudioObjectPropertyManufacturer,kAudioObjectPropertyOwnedObjects,
+        kAudioDevicePropertyDeviceUID,kAudioDevicePropertyModelUID,kAudioDevicePropertyTransportType,
+        kAudioDevicePropertyRelatedDevices,kAudioDevicePropertyClockDomain,kAudioDevicePropertyDeviceIsAlive,
+        kAudioDevicePropertyDeviceIsRunning,kAudioObjectPropertyControlList,kAudioDevicePropertyNominalSampleRate,
+        kAudioDevicePropertyAvailableNominalSampleRates,kAudioDevicePropertyIsHidden,
+        kAudioDevicePropertyZeroTimeStampPeriod,kAudioDevicePropertyStreams
+    };
+    const AudioObjectPropertySelector directional[] = {
+        kAudioDevicePropertyDeviceCanBeDefaultDevice,kAudioDevicePropertyDeviceCanBeDefaultSystemDevice,
+        kAudioDevicePropertyLatency,kAudioDevicePropertySafetyOffset,kAudioDevicePropertyStreams,kAudioObjectPropertyOwnedObjects
+    };
+    for (UInt32 group=0;group<4;++group) {
+        const AudioObjectPropertySelector *selectors = group==0 ? pluginSelectors : group==1 ? deviceGlobal : directional;
+        size_t count=group==0 ? sizeof(pluginSelectors)/sizeof(pluginSelectors[0]) : group==1 ? sizeof(deviceGlobal)/sizeof(deviceGlobal[0]) : sizeof(directional)/sizeof(directional[0]);
+        AudioObjectID object=group==0 ? kAudioObjectPlugInObject : kFlowObjectDevice;
+        AudioObjectPropertyScope scope=group<2 ? kAudioObjectPropertyScopeGlobal : group==2 ? kAudioObjectPropertyScopeInput : kAudioObjectPropertyScopeOutput;
+        for(size_t i=0;i<count;++i) {
+            AudioObjectPropertyAddress address={selectors[i],scope,kAudioObjectPropertyElementMain};
+            UInt32 size=0,written=UINT32_MAX; Boolean settable=false; unsigned char bytes[256]={0};
+            assert(HasProperty(Driver(),object,0,&address));
+            assert(IsSettable(Driver(),object,0,&address,&settable)==noErr);
+            assert(DataSize(Driver(),object,0,&address,0,NULL,&size)==noErr && size<=sizeof(bytes));
+            assert(GetData(Driver(),object,0,&address,0,NULL,size,&written,size ? bytes : NULL)==noErr && written==size);
+            if (selectors[i]==kAudioObjectPropertyName || selectors[i]==kAudioObjectPropertyManufacturer
+                || selectors[i]==kAudioPlugInPropertyBundleID || selectors[i]==kAudioPlugInPropertyResourceBundle
+                || selectors[i]==kAudioDevicePropertyDeviceUID || selectors[i]==kAudioDevicePropertyModelUID) {
+                CFStringRef string; memcpy(&string,bytes,sizeof(string)); assert(string); CFRelease(string);
+            }
+        }
+    }
+    for (AudioObjectPropertyElement channel=0;channel<=2;++channel) {
+        AudioObjectPropertyAddress address={kAudioObjectPropertyElementName,kAudioObjectPropertyScopeOutput,channel};
+        UInt32 size=0,written=0; CFStringRef name=NULL;
+        assert(DataSize(Driver(),kFlowObjectDevice,0,&address,0,NULL,&size)==noErr && size==sizeof(name));
+        assert(GetData(Driver(),kFlowObjectDevice,0,&address,0,NULL,sizeof(name),&written,&name)==noErr && name);
+        CFRelease(name);
+    }
+}
 int main(void) {
     assert(FlowVirtualAudioFactory(NULL,kAudioServerPlugInTypeUUID)==Driver());
     assert(Initialize(Driver(),&gMockHost)==noErr);
+    CheckInitializationProperties();
     assert(atomic_is_lock_free(&gAnchor));
     assert(Read32(kFlowObjectDevice,kAudioDevicePropertyLatency,kAudioObjectPropertyScopeOutput)==0);
+    assert(Read32(kFlowObjectDevice,kAudioDevicePropertyLatency,kAudioObjectPropertyScopeInput)==0);
+    assert(Read32(kFlowObjectDevice,kAudioDevicePropertySafetyOffset,kAudioObjectPropertyScopeInput)==0);
+    assert(Read32(kFlowObjectDevice,kAudioDevicePropertyRelatedDevices,kAudioObjectPropertyScopeGlobal)==kFlowObjectDevice);
+    assert(Read32(kFlowObjectDevice,kAudioObjectPropertyOwnedObjects,kAudioObjectPropertyScopeOutput)==kFlowObjectOutputStream);
+    AudioObjectPropertyAddress emptyOwned={kAudioObjectPropertyOwnedObjects,kAudioObjectPropertyScopeInput,kAudioObjectPropertyElementMain};
+    UInt32 emptySize=99;
+    assert(DataSize(Driver(),kFlowObjectDevice,0,&emptyOwned,0,NULL,&emptySize)==noErr && emptySize==0);
     assert(Read32(kFlowObjectOutputStream,kAudioStreamPropertyLatency,kAudioObjectPropertyScopeGlobal)==0);
     AudioObjectPropertyAddress address=Global(kFlowLatencyFrames);
     UInt32 latency=96000;

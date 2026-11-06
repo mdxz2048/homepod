@@ -1,0 +1,447 @@
+Timestamp               Ty Process[PID:TID]
+2026-11-06 15:03:13.338 Df coreaudiod[677:11f687] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:13.338 Df coreaudiod[677:11f687] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:13.338 Df coreaudiod[677:11f687] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:13.338 Df coreaudiod[677:11f687] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:13.338 Df coreaudiod[677:11f687] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:13.338 Df coreaudiod[677:11f687] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:13.339 Df coreaudiod[677:11f687] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:13.339 Df coreaudiod[677:11f687] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:13.339 Df coreaudiod[677:11f687] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:13.339 Df coreaudiod[677:11f687] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:13.339 Df coreaudiod[677:11f687] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:13.735 Df coreaudiod[677:11fa1b] (CoreAudio)      HALC_ShellDevice.cpp:3820   HALC_ShellDevice::_InitializeDriverPlugIn: *X*X*X Not loading the driver plug-in into coreaudiod
+2026-11-06 15:03:15.944 Df coreaudiod[677:11fa4f] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:15.944 Df coreaudiod[677:11fa4f] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:15.945 Df coreaudiod[677:11fa4f] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:15.945 Df coreaudiod[677:11fa4f] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:15.945 Df coreaudiod[677:11fa4f] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:15.945 Df coreaudiod[677:11fa4f] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:15.945 Df coreaudiod[677:11fa4f] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:15.946 Df coreaudiod[677:11fa4f] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:15.946 Df coreaudiod[677:11fa4f] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:15.946 Df coreaudiod[677:11fa4f] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:15.946 Df coreaudiod[677:11fa4f] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 560947818 (<private>)
+2026-11-06 15:03:16.999 Df coreaudiod[677:11fa1c] (CoreAudio)      HALC_ShellDevice.cpp:3820   HALC_ShellDevice::_InitializeDriverPlugIn: *X*X*X Not loading the driver plug-in into coreaudiod
+2026-11-06 15:08:08.744 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:08:08.745 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:355    HALS_PlugInManager::LoadPlugIns:     Loading....
+2026-11-06 15:08:08.754 Df coreaudiod[228:d12] (CoreAudio)           HALS_Device.cpp:190    HALS_Device::Activate: activating device 36: com.apple.accessibility.audioPlugin.AXSpeech.input Transport Type: <private> Clock Domain: 0
+2026-11-06 15:08:08.755 Df coreaudiod[228:d12] (CoreAudio)           HALS_Device.cpp:190    HALS_Device::Activate: activating device 46: com.apple.accessibility.audioPlugin.AXSpeech.output Transport Type: <private> Clock Domain: 0
+2026-11-06 15:08:08.755 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:08:08.755 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:286    HALS_PlugInManager::LoadPlugIns:     has 1 matching dictionaries
+2026-11-06 15:08:08.755 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:294    HALS_PlugInManager::LoadPlugIns:     dictionary 0
+2026-11-06 15:08:08.755 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:295    HALS_PlugInManager::LoadPlugIns:     matching dict: <private>
+2026-11-06 15:08:08.755 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:343    HALS_PlugInManager::LoadPlugIns:     Deferring....
+2026-11-06 15:08:08.755 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:08:08.755 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:286    HALS_PlugInManager::LoadPlugIns:     has 1 matching dictionaries
+2026-11-06 15:08:08.755 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:294    HALS_PlugInManager::LoadPlugIns:     dictionary 0
+2026-11-06 15:08:08.755 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:295    HALS_PlugInManager::LoadPlugIns:     matching dict: <private>
+2026-11-06 15:08:08.755 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:343    HALS_PlugInManager::LoadPlugIns:     Deferring....
+2026-11-06 15:08:08.755 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:08:08.755 Df coreaudiod[228:d12] (CoreAudio)    HALS_PlugInManager.cpp:355    HALS_PlugInManager::LoadPlugIns:     Loading....
+2026-11-06 15:08:08.761 Df coreaudiod[228:d12] [com.apple.audio.ASDT:MacAudio] MacAudioFactory factory for AudioServerPlugin
+2026-11-06 15:08:08.762 Df coreaudiod[228:d12] [com.apple.audio.ASDT:MacAudio] MALegacyPlugin beginning initialization
+2026-11-06 15:08:08.889 Df coreaudiod[228:d12] [com.apple.audio.ASDT:MacAudio] MALegacyPlugin ending initialization: Success
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.890 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.891 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.892 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.893 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.893 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.893 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.893 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.893 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.893 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.893 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.893 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.893 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.893 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.893 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.894 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.894 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.911 Df coreaudiod[228:d12] (CoreAudio)   HALPlugInManagement.cpp:440    HALPlugInManagement::RegisterPlugIns: skipping in-process plug-ins
+2026-11-06 15:08:08.917 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.917 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.917 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.917 E  coreaudiod[228:d19] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.918 E  coreaudiod[228:d39] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.918 E  coreaudiod[228:d39] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.919 Df coreaudiod[228:d12] (CoreAudio)      HALC_ShellDevice.cpp:3820   HALC_ShellDevice::_InitializeDriverPlugIn: *X*X*X Not loading the driver plug-in into coreaudiod
+2026-11-06 15:08:08.919 Df coreaudiod[228:d12] (CoreAudio)      HALC_ShellDevice.cpp:3820   HALC_ShellDevice::_InitializeDriverPlugIn: *X*X*X Not loading the driver plug-in into coreaudiod
+2026-11-06 15:08:08.919 Df coreaudiod[228:d12] (CoreAudio)      HALC_ShellDevice.cpp:3820   HALC_ShellDevice::_InitializeDriverPlugIn: *X*X*X Not loading the driver plug-in into coreaudiod
+2026-11-06 15:08:08.919 Df coreaudiod[228:d12] (CoreAudio)      HALC_ShellDevice.cpp:3820   HALC_ShellDevice::_InitializeDriverPlugIn: *X*X*X Not loading the driver plug-in into coreaudiod
+2026-11-06 15:08:08.973 E  coreaudiod[228:d3c] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:08:08.974 E  coreaudiod[228:d3c] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.044 Df coreaudiod[477:11db] [com.apple.coreaudio:AMCP]    HALS_RemotePlugInRegistrar.mm:237   Attempting to load:  HomePodFlowAudio.driver
+2026-11-06 15:12:33.044 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:12:33.045 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:355    HALS_PlugInManager::LoadPlugIns:     Loading....
+2026-11-06 15:12:33.069 E  coreaudiod[477:11c3] (CoreAudio)         HALS_UCPlugIn.cpp:123    HALS_UCPlugIn::Construct_New: couldn't create the IUnknown interface
+2026-11-06 15:12:33.070 E  coreaudiod[477:11c3] [com.apple.CFBundle:loading] dlsym cannot find symbol AudioServerPlugIn_Initialize in CFBundle/CFPlugIn 0xaf6d380e0 </System/Library/Audio/Plug-Ins/HAL/AirPlay.driver> (bundle, loaded): <private>
+2026-11-06 15:12:33.070 E  coreaudiod[477:11c3] (CoreAudio)         HALS_UCPlugIn.cpp:227    HALS_UCPlugIn::Construct_Old: Can't get a pointer to the AudioServerPlugIn_Initialize routine
+2026-11-06 15:12:33.070 E  coreaudiod[477:11c3] (CoreAudio)         HALS_UCPlugIn.cpp:58     HALS_UCPlugIn::HALS_UCPlugIn: construction failed, probably because this isn't a server plug-in, Error: 1852797029 (<private>)
+2026-11-06 15:12:33.071 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:12:33.071 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:286    HALS_PlugInManager::LoadPlugIns:     has 1 matching dictionaries
+2026-11-06 15:12:33.071 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:294    HALS_PlugInManager::LoadPlugIns:     dictionary 0
+2026-11-06 15:12:33.071 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:295    HALS_PlugInManager::LoadPlugIns:     matching dict: <private>
+2026-11-06 15:12:33.071 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:327    HALS_PlugInManager::LoadPlugIns:     Loading....
+2026-11-06 15:12:33.071 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:332    <private>
+2026-11-06 15:12:33.078 Df coreaudiod[477:11c3] (AppleAOPAudioPlugin) (notice) Plugin activated
+2026-11-06 15:12:33.235 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:12:33.235 E  coreaudiod[477:11dc] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.236 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:286    HALS_PlugInManager::LoadPlugIns:     has 1 matching dictionaries
+2026-11-06 15:12:33.236 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:294    HALS_PlugInManager::LoadPlugIns:     dictionary 0
+2026-11-06 15:12:33.236 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:295    HALS_PlugInManager::LoadPlugIns:     matching dict: <private>
+2026-11-06 15:12:33.236 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:343    HALS_PlugInManager::LoadPlugIns:     Deferring....
+2026-11-06 15:12:33.236 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:12:33.236 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:355    HALS_PlugInManager::LoadPlugIns:     Loading....
+2026-11-06 15:12:33.238 Df coreaudiod[477:11c3] (CoreAudio)           HALS_Device.cpp:190    HALS_Device::Activate: activating device 41: com.apple.accessibility.audioPlugin.AXSpeech.input Transport Type: <private> Clock Domain: 0
+2026-11-06 15:12:33.238 Df coreaudiod[477:11c3] (CoreAudio)           HALS_Device.cpp:190    HALS_Device::Activate: activating device 51: com.apple.accessibility.audioPlugin.AXSpeech.output Transport Type: <private> Clock Domain: 0
+2026-11-06 15:12:33.239 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:12:33.239 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:355    HALS_PlugInManager::LoadPlugIns:     Loading....
+2026-11-06 15:12:33.241 Df coreaudiod[477:11c3] (AppleTimeSyncAudioClock) AppleTimeSyncAudioClockFactory factory for AudioServerPlugin
+2026-11-06 15:12:33.242 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:12:33.242 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:286    HALS_PlugInManager::LoadPlugIns:     has 1 matching dictionaries
+2026-11-06 15:12:33.242 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:294    HALS_PlugInManager::LoadPlugIns:     dictionary 0
+2026-11-06 15:12:33.242 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:295    HALS_PlugInManager::LoadPlugIns:     matching dict: <private>
+2026-11-06 15:12:33.242 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:343    HALS_PlugInManager::LoadPlugIns:     Deferring....
+2026-11-06 15:12:33.242 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:12:33.242 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:355    HALS_PlugInManager::LoadPlugIns:     Loading....
+2026-11-06 15:12:33.242 E  coreaudiod[477:1411] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.242 E  coreaudiod[477:1411] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.243 E  coreaudiod[477:1411] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.253 Df coreaudiod[477:11c3] [com.apple.bluetooth:BTAudio] Creating audio plugin with audioID: 1
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] [com.apple.bluetooth:BTAudio] Starting BTAudioPlugin for <private>
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] [com.apple.xpc:connection] [0xaf70a8b40] activating connection: mach=true listener=false peer=false name=com.apple.BTAudioHALPlugin.xpc
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] [com.apple.bluetooth:BTAudio] Register audio plugin connection with bluetoothd
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] [com.apple.xpc:connection] [0xaf70a8c80] activating connection: mach=true listener=true peer=false name=com.apple.BTAudioHALPluginAccessories
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] [com.apple.bluetooth:BTAudio] Registered audio plugin connection with audioaccessoryd
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] [com.apple.bluetooth:BTAudio] AudioServerPlugIn Initialized
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] [com.apple.bluetooth:BTAudio] BluetoothHALPlugIn_initialize
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:286    HALS_PlugInManager::LoadPlugIns:     has 1 matching dictionaries
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:294    HALS_PlugInManager::LoadPlugIns:     dictionary 0
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:295    HALS_PlugInManager::LoadPlugIns:     matching dict: <private>
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:343    HALS_PlugInManager::LoadPlugIns:     Deferring....
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:12:33.254 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:355    HALS_PlugInManager::LoadPlugIns:     Loading....
+2026-11-06 15:12:33.354 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:12:33.354 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:355    HALS_PlugInManager::LoadPlugIns:     Loading....
+2026-11-06 15:12:33.358 Df coreaudiod[477:11c3] [com.apple.Accessibility:AXHearingHalPlugin] HearingAudioPlugin Create
+2026-11-06 15:12:33.358 Df coreaudiod[477:11c3] [com.apple.Accessibility:AXHearingHalPlugin] HearingAudioPlugin QueryInterface
+2026-11-06 15:12:33.358 Df coreaudiod[477:11c3] [com.apple.Accessibility:AXHearingHalPlugin] HearingAudioPlugin QueryInterface
+2026-11-06 15:12:33.358 Df coreaudiod[477:11c3] [com.apple.Accessibility:AXHearingHalPlugin] HearingAudioPlugin_Initialize
+2026-11-06 15:12:33.359 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:12:33.359 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:355    HALS_PlugInManager::LoadPlugIns:     Loading....
+2026-11-06 15:12:33.359 E  coreaudiod[477:1438] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.359 E  coreaudiod[477:1438] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.360 E  coreaudiod[477:1438] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.360 E  coreaudiod[477:1438] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.360 E  coreaudiod[477:1438] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.360 E  coreaudiod[477:11dc] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.360 E  coreaudiod[477:11dc] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.369 Df coreaudiod[477:11c3] [com.apple.audio.ASDT:MacAudio] MacAudioFactory factory for AudioServerPlugin
+2026-11-06 15:12:33.369 Df coreaudiod[477:11c3] [com.apple.audio.ASDT:MacAudio] MALegacyPlugin beginning initialization
+2026-11-06 15:12:33.601 Df coreaudiod[477:11c3] [com.apple.audio.ASDT:MacAudio] MALegacyPlugin ending initialization: Success
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:270    HALS_PlugInManager::LoadPlugIns: loading plug-in from: <private>
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.602 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:286    HALS_PlugInManager::LoadPlugIns:     has 1 matching dictionaries
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:294    HALS_PlugInManager::LoadPlugIns:     dictionary 0
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:295    HALS_PlugInManager::LoadPlugIns:     matching dict: <private>
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 Df coreaudiod[477:11c3] (CoreAudio)    HALS_PlugInManager.cpp:343    HALS_PlugInManager::LoadPlugIns:     Deferring....
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.603 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.604 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:33.697 Df coreaudiod[477:11db] [com.apple.coreaudio:AMCP]    HALS_RemotePlugInRegistrar.mm:421   Creating remote driver service: <CFString 0xaf707c090 [0x1fb798880]>{contents = "HomePodFlowAudio.driver"}, pid: 569
+2026-11-06 15:12:33.699 Df coreaudiod[477:11db] (CoreAudio)    HALS_UCRemotePlugIn.mm:1356   HALS_UCRemotePlugIn::ObjectGetPropertyData: failed:  [<private>/<private>/0], Error: 2003332927 (<private>)
+2026-11-06 15:12:33.700 E  coreaudiod[477:11db] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:1441  Caught exception trying to add device
+2026-11-06 15:12:33.700 Df coreaudiod[477:11db] [com.apple.coreaudio:AMCP]    HALS_RemotePlugInRegistrar.mm:237   Attempting to load:  ParrotAudioPlugin.driver
+2026-11-06 15:12:33.716 Df coreaudiod[477:11db] [com.apple.coreaudio:AMCP]    HALS_RemotePlugInRegistrar.mm:421   Creating remote driver service: <CFString 0xaf707c060 [0x1fb798880]>{contents = "ParrotAudioPlugin.driver"}, pid: 606
+2026-11-06 15:12:34.327 Df coreaudiod[477:11c3] (CoreAudio)   HALPlugInManagement.cpp:440    HALPlugInManagement::RegisterPlugIns: skipping in-process plug-ins
+2026-11-06 15:12:34.330 E  coreaudiod[477:1411] [com.apple.coreaudio:AMCP]            HALS_PlugInDevice.cpp:2308  [hal_dsp][offloads] Device ignores available DSP offloads property (Device ID: 41)
+2026-11-06 15:12:34.334 E  coreaudiod[477:1411] [com.apple.coreaudio:AMCP]            HALS_PlugInDevice.cpp:2308  [hal_dsp][offloads] Device ignores available DSP offloads property (Device ID: 37)
+2026-11-06 15:12:34.335 E  coreaudiod[477:11dc] [com.apple.coreaudio:AMCP]            HALS_PlugInDevice.cpp:2308  [hal_dsp][offloads] Device ignores available DSP offloads property (Device ID: 67)
+2026-11-06 15:12:34.337 E  coreaudiod[477:1605] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:34.337 E  coreaudiod[477:1605] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:34.337 E  coreaudiod[477:1605] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:34.337 E  coreaudiod[477:1605] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:34.337 E  coreaudiod[477:1605] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:34.337 E  coreaudiod[477:1605] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:34.338 E  coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]            HALS_PlugInDevice.cpp:2308  [hal_dsp][offloads] Device ignores available DSP offloads property (Device ID: 86)
+2026-11-06 15:12:34.338 E  coreaudiod[477:1438] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:34.338 E  coreaudiod[477:1438] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:34.338 Df coreaudiod[477:11c3] (CoreAudio)      HALC_ShellDevice.cpp:3820   HALC_ShellDevice::_InitializeDriverPlugIn: *X*X*X Not loading the driver plug-in into coreaudiod
+2026-11-06 15:12:34.339 Df coreaudiod[477:11c3] (CoreAudio)      HALC_ShellDevice.cpp:3820   HALC_ShellDevice::_InitializeDriverPlugIn: *X*X*X Not loading the driver plug-in into coreaudiod
+2026-11-06 15:12:34.339 Df coreaudiod[477:11c3] (CoreAudio)      HALC_ShellDevice.cpp:3820   HALC_ShellDevice::_InitializeDriverPlugIn: *X*X*X Not loading the driver plug-in into coreaudiod
+2026-11-06 15:12:34.339 Df coreaudiod[477:11c3] (CoreAudio)      HALC_ShellDevice.cpp:3820   HALC_ShellDevice::_InitializeDriverPlugIn: *X*X*X Not loading the driver plug-in into coreaudiod
+2026-11-06 15:12:34.339 Df coreaudiod[477:11c3] (CoreAudio)      HALC_ShellDevice.cpp:3820   HALC_ShellDevice::_InitializeDriverPlugIn: *X*X*X Not loading the driver plug-in into coreaudiod
+2026-11-06 15:12:34.371 Df coreaudiod[477:1605] [com.apple.coreaudio:AMCP]                 HALB_Logging.cpp:100   LogVolumeChangeForServerSideControl from HALS_PlugInControl::SetPropertyData: control id 81, property address ['lcsv', 'glob', 0], owning device UID BuiltInSpeakerDevice, control type external driver, control scope 'outp', control element 0, volume: 0.500000
+2026-11-06 15:12:34.371 Df coreaudiod[477:1411] [com.apple.coreaudio:AMCP]                 HALB_Logging.cpp:100   LogVolumeChangeForServerSideControl from HALS_PlugInControl::SetPropertyData: control id 82, property address ['bcvl', 'glob', 0], owning device UID BuiltInSpeakerDevice, control type external driver, control scope 'outp', control element 0, mute: 0.000000
+2026-11-06 15:12:34.371 Df coreaudiod[477:1605] (CoreAudio)     HALS_PlugInDevice.cpp:2441   HALS_PlugInDevice::HandlePlugIn_RequestConfigChange: <private>  --->
+2026-11-06 15:12:34.372 Df coreaudiod[477:1605] (CoreAudio)     HALS_PlugInDevice.cpp:2484   HALS_PlugInDevice::HandlePlugIn_RequestConfigChange: <private>  --- calling driver
+2026-11-06 15:12:34.372 Df coreaudiod[477:13a2] [com.apple.coreaudio:AMCP]                 HALB_Logging.cpp:100   LogVolumeChangeForServerSideControl from HALS_PlugInControl::SetPropertyData: control id 90, property address ['lcsv', 'glob', 0], owning device UID BuiltInMicrophoneDevice, control type external driver, control scope 'inpt', control element 0, volume: 0.450980
+2026-11-06 15:12:34.372 Df coreaudiod[477:1605] (CoreAudio)     HALS_PlugInDevice.cpp:2502   HALS_PlugInDevice::HandlePlugIn_RequestConfigChange: <private>  --- driver returned
+2026-11-06 15:12:34.372 Df coreaudiod[477:1605] (CoreAudio)     HALS_PlugInDevice.cpp:2615   HALS_PlugInDevice::HandlePlugIn_RequestConfigChange: <private>  --- sending notifications
+2026-11-06 15:12:34.373 Df coreaudiod[477:1605] (CoreAudio)     HALS_PlugInDevice.cpp:2660   HALS_PlugInDevice::HandlePlugIn_RequestConfigChange: <private>  --- restarting IO
+2026-11-06 15:12:34.373 Df coreaudiod[477:1605] (CoreAudio)     HALS_PlugInDevice.cpp:2681   HALS_PlugInDevice::HandlePlugIn_RequestConfigChange: <private>  <---
+2026-11-06 15:12:34.373 E  coreaudiod[477:1606] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:34.373 E  coreaudiod[477:1615] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:34.374 Df coreaudiod[477:1616] [com.apple.coreaudio:AMCP]                 HALB_Logging.cpp:100   LogVolumeChangeForServerSideControl from HALS_PlugInControl::SetPropertyData: control id 90, property address ['lcsv', 'glob', 0], owning device UID BuiltInMicrophoneDevice, control type external driver, control scope 'inpt', control element 0, volume: 0.450980
+2026-11-06 15:12:34.375 Df coreaudiod[477:1606] [com.apple.coreaudio:AMCP]                 HALB_Logging.cpp:100   LogVolumeChangeForServerSideControl from HALS_PlugInControl::SetPropertyData: control id 90, property address ['lcsv', 'glob', 0], owning device UID BuiltInMicrophoneDevice, control type external driver, control scope 'inpt', control element 0, volume: 0.450980
+2026-11-06 15:12:34.375 Df coreaudiod[477:1606] [com.apple.coreaudio:AMCP]                 HALB_Logging.cpp:100   LogVolumeChangeForServerSideControl from HALS_PlugInControl::SetPropertyData: control id 90, property address ['lcsv', 'glob', 0], owning device UID BuiltInMicrophoneDevice, control type external driver, control scope 'inpt', control element 0, volume: 0.450980
+2026-11-06 15:12:36.027 E  coreaudiod[477:1606] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid
+2026-11-06 15:12:36.028 E  coreaudiod[477:1606] [com.apple.coreaudio:AMCP]                  HALS_PlugIn.cpp:847   HALS_PlugIn::HostInterface_PropertiesChanged: the object is not valid

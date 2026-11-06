@@ -1,0 +1,15 @@
+{
+  "rate": 48000,
+  "fps": 30,
+  "duration_s": 11,
+  "event_seconds": [
+    2,
+    5,
+    8
+  ],
+  "flash_frames": 3,
+  "pulse_duration_ms": 40,
+  "video_created": true,
+  "status": "fixture_only_not_a_measurement",
+  "audio_codec_note": "AAC priming/pre-echo must be calibrated using encoded file baseline"
+}

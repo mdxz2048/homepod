@@ -26,12 +26,14 @@
 
 ## 安静阶段：无需出声的检查
 
-已对照 CONTRACT v0.2 增补以下安装后静默查询矩阵（均未执行）：
+已对照 CONTRACT v0.3 增补以下安装后静默查询矩阵（历史候选执行情况见后文，v0.3新增项未测）：
 
 | 对象/属性 | 预期 | 负向/边界 |
 |---|---|---|
 | Device UID/输出stream/输入stream | 固定UID、一个FL/FR输出、输入为零 | 不凭display name选设备，不把output-only当免TCC |
-| `deviceLatency` / `safety` | output/main均0 | 错scope/element返回约定HAL错误 |
+| `deviceLatency` / `safety` | v0.3 output/main与input/main均只读0 | input零值仅为HAL枚举兼容，无输入流/麦克风；未知scope/非main拒绝 |
+| device RelatedDevices | global/main返回自身device ID | 只用于相关设备列表，不增加输入能力 |
+| device OwnedObjects | global/output/main返回单输出stream；input/main空数组 | 空数组size0、get written0，非零输入对象拒绝 |
 | `streamLatency` | stream global/main、output/main **均存在、大小UInt32、只读、同值**，当前`hfla`预算帧数 | 两scope的Has/Settable/Size/Get四入口一致；input、未知scope、非main拒绝，与device/AU/hostTime不得重复加 |
 | `hfla` | UInt32 global/main，停止且无pending配置可写0..10×rate | 拒绝越界/错误尺寸/运行或pending时改值，状态无部分变更 |
 | `hflr` | UInt64只读，初值1 | 同值幂等不增加；有效rate/latency变更才增；重发现使旧revision失效 |
@@ -163,3 +165,30 @@ Input第二候选Recovery.swift SHA256 `a190af985f43e8e72f6f191e3f6ad71252703203
 | QA工具Mac复跑 | 6/6通过 | 素材/事件分析工具逻辑，不是播放或声学测量 |
 
 结合静态复审及协调反馈，关闭源码层问题：同fourcc对象分支、双scope查询/通知、input scope拒绝、失败配置回滚、NaN/inf先验证、已报告的嵌套输出symlink路径、journal超大文件无界读取。跨进程journal事务/helper真实恢复仍未关闭。实际HAL枚举/初始化、Tap左右独立非零PCM和源时钟语义、浏览器采用及最终声学音画全部保持未测。
+
+### 实际安装后的枚举阻点与 v0.3 兼容修订
+
+总协调随后反馈：第三候选已安装，重启后remote driver service创建成功，但HAL add-device返回UnknownProperty（`who?`）。这不是具体selector，尚不能判断哪个属性缺失；旧的mock/stage通过不等于真实设备枚举通过。原始日志待统一交接。
+
+CONTRACT v0.3将device latency/safety的input/main只读0作为兼容例外，同时补RelatedDevices与分scope OwnedObjects；stream input latency仍拒绝。此例外不改变零输入stream事实，不宣称麦克风或loopback输入。待候选冻结后复审全部属性入口和新增非RT诊断，再由协调统一重装/枚举验证。
+
+预审未见plist factory UUID/typeUUID与接口vtable布局的新明显错误；service能够创建本身也支持加载层已经前进，但不代表device属性完整。[Apple Initialize说明](https://developer.apple.com/documentation/coreaudio/audioserverplugindriverinterface/initialize)要求初始化发布已知对象；如补属性后仍失败，需要按真实查询日志检查对象发布路径。第一手[BlackHole实现](https://github.com/ExistentialAudio/BlackHole/blob/master/BlackHole/BlackHole.c)包含Box对象，可作为后续对照排查线索，但其存在不独自证明所有虚拟设备必须有Box。不得凭未核实二手经验把Box列为已定位根因。
+
+### v0.3 候选静态审查与原始日志复核
+
+v0.3源码SHA256 `37bc016a76627e299efcadca32353753563cb7e2e42221114d9880037eb1a2df`，测试源码 `f4e014e7f3f9d4ce1c309768a03e3b55d81006a99e1b09c08b45e6fff5a6c184`。静态未见新增阻断项：ElementName的output0/1/2、global0特判放在统一main拒绝之前，四属性入口一致；device input latency/safety0、RelatedDevices自身、OwnedObjects input空数组的size/get均一致。ResourceBundle返回空CFString，BoxList空数组/TranslateBox返回unknown仅声明无Box，不可当发布验证。
+
+诊断仅由GetData属性表失败分支调用，上限32条；DoIO/ZeroTime/WillIO/BeginIO没有调用诊断或通知。非阻断诊断缺口已反馈：DataSize失败不记录，HAL若先查询size失败而不调用GetData，仍无法定位selector；可在需要时补非RT失败日志，不记录HasProperty常规optional探测以免耗尽日志额度。v0.3运行/重新枚举结果仍待协调提供。
+
+QA已独立读取 [原始证据目录](../reports/VirtualAudio-2026-11-06/) 中以下文件：
+
+- `virtual-driver-tests-first.log`实际有HostRef/Size等编译错误，不能混入成功计数。`virtual-driver-tests-second.log`与`virtual-driver-tests-third.log`有对应PASS；第三项另外含path拒绝PASS。
+- `virtual-driver-stage-third.log`有plist OK、签名valid on disk与Designated Requirement成功，并打印源码SHA `b9f077...94c610`，与第三候选一致；它不是v0.3运行证据。
+- `virtual-input-tests-second.log`明确XCTest执行13项、0 failures；末尾Swift Testing的0 tests属于另一框架，不把它误报为没有执行XCTest。`virtual-input-help.log`只有只读说明，`virtual-input-discover.log`及postboot-discover.err为driver_unavailable。
+- `virtual-qa-tools.log`明确Ran6/OK；`virtual-fixture-generation.log`为video_created=true，说明Mac已生成MP4。编码后PTS/音频脉冲起点校准和浏览器播放尚无证据，仍不验收素材精度或A/V。
+- `virtual-postboot-coreaudiod.log`第409–411行同一coreaudiod PID477/TID11db：15:12:33.697创建HomePodFlowAudio.driver remote service PID569，随后33.699 ObjectGetPropertyData失败2003332927，33.700 add-device exception；412行才开始另一个Parrot插件。归因依据是紧邻同线程顺序，不混用更早其他插件的unknown-property。具体selector/scope被private遮盖，未定位。
+- `virtual-postboot-loading.log`还存在ad-hoc签名相关系统消息，随后仍创建remote service；不能只凭该消息断言签名就是本轮设备添加失败原因，也不能据此称正式签名/安装体验已通过。
+
+据原始证据可确认mock/stage与13项policy测试成功、第三候选实际枚举失败，二者同时成立。当前不宣称真实HAL枚举、Tap、浏览器采用或最终音画通过。
+
+v0.3随后补充DataSize失败诊断，最新源码SHA256 `7e8987cd76780fa3ca2bafb94d1c2b70be30e36ca081666bdd8f9a8e8b37f536`。QA只读确认DataSize失败调用同一32条限额函数，HasProperty不记录，RT调用图未变；关闭上面的诊断覆盖缺口。运行/安装后的枚举结论仍待新日志。

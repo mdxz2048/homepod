@@ -1,0 +1,3 @@
+virtual-audio-input --discover
+Read-only HAL discovery. No capture, writes, installation or output switching.
+With no arguments, prints this help only.

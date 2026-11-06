@@ -13,6 +13,7 @@
 #include <string.h>
 #include <math.h>
 #include <stddef.h>
+#include <os/log.h>
 
 static AudioServerPlugInHostRef gHost;
 static pthread_mutex_t gControl = PTHREAD_MUTEX_INITIALIZER;
@@ -30,6 +31,7 @@ static Boolean gRatePending;
 static UInt32 gLatencyBudgetFrames = 0, gLatencyBudgetRate = 48000;
 static UInt32 gRunningClients[64];
 static Boolean gClientSlotUsed[64];
+static _Atomic UInt32 gPropertyErrorLogs;
 
 static HRESULT QueryInterface(void *, REFIID, LPVOID *);
 static ULONG AddRef(void *);
@@ -65,6 +67,16 @@ static Boolean ValidObject(AudioObjectID object) {
 }
 static AudioObjectPropertyAddress Global(AudioObjectPropertySelector selector) {
     return (AudioObjectPropertyAddress){selector, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMain};
+}
+/* Control-plane diagnostics only. Never called by the realtime IO callbacks. */
+static void PropertyReadFailure(AudioObjectID object, const AudioObjectPropertyAddress *address, OSStatus status) {
+    if (!address) return;
+    UInt32 count=atomic_load(&gPropertyErrorLogs);
+    while (count < 32 && !atomic_compare_exchange_weak(&gPropertyErrorLogs,&count,count+1)) {}
+    if (count >= 32) return;
+    os_log_error(OS_LOG_DEFAULT,
+        "HomePodFlowAudio property read rejected object=%{public}u selector=%{public}u scope=%{public}u element=%{public}u status=%{public}d",
+        object,address->mSelector,address->mScope,address->mElement,(int)status);
 }
 static void Notify(AudioObjectID object, UInt32 count, const AudioObjectPropertyAddress *addresses) {
     if (gHost) gHost->PropertiesChanged(gHost, object, count, addresses);
@@ -158,6 +170,13 @@ static OSStatus AbortChange(AudioServerPlugInDriverRef driver, AudioObjectID obj
 /* Property table is the single source of truth for HasProperty and size queries. */
 static OSStatus PropertyDataSize(AudioObjectID object, const AudioObjectPropertyAddress *a, UInt32 *size) {
     if (!a || !size || !ValidObject(object)) return kAudioHardwareBadObjectError;
+    if (object == kFlowObjectDevice && a->mSelector == kAudioObjectPropertyElementName) {
+        if ((a->mScope == kAudioObjectPropertyScopeGlobal && a->mElement == kAudioObjectPropertyElementMain)
+            || (a->mScope == kAudioObjectPropertyScopeOutput && a->mElement <= 2)) {
+            *size=sizeof(CFStringRef); return noErr;
+        }
+        return kAudioHardwareUnknownPropertyError;
+    }
     if (a->mElement != kAudioObjectPropertyElementMain) return kAudioHardwareUnknownPropertyError;
     Boolean global = a->mScope == kAudioObjectPropertyScopeGlobal;
     Boolean output = a->mScope == kAudioObjectPropertyScopeOutput;
@@ -169,18 +188,26 @@ static OSStatus PropertyDataSize(AudioObjectID object, const AudioObjectProperty
         case kAudioObjectPropertyName: case kAudioObjectPropertyManufacturer:
             if (global) { *size = sizeof(CFStringRef); return noErr; } break;
         case kAudioObjectPropertyOwnedObjects:
-            if (global) { *size = object == kFlowObjectOutputStream ? 0 : sizeof(AudioObjectID); return noErr; } break;
+            if (global || (object == kFlowObjectDevice && (input || output))) {
+                *size = object == kFlowObjectOutputStream || (object == kFlowObjectDevice && input) ? 0 : sizeof(AudioObjectID);
+                return noErr;
+            } break;
     }
     if (object == kAudioObjectPlugInObject && global) {
         switch (a->mSelector) {
-            case kAudioPlugInPropertyBundleID: *size = sizeof(CFStringRef); return noErr;
-            case kAudioPlugInPropertyDeviceList: case kAudioPlugInPropertyTranslateUIDToDevice: *size = sizeof(AudioObjectID); return noErr;
+            case kAudioPlugInPropertyBundleID: case kAudioPlugInPropertyResourceBundle:
+                *size = sizeof(CFStringRef); return noErr;
+            case kAudioPlugInPropertyBoxList: *size = 0; return noErr;
+            case kAudioPlugInPropertyDeviceList: case kAudioPlugInPropertyTranslateUIDToDevice:
+            case kAudioPlugInPropertyTranslateUIDToBox: *size = sizeof(AudioObjectID); return noErr;
         }
     }
     if (object == kFlowObjectDevice) {
         switch (a->mSelector) {
             case kAudioDevicePropertyDeviceUID: case kAudioDevicePropertyModelUID:
                 if (global) { *size = sizeof(CFStringRef); return noErr; } break;
+            case kAudioDevicePropertyRelatedDevices:
+                if (global) { *size = sizeof(AudioObjectID); return noErr; } break;
             case kAudioDevicePropertyStreams:
                 if (global || output || input) { *size = input ? 0 : sizeof(AudioObjectID); return noErr; } break;
             case kAudioObjectPropertyControlList:
@@ -208,7 +235,7 @@ static OSStatus PropertyDataSize(AudioObjectID object, const AudioObjectProperty
             case kAudioDevicePropertyDeviceCanBeDefaultDevice: case kAudioDevicePropertyDeviceCanBeDefaultSystemDevice:
                 if (output || input) { *size = sizeof(UInt32); return noErr; } break;
             case kAudioDevicePropertyLatency: case kAudioDevicePropertySafetyOffset:
-                if (output) { *size = sizeof(UInt32); return noErr; } break;
+                if (output || input) { *size = sizeof(UInt32); return noErr; } break;
         }
     }
     if (object == kFlowObjectOutputStream && output && a->mSelector == kAudioStreamPropertyLatency) {
@@ -240,12 +267,16 @@ static OSStatus IsSettable(AudioServerPlugInDriverRef driver, AudioObjectID obje
 }
 static OSStatus DataSize(AudioServerPlugInDriverRef driver, AudioObjectID object, pid_t pid, const AudioObjectPropertyAddress *a, UInt32 qualifierSize, const void *qualifier, UInt32 *size) {
     (void)pid; (void)qualifierSize; (void)qualifier;
-    return ValidDriver(driver) ? PropertyDataSize(object, a, size) : kAudioHardwareBadObjectError;
+    if (!ValidDriver(driver)) return kAudioHardwareBadObjectError;
+    OSStatus status=PropertyDataSize(object,a,size);
+    if (status) PropertyReadFailure(object,a,status);
+    return status;
 }
 static OSStatus GetData(AudioServerPlugInDriverRef driver, AudioObjectID object, pid_t pid, const AudioObjectPropertyAddress *a, UInt32 qualifierSize, const void *qualifier, UInt32 capacity, UInt32 *written, void *data) {
     (void)pid;
     if (!ValidDriver(driver) || !written) return kAudioHardwareBadObjectError;
-    *written = 0; UInt32 size; OSStatus status = PropertyDataSize(object, a, &size); if (status) return status;
+    *written = 0; UInt32 size; OSStatus status = PropertyDataSize(object, a, &size);
+    if (status) { PropertyReadFailure(object,a,status); return status; }
     if (capacity < size || (size && !data)) return kAudioHardwareBadPropertySizeError;
     if (!size) return noErr;
     UInt32 u = 0; CFStringRef string = NULL;
@@ -255,11 +286,18 @@ static OSStatus GetData(AudioServerPlugInDriverRef driver, AudioObjectID object,
         case kAudioObjectPropertyOwner: u = object == kAudioObjectPlugInObject ? kAudioObjectUnknown : object == kFlowObjectDevice ? kAudioObjectPlugInObject : kFlowObjectDevice; break;
         case kAudioObjectPropertyName: string = object == kAudioObjectPlugInObject ? CFSTR("HomePod Flow Audio Plug-in") : object == kFlowObjectDevice ? CFSTR("HomePod Flow Audio") : CFSTR("HomePod Flow Stereo Output"); break;
         case kAudioObjectPropertyManufacturer: string = CFSTR("HomePod Flow"); break;
+        case kAudioObjectPropertyElementName:
+            string = a->mElement == 1 ? CFSTR("Left") : a->mElement == 2 ? CFSTR("Right") : CFSTR("Main"); break;
         case kAudioPlugInPropertyBundleID: string = CFSTR(FLOW_BUNDLE_ID); break;
+        case kAudioPlugInPropertyResourceBundle: string = CFSTR(""); break;
         case kAudioDevicePropertyDeviceUID: string = CFSTR(FLOW_DEVICE_UID); break;
         case kAudioDevicePropertyModelUID: string = CFSTR(FLOW_MODEL_UID); break;
         case kAudioObjectPropertyOwnedObjects: u = object == kAudioObjectPlugInObject ? kFlowObjectDevice : kFlowObjectOutputStream; break;
         case kAudioPlugInPropertyDeviceList: u = kFlowObjectDevice; break;
+        case kAudioDevicePropertyRelatedDevices: u = kFlowObjectDevice; break;
+        case kAudioPlugInPropertyTranslateUIDToBox:
+            if (qualifierSize != sizeof(CFStringRef) || !qualifier) return kAudioHardwareBadPropertySizeError;
+            u = kAudioObjectUnknown; break;
         case kAudioPlugInPropertyTranslateUIDToDevice:
             if (qualifierSize != sizeof(CFStringRef) || !qualifier) return kAudioHardwareBadPropertySizeError;
             u = *(CFStringRef const *)qualifier && CFEqual(*(CFStringRef const *)qualifier, CFSTR(FLOW_DEVICE_UID)) ? kFlowObjectDevice : kAudioObjectUnknown; break;

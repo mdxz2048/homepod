@@ -1,0 +1,9 @@
+Timestamp               Ty Process[PID:TID]
+2026-11-06 15:12:33.052 A  xpcproxy[569:13a4] (libsystem_info.dylib) Retrieve User by ID
+2026-11-06 15:12:33.052 A  xpcproxy[569:13a4] (libsystem_info.dylib) Resolve user group list
+2026-11-06 15:12:33.052 A  xpcproxy[569:13a4] (libsystem_info.dylib) Membership API: translate identifier
+2026-11-06 15:12:33.063 Df com.apple.audio.Core-Audio-Driver-Service.helper[569:13b3] [com.apple.audio.caulk:alloc] Registered notify signal com.apple.caulk.alloc.rtdump (0)
+2026-11-06 15:12:33.697 Df com.apple.audio.Core-Audio-Driver-Service.helper[569:13b3] [com.apple.xpc:connection] [0x1013eb1a0] activating connection: mach=false listener=true peer=false name=(anonymous)
+2026-11-06 15:12:33.697 Df com.apple.audio.Core-Audio-Driver-Service.helper[569:13b3] [com.apple.xpc:connection] [0x1013eb1a0] Connection returned listener port: 0x2503
+2026-11-06 15:12:33.698 Df com.apple.audio.Core-Audio-Driver-Service.helper[569:13b3] [com.apple.xpc:connection] [0x1013e7d00] activating connection: mach=false listener=false peer=true name=com.apple.xpc.anonymous.0x1013eb1a0.peer[477].0x1013e7d00
+2026-11-06 15:12:33.698 Df com.apple.audio.Core-Audio-Driver-Service.helper[569:13b3] [com.apple.xpc:connection] [0x1013eb6e0] activating connection: mach=false listener=false peer=false name=(anonymous)

@@ -7,8 +7,8 @@
 | ID | 任务 | 状态 |
 |---|---|---|
 | T025 | 当前系统声音/动态音量开发基线Git备份 | 完成：远端main与本地main均4331d3b92cc2330e58dcf28ab50ffd4b7d6d283d |
-| T026 | 虚拟入口产品/架构及共享接口冻结 | 契约v0.2已冻结（含Chrome stream latency output scope兼容），架构/驱动/QA对齐 |
-| T027 | 最小立体声虚拟输出驱动 | Mac第三候选tests/stage/plist/codesign通过；用户授权直接安装后已复制HAL目录，待重启加载；未改默认输出 |
+| T026 | 虚拟入口产品/架构及共享接口冻结 | 契约v0.3已冻结（含Chrome stream latency output scope及HAL初始化有限兼容），架构/驱动/QA对齐 |
+| T027 | 最小立体声虚拟输出驱动 | 首版安装后重启枚举失败；第五兼容候选Mac tests/stage/plist/codesign通过并更新安装；用户已再次重启，新枚举待读取；未改默认输出 |
 | T028 | 原生输出/虚拟输出音画对照验收 | 工具Mac6/6通过，MP4素材已生成；浏览器采用及实际音画仍未测 |
 | T029 | 虚拟输入到现有实时核心的适配 | 新VirtualAudioInput骨架Mac13测试通过，默认禁接管；真实Tap、恢复helper/跨进程事务及音频整合未实现验收 |
 

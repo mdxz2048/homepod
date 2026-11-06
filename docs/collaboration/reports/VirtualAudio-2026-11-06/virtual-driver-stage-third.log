@@ -1,0 +1,8 @@
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/virtual-driver-stage/HomePodFlowAudio.driver/Contents/Info.plist: OK
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/virtual-driver-stage/HomePodFlowAudio.driver: replacing existing signature
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/virtual-driver-stage/HomePodFlowAudio.driver: valid on disk
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/virtual-driver-stage/HomePodFlowAudio.driver: satisfies its Designated Requirement
+b9f077536d3d3c7c9780e977dbd1be532c7ba8048f35b4ac42fa45dacf94c610  /Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c
+0b70f3a7817f35b134ae7f38e1eae4a7f36f9f6e0be3bdd88b2c5b5a3c82048a  /Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.h
+0e02f4f281021458f322b426dc07a9de6e67fdc0d5fc97385086b4aa4ee02ffb  /Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/virtual-driver-stage/HomePodFlowAudio.driver/Contents/MacOS/HomePodFlowAudio
+STAGE_ONLY=/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/virtual-driver-stage/HomePodFlowAudio.driver

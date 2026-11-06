@@ -1,4 +1,4 @@
-# Virtual Audio MVP 契约 v0.2
+# Virtual Audio MVP 契约 v0.3
 
 日期：2026-11-06。状态：首轮实现接口冻结；所有安装、Tap 可读性、客户端音画补偿与声学结果尚待验收。本文是本阶段 driver / input / app / QA 的唯一接口依据；变更需总协调确认并更新版本。旧 core C ABI v1 与35个保护文件不变。
 
@@ -20,9 +20,19 @@
 
 physical/virtual ASBD 必须与 IO 样本一致；输入方向设备查询返回零 stream/零通道。不可把 output-only 设备误报为物理麦克风。驱动接受输出但不提供本机回放；App 未接通时该设备可能无声，未验收前不得自动接管系统输出。首轮不声明6/8ch，不声明 encoded passthrough/Atmos。驱动只实现 `WriteMix` 数据面；实现者需按 SDK 的 IO operation 调用约束报告 in-place 支持，不支持操作应明确拒绝。
 
-所有对象属性必须符合 HasProperty / IsPropertySettable / GetPropertyDataSize / GetPropertyData 的 scope、element、大小、错误语义。**单输出 stream 的 `kAudioStreamPropertyLatency` 必须同时接受 global/main 与 output/main 查询，返回同一 UInt32 值与同一大小，均只读。** 该兼容例外需贯穿上述四个属性入口；input scope 或非 main element 仍拒绝。device latency、safety offset 作用域 output/main。格式、采样率、默认输出 eligibility 等按 HAL SDK 查询矩阵实现，不能将此例外推广为所有 selector 通吃。object IDs 为进程内句柄，不能持久化。
+所有对象属性必须符合 HasProperty / IsPropertySettable / GetPropertyDataSize / GetPropertyData 的 scope、element、大小、错误语义。**单输出 stream 的 `kAudioStreamPropertyLatency` 必须同时接受 global/main 与 output/main 查询，返回同一 UInt32 值与同一大小，均只读。** 该兼容例外需贯穿上述四个属性入口；stream 的 input scope 或非 main element 仍拒绝。**device 的 latency、safety offset 接受 output/main 与 input/main 查询，两者均只读UInt32零。** input 查询返回零仅是空方向的兼容数值，不代表存在输入流、输入格式或输入IO能力。格式、采样率、默认输出 eligibility 等按 HAL SDK 查询矩阵实现，不能将这些例外推广为所有 selector 通吃。object IDs 为进程内句柄，不能持久化。
 
 v0.2审查修正：当前 Chromium `GetHardwareLatency` 先用调用方 output scope 构造 device latency 地址，随后只改 selector 查询 streams 及首 stream latency，保留 output scope（源码478–508行）。v0.1仅 global 的契约可能使 Chrome 此查询失败并保留初值0，导致有属性却未取得延迟。原生路径实测两 scope 查询均成功；本项目实现需以独立测试验证相同行为。这是特定 selector 的客户端兼容要求，不等于 Safari 行为已验证。
+
+v0.3枚举兼容审查：目标Mac已创建driver remote service，但HAL add-device返回UnknownProperty（`'who?'`错误码）；该错误码本身**不指出缺失selector**，以下是逐项补齐属性矩阵的候选修正，不能写成已定位根因或已枚举成功。
+
+- device `kAudioDevicePropertyRelatedDevices`：global/main只读，返回仅含本device的AudioObjectID数组，不声称与其他设备硬件共钟。
+- device `kAudioObjectPropertyOwnedObjects`：global/main、output/main返回单输出stream；input/main返回空数组。其余对象按自己的对象树矩阵实现，不泛化为所有对象都拥有此stream。
+- device latency/safety的input/main零值兼容如上；input streams、stream configuration、owned objects仍明确为空，input default eligibility仍false。
+- 所有空数组查询Size=0、Get written=0一致，不能解引用零长payload，不能把零个stream包装成一个空对象。非main element、未声明scope仍拒绝。
+- 可在非RT属性查询失败路径记录有界诊断：object、selector、scope、element、失败入口/OSStatus，不记录PCM/用户媒体。不得在IO、ZeroTimeStamp或实时路径加入日志；静态诊断需有rate limit，不能让未知selector查询风暴无限刷日志。
+
+这些兼容扩展不改变冻结核心ABI、驱动output-only能力或麦克风权限语义。需独立mock属性测试与目标Mac重新枚举证据；安装/服务加载并不等于设备枚举、PCM捕获或音画验证通过。
 
 ## 2. 时钟与格式重配置
 

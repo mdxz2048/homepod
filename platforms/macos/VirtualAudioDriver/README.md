@@ -40,6 +40,14 @@ Source of truth: `docs/collaboration/virtual-audio/CONTRACT.md` v0.2.
 Device UID: `com.homepodflow.virtual-audio.stereo.v1`.
 Plug-in bundle ID: `com.homepodflow.audio.driver`.
 
+HAL initialization compatibility: the empty input direction still answers device
+latency/safety as zero, and OwnedObjects as an empty list. This does not create an
+input stream. RelatedDevices contains the device itself. Plug-in ResourceBundle
+uses the plug-in's resources, with an empty BoxList. Non-RT failed property reads
+log object/selector/scope/element/status to the OS log for initialization diagnosis
+(bounded to 32 entries per loaded instance);
+no audio, process identity, or application content is logged.
+
 - Device latency and safety offset: 0 frames. The **single stream** holds the
   downstream latency budget, initially 0 **uncalibrated**, not zero-latency playback.
 - Device global/main `'hfla'`: UInt32 latency frames, 0..10×current sample rate;

@@ -1,0 +1,77 @@
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:69:24: error: member reference type 'AudioServerPlugInHostInterface' (aka 'struct AudioServerPlugInHostInterface') is not a pointer; did you mean to use '.'?
+   69 |     if (gHost) (*gHost)->PropertiesChanged(gHost, object, count, addresses);
+      |                ~~~~~~~~^~
+      |                        .
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:158:17: error: redefinition of 'Size' as different kind of symbol
+  158 | static OSStatus Size(AudioObjectID object, const AudioObjectPropertyAddress *a, UInt32 *size) {
+      |                 ^
+/Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/MacTypes.h:252:41: note: previous definition is here
+  252 | typedef long                            Size;
+      |                                         ^
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:191:18: error: use of undeclared identifier 'kAudioDevicePropertyBufferFrameSizeRange'
+  191 |             case kAudioDevicePropertyBufferFrameSizeRange:
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:203:60: error: use of undeclared identifier 'kAudioDevicePropertyDeviceIsRunningSomewhere'; did you mean 'kAudioDevicePropertyDeviceIsRunning'?
+  203 |             case kAudioDevicePropertyDeviceIsRunning: case kAudioDevicePropertyDeviceIsRunningSomewhere:
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                            kAudioDevicePropertyDeviceIsRunning
+/Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreAudio.framework/Headers/AudioHardwareBase.h:740:5: note: 'kAudioDevicePropertyDeviceIsRunning' declared here
+  740 |     kAudioDevicePropertyDeviceIsRunning                 = 'goin',
+      |     ^
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:205:18: error: use of undeclared identifier 'kAudioDevicePropertyBufferFrameSize'
+  205 |             case kAudioDevicePropertyBufferFrameSize:
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:203:60: error: duplicate case value 'kAudioDevicePropertyDeviceIsRunning'
+  203 |             case kAudioDevicePropertyDeviceIsRunning: case kAudioDevicePropertyDeviceIsRunningSomewhere:
+      |                                                            ^
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:203:18: note: previous case defined here
+  203 |             case kAudioDevicePropertyDeviceIsRunning: case kAudioDevicePropertyDeviceIsRunningSomewhere:
+      |                  ^
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:229:59: error: unexpected type name 'Size': expected expression
+  229 |     (void)pid; UInt32 size; return ValidDriver(driver) && Size(object, a, &size) == noErr;
+      |                                                           ^
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:234:23: error: unexpected type name 'Size': expected expression
+  234 |     OSStatus status = Size(object, a, &size); if (status) return status;
+      |                       ^
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:235:161: error: use of undeclared identifier 'kAudioDevicePropertyBufferFrameSize'
+  235 |     *settable = (object == kFlowObjectDevice && (a->mSelector == kAudioDevicePropertyNominalSampleRate || a->mSelector == kFlowLatencyFrames || a->mSelector == kAudioDevicePropertyBufferFrameSize))
+      |                                                                                                                                                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:241:34: error: unexpected type name 'Size': expected expression
+  241 |     return ValidDriver(driver) ? Size(object, a, size) : kAudioHardwareBadObjectError;
+      |                                  ^
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:246:50: error: unexpected type name 'Size': expected expression
+  246 |     *written = 0; UInt32 size; OSStatus status = Size(object, a, &size); if (status) return status;
+      |                                                  ^
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:268:56: error: use of undeclared identifier 'kAudioDevicePropertyDeviceIsRunningSomewhere'; did you mean 'kAudioDevicePropertyDeviceIsRunning'?
+  268 |         case kAudioDevicePropertyDeviceIsRunning: case kAudioDevicePropertyDeviceIsRunningSomewhere: u = atomic_load(&gRunning) > 0; break;
+      |                                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                        kAudioDevicePropertyDeviceIsRunning
+/Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreAudio.framework/Headers/AudioHardwareBase.h:740:5: note: 'kAudioDevicePropertyDeviceIsRunning' declared here
+  740 |     kAudioDevicePropertyDeviceIsRunning                 = 'goin',
+      |     ^
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:270:14: error: use of undeclared identifier 'kAudioDevicePropertyBufferFrameSize'
+  270 |         case kAudioDevicePropertyBufferFrameSize: u = 512; break;
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:282:14: error: use of undeclared identifier 'kAudioDevicePropertyBufferFrameSizeRange'
+  282 |         case kAudioDevicePropertyBufferFrameSizeRange: {
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:268:56: error: duplicate case value 'kAudioDevicePropertyDeviceIsRunning'
+  268 |         case kAudioDevicePropertyDeviceIsRunning: case kAudioDevicePropertyDeviceIsRunningSomewhere: u = atomic_load(&gRunning) > 0; break;
+      |                                                        ^
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:268:14: note: previous case defined here
+  268 |         case kAudioDevicePropertyDeviceIsRunning: case kAudioDevicePropertyDeviceIsRunningSomewhere: u = atomic_load(&gRunning) > 0; break;
+      |              ^
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:276:14: error: duplicate case value: 'kAudioStreamPropertyLatency' and 'kAudioDevicePropertyLatency' both equal '1819569763'
+  276 |         case kAudioDevicePropertyLatency: case kAudioDevicePropertySafetyOffset: u = 0; break;
+      |              ^
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:274:14: note: previous case defined here
+  274 |         case kAudioStreamPropertyLatency: case kFlowLatencyFrames: u = atomic_load(&gLatency); break;
+      |              ^
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:312:25: error: use of undeclared identifier 'kAudioDevicePropertyBufferFrameSize'
+  312 |     if (a->mSelector == kAudioDevicePropertyBufferFrameSize) {
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioDriver/src/FlowVirtualAudio.c:353:22: error: member reference type 'AudioServerPlugInHostInterface' (aka 'struct AudioServerPlugInHostInterface') is not a pointer; did you mean to use '.'?
+  353 |     status = (*gHost)->RequestDeviceConfigurationChange(gHost,kFlowObjectDevice,(UInt64)rate,NULL);
+      |              ~~~~~~~~^~
+      |                      .
+18 errors generated.
