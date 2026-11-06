@@ -116,6 +116,7 @@ enum {
     kMCObjectStream71 = 15,
     kMCLatencyFrames = 'hfla',
     kMCLatencyRevision = 'hflr',
+    kMCLatencyStatus = 'hfls',
     kMCZeroTimeStampPeriod = 16384
 };
 

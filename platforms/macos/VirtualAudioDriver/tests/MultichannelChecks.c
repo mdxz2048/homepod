@@ -17,7 +17,7 @@ static UInt32 gRunningNotifications[MC_DEVICE_COUNT];
 static UInt32 gFormatNotifications[MC_DEVICE_COUNT];
 static OSStatus gRequestResult;
 static AudioObjectID gRequestedDevice;
-static UInt64 gRequestedRate;
+static UInt64 gRequestedAction;
 
 static int NotifyIndex(AudioObjectID object) {
     for (UInt32 i = 0; i < MC_DEVICE_COUNT; ++i) {
@@ -63,13 +63,20 @@ static OSStatus MockRequestChange(AudioServerPlugInHostRef host, AudioObjectID d
     (void)host;
     (void)info;
     gRequestedDevice = device;
-    gRequestedRate = action;
+    gRequestedAction = action;
     return gRequestResult;
 }
 
 static AudioServerPlugInHostInterface gMockHost = {
     .PropertiesChanged = MockPropertiesChanged,
     .RequestDeviceConfigurationChange = MockRequestChange};
+
+/* Deterministic injected scheduler: the test runs the host request work item
+ * synchronously instead of relying on the global dispatch queue, so queue
+ * timing cannot race the assertions below. */
+static void MockHostRequestSubmit(MCHostRequestFunction function, void *context) {
+    function(context);
+}
 
 static UInt32 Read32(AudioObjectID object, AudioObjectPropertySelector selector,
                      AudioObjectPropertyScope scope) {
@@ -118,6 +125,20 @@ static UInt64 ReadCustom64(AudioObjectID object, AudioObjectPropertySelector sel
     assert(CFNumberGetValue(number, kCFNumberSInt64Type, &value));
     CFRelease(number);
     return (UInt64)value;
+}
+
+static SInt32 ReadStatus(AudioObjectID object) {
+    AudioObjectPropertyAddress address = Global(kMCLatencyStatus);
+    CFNumberRef number = NULL;
+    UInt32 written = 0;
+    assert(GetData(Driver(), object, 0, &address, 0, NULL, sizeof(number), &written,
+                   &number) == noErr);
+    assert(written == sizeof(number) && number &&
+           CFGetTypeID(number) == CFNumberGetTypeID());
+    SInt32 value = 0;
+    assert(CFNumberGetValue(number, kCFNumberSInt32Type, &value));
+    CFRelease(number);
+    return value;
 }
 
 static OSStatus SetCustom32(AudioObjectID object, AudioObjectPropertySelector selector,
@@ -332,7 +353,8 @@ static void ExerciseProperty(AudioObjectID object, AudioObjectPropertySelector s
         memcpy(&string, bytes, sizeof(string));
         assert(string);
         CFRelease(string);
-    } else if (selector == kMCLatencyFrames || selector == kMCLatencyRevision) {
+    } else if (selector == kMCLatencyFrames || selector == kMCLatencyRevision ||
+               selector == kMCLatencyStatus) {
         CFNumberRef number = NULL;
         memcpy(&number, bytes, sizeof(number));
         assert(number);
@@ -365,7 +387,7 @@ static void CheckInitializationMatrix(void) {
         kAudioDevicePropertyZeroTimeStampPeriod, kAudioDevicePropertyStreams,
         kAudioDevicePropertyBufferFrameSizeRange, kAudioDevicePropertyBufferFrameSize,
         kAudioObjectPropertyCustomPropertyInfoList, kMCLatencyFrames,
-        kMCLatencyRevision};
+        kMCLatencyRevision, kMCLatencyStatus};
     const AudioObjectPropertySelector deviceBoth[] = {
         kAudioDevicePropertyDeviceCanBeDefaultDevice,
         kAudioDevicePropertyDeviceCanBeDefaultSystemDevice,
@@ -572,9 +594,10 @@ static void CheckStaticDevice(UInt32 index) {
                   kAudioObjectPropertyScopeGlobal) == 1);
     assert(ReadCustom32(info->deviceID, kMCLatencyFrames) == 0);
     assert(ReadCustom64(info->deviceID, kMCLatencyRevision) == 1);
+    assert(ReadStatus(info->deviceID) == MCLatencyStatusIdle);
 
     AudioObjectPropertyAddress infoAddress = Global(kAudioObjectPropertyCustomPropertyInfoList);
-    AudioServerPlugInCustomPropertyInfo properties[2];
+    AudioServerPlugInCustomPropertyInfo properties[3];
     assert(DataSize(Driver(), info->deviceID, 0, &infoAddress, 0, NULL, &size) == noErr);
     assert(size == sizeof(properties));
     assert(GetData(Driver(), info->deviceID, 0, &infoAddress, 0, NULL, sizeof(properties),
@@ -584,6 +607,9 @@ static void CheckStaticDevice(UInt32 index) {
            kAudioServerPlugInCustomPropertyDataTypeCFPropertyList);
     assert(properties[1].mSelector == kMCLatencyRevision);
     assert(properties[1].mPropertyDataType ==
+           kAudioServerPlugInCustomPropertyDataTypeCFPropertyList);
+    assert(properties[2].mSelector == kMCLatencyStatus);
+    assert(properties[2].mPropertyDataType ==
            kAudioServerPlugInCustomPropertyDataTypeCFPropertyList);
     assert(channels == MCLayoutChannelCount(info->layout));
 }
@@ -643,7 +669,7 @@ static void Check2chRejectedOnWideStreams(void) {
             assert(status == noErr);
         } else {
             assert(status == kAudioDeviceUnsupportedFormatError);
-            assert(!gState[i].ratePending);
+            assert(gState[i].pendingKind == MCPendingNone);
             assert(atomic_load(&gState[i].rate) == rateBefore);
             assert(ReadFormat(info->streamID, kAudioStreamPropertyVirtualFormat)
                        .mChannelsPerFrame == channels);
@@ -662,16 +688,45 @@ static void CheckLatencyIsolation(void) {
     for (UInt32 i = 0; i < MC_DEVICE_COUNT; ++i) {
         const MCDeviceInfo *info = &gDevices[i];
         UInt32 value = 1000 * (i + 1);
+        UInt32 previous = ReadCustom32(info->deviceID, kMCLatencyFrames);
+        UInt64 revisionBefore = ReadCustom64(info->deviceID, kMCLatencyRevision);
+        UInt32 globalBefore = gLatencyGlobal[i];
+        UInt32 outputBefore = gLatencyOutput[i];
+        UInt32 revisionNotesBefore = gRevisionNotifications[i];
+
+        gRequestResult = noErr;
+        gRequestedDevice = kAudioObjectUnknown;
+        gRequestedAction = 0;
         assert(SetCustom32(info->deviceID, kMCLatencyFrames, value) == noErr);
+        assert(gState[i].pendingKind == MCPendingLatency);
+        assert(gRequestedDevice == info->deviceID &&
+               gRequestedAction == gState[i].pendingAction);
+        assert(ReadStatus(info->deviceID) == MCLatencyStatusPending);
+        /* The old readback is preserved until the host commits. */
+        assert(ReadCustom32(info->deviceID, kMCLatencyFrames) == previous);
+        assert(ReadCustom64(info->deviceID, kMCLatencyRevision) == revisionBefore);
+        assert(Read32(info->streamID, kAudioStreamPropertyLatency,
+                      kAudioObjectPropertyScopeOutput) == previous);
+        assert(StartIO(Driver(), info->deviceID, 8000 + i) ==
+               kAudioHardwareIllegalOperationError);
+        /* A second write while the transaction is pending is busy-rejected. */
+        assert(SetCustom32(info->deviceID, kMCLatencyFrames, value + 1) ==
+               kAudioHardwareIllegalOperationError);
+
+        assert(PerformChange(Driver(), info->deviceID, gState[i].pendingAction, NULL) ==
+               noErr);
         expected[i] = value;
+        assert(gState[i].pendingKind == MCPendingNone);
         assert(ReadCustom32(info->deviceID, kMCLatencyFrames) == value);
-        assert(ReadCustom64(info->deviceID, kMCLatencyRevision) == 2);
+        assert(ReadCustom64(info->deviceID, kMCLatencyRevision) == revisionBefore + 1);
+        assert(ReadStatus(info->deviceID) == MCLatencyStatusIdle);
         assert(Read32(info->streamID, kAudioStreamPropertyLatency,
                       kAudioObjectPropertyScopeGlobal) == value);
         assert(Read32(info->streamID, kAudioStreamPropertyLatency,
                       kAudioObjectPropertyScopeOutput) == value);
-        assert(gLatencyGlobal[i] == 1 && gLatencyOutput[i] == 1);
-        assert(gRevisionNotifications[i] == 1);
+        assert(gLatencyGlobal[i] == globalBefore + 1);
+        assert(gLatencyOutput[i] == outputBefore + 1);
+        assert(gRevisionNotifications[i] == revisionNotesBefore + 1);
         for (UInt32 j = 0; j < MC_DEVICE_COUNT; ++j) {
             if (j == i) continue;
             assert(ReadCustom32(gDevices[j].deviceID, kMCLatencyFrames) == expected[j]);
@@ -685,20 +740,28 @@ static void CheckLatencyIsolation(void) {
     const MCDeviceInfo *first = &gDevices[0];
     UInt32 globalBefore = gLatencyGlobal[0];
     UInt32 outputBefore = gLatencyOutput[0];
-    UInt32 revisionBefore = gRevisionNotifications[0];
+    UInt32 revisionNotesBefore = gRevisionNotifications[0];
+    gRequestResult = noErr;
+    gRequestedDevice = kAudioObjectUnknown;
+    gRequestedAction = 0;
     assert(SetCustom32(first->deviceID, kMCLatencyFrames, expected[0]) == noErr);
     assert(ReadCustom64(first->deviceID, kMCLatencyRevision) == 2);
+    assert(gState[0].pendingKind == MCPendingNone);
+    assert(ReadStatus(first->deviceID) == MCLatencyStatusIdle);
+    assert(gRequestedDevice == kAudioObjectUnknown && gRequestedAction == 0);
     assert(gLatencyGlobal[0] == globalBefore &&
            gLatencyOutput[0] == outputBefore &&
-           gRevisionNotifications[0] == revisionBefore);
+           gRevisionNotifications[0] == revisionNotesBefore);
 
     assert(SetCustom32(first->deviceID, kMCLatencyFrames, -1) ==
            kAudioHardwareIllegalOperationError);
+    assert(gState[0].pendingKind == MCPendingNone);
     assert(SetCustom32(first->deviceID, kMCLatencyFrames, 5000000000LL) ==
            kAudioHardwareIllegalOperationError);
     assert(SetCustom32(first->deviceID, kMCLatencyFrames,
                        10 * 48000 + 1) == kAudioHardwareIllegalOperationError);
     assert(ReadCustom64(first->deviceID, kMCLatencyRevision) == 2);
+    assert(ReadStatus(first->deviceID) == MCLatencyStatusIdle);
 
     AudioObjectPropertyAddress address = Global(kMCLatencyFrames);
     UInt32 wrongSize = 123;
@@ -731,22 +794,30 @@ static void CheckRateIsolation(void) {
         UInt32 channels = DeviceChannels(info);
         AudioStreamBasicDescription request = Format(44100, channels);
         AudioObjectPropertyAddress address = Global(kAudioStreamPropertyVirtualFormat);
+        UInt64 revisionBefore = ReadCustom64(info->deviceID, kMCLatencyRevision);
         gRequestResult = noErr;
         gRequestedDevice = kAudioObjectUnknown;
-        gRequestedRate = 0;
+        gRequestedAction = 0;
         assert(SetData(Driver(), info->streamID, 0, &address, 0, NULL, sizeof(request),
                        &request) == noErr);
-        assert(gState[i].ratePending);
-        assert(gRequestedDevice == info->deviceID && gRequestedRate == 44100);
+        assert(gState[i].pendingKind == MCPendingRate);
+        assert(gRequestedDevice == info->deviceID &&
+               gRequestedAction == gState[i].pendingAction);
+        assert(ReadStatus(info->deviceID) == MCLatencyStatusPending);
+        /* Rate and latency stay at their committed values until PerformChange. */
+        assert(atomic_load(&gState[i].rate) == 48000);
+        assert(ReadCustom32(info->deviceID, kMCLatencyFrames) == expected[i]);
         assert(StartIO(Driver(), info->deviceID, 500 + i) ==
                kAudioHardwareIllegalOperationError);
-        assert(PerformChange(Driver(), info->deviceID, 44100, NULL) == noErr);
+        assert(PerformChange(Driver(), info->deviceID, gState[i].pendingAction, NULL) ==
+               noErr);
         UInt32 scaled = (UInt32)(((UInt64)expected[i] * 44100 + 24000) / 48000);
         expected[i] = scaled;
         assert(atomic_load(&gState[i].rate) == 44100);
-        assert(!gState[i].ratePending);
+        assert(gState[i].pendingKind == MCPendingNone);
         assert(ReadCustom32(info->deviceID, kMCLatencyFrames) == scaled);
-        assert(ReadCustom64(info->deviceID, kMCLatencyRevision) == 3);
+        assert(ReadCustom64(info->deviceID, kMCLatencyRevision) == revisionBefore + 1);
+        assert(ReadStatus(info->deviceID) == MCLatencyStatusIdle);
         assert(Read32(info->streamID, kAudioStreamPropertyLatency,
                       kAudioObjectPropertyScopeGlobal) == scaled);
         assert(Read32(info->streamID, kAudioStreamPropertyLatency,
@@ -768,23 +839,46 @@ static void CheckRateIsolation(void) {
     const MCDeviceInfo *first = &gDevices[0];
     AudioStreamBasicDescription back = Format(48000, DeviceChannels(first));
     AudioObjectPropertyAddress address = Global(kAudioStreamPropertyVirtualFormat);
-    gRequestResult = kAudioHardwareUnspecifiedError;
-    assert(SetData(Driver(), first->streamID, 0, &address, 0, NULL, sizeof(back),
-                   &back) == gRequestResult);
-    assert(!gState[0].ratePending && atomic_load(&gState[0].rate) == 44100);
 
+    /* Host request failure clears the pending slot and preserves the device.
+     * The test injected scheduler runs the queued request before SetData
+     * returns; in production the block runs on a dispatch queue and SetData
+     * has already returned noErr when AbortChange clears the reservation. */
+    gRequestResult = kAudioHardwareUnspecifiedError;
+    gRequestedDevice = kAudioObjectUnknown;
+    gRequestedAction = 0;
+    assert(SetData(Driver(), first->streamID, 0, &address, 0, NULL, sizeof(back),
+                   &back) == noErr);
+    assert(gRequestedDevice == first->deviceID);
+    assert(gRequestedAction != 0);
+    assert(gState[0].pendingKind == MCPendingNone &&
+           atomic_load(&gState[0].rate) == 44100);
+    assert(ReadStatus(first->deviceID) == MCLatencyStatusRejected);
+
+    /* A missing host is refused the same way, never left pending. */
     gHost = NULL;
     assert(SetData(Driver(), first->streamID, 0, &address, 0, NULL, sizeof(back),
                    &back) == kAudioHardwareNotReadyError);
-    assert(!gState[0].ratePending && atomic_load(&gState[0].rate) == 44100);
+    assert(gState[0].pendingKind == MCPendingNone &&
+           atomic_load(&gState[0].rate) == 44100);
+    assert(ReadStatus(first->deviceID) == MCLatencyStatusRejected);
     gHost = &gMockHost;
 
+    /* A stale callback must not clear a newer transaction. */
     gRequestResult = noErr;
     assert(SetData(Driver(), first->streamID, 0, &address, 0, NULL, sizeof(back),
                    &back) == noErr);
-    assert(gState[0].ratePending);
-    assert(AbortChange(Driver(), first->deviceID, 48000, NULL) == noErr);
-    assert(!gState[0].ratePending && atomic_load(&gState[0].rate) == 44100);
+    assert(gState[0].pendingKind == MCPendingRate);
+    assert(ReadStatus(first->deviceID) == MCLatencyStatusPending);
+    UInt64 action = gState[0].pendingAction;
+    assert(AbortChange(Driver(), first->deviceID, action - 1, NULL) == noErr);
+    assert(gState[0].pendingKind == MCPendingRate &&
+           atomic_load(&gState[0].rate) == 44100);
+    assert(ReadStatus(first->deviceID) == MCLatencyStatusPending);
+    assert(AbortChange(Driver(), first->deviceID, action, NULL) == noErr);
+    assert(gState[0].pendingKind == MCPendingNone &&
+           atomic_load(&gState[0].rate) == 44100);
+    assert(ReadStatus(first->deviceID) == MCLatencyStatusRejected);
 
     assert(StartIO(Driver(), first->deviceID, 600) == noErr);
     assert(StopIO(Driver(), first->deviceID, 600) == noErr);
@@ -874,21 +968,33 @@ static void CheckClockAndIO(void) {
                       kAudioObjectPropertyScopeGlobal) == 0);
     }
 
-    /* Latency mutation is blocked only on the device with active IO. */
+    /* Latency mutation is blocked only on the device with active IO, and the
+     * idle device commits through the host transaction. */
     assert(StartIO(Driver(), first->deviceID, 3000) == noErr);
     UInt32 revisionBefore = ReadCustom64(first->deviceID, kMCLatencyRevision);
     UInt32 latencyBefore = ReadCustom32(first->deviceID, kMCLatencyFrames);
+    assert(ReadStatus(first->deviceID) == MCLatencyStatusBusy);
     assert(SetCustom32(first->deviceID, kMCLatencyFrames, latencyBefore + 1) ==
            kAudioHardwareIllegalOperationError);
     assert(ReadCustom64(first->deviceID, kMCLatencyRevision) == revisionBefore);
+    assert(gState[0].pendingKind == MCPendingNone);
     if (MC_DEVICE_COUNT > 1) {
         const MCDeviceInfo *second = &gDevices[1];
         UInt32 secondRevision = ReadCustom64(second->deviceID, kMCLatencyRevision);
         UInt32 secondLatency = ReadCustom32(second->deviceID, kMCLatencyFrames);
-        assert(SetCustom32(second->deviceID, kMCLatencyFrames, secondLatency + 7) ==
+        UInt32 target = secondLatency + 7;
+        gRequestResult = noErr;
+        assert(SetCustom32(second->deviceID, kMCLatencyFrames, target) == noErr);
+        assert(gState[1].pendingKind == MCPendingLatency);
+        assert(ReadStatus(second->deviceID) == MCLatencyStatusPending);
+        /* Readback is unchanged until the host commits. */
+        assert(ReadCustom32(second->deviceID, kMCLatencyFrames) == secondLatency);
+        assert(PerformChange(Driver(), second->deviceID, gState[1].pendingAction, NULL) ==
                noErr);
         assert(ReadCustom64(second->deviceID, kMCLatencyRevision) ==
                secondRevision + 1);
+        assert(ReadCustom32(second->deviceID, kMCLatencyFrames) == target);
+        assert(ReadStatus(second->deviceID) == MCLatencyStatusIdle);
         assert(ReadCustom32(first->deviceID, kMCLatencyFrames) == latencyBefore);
     }
     assert(StopIO(Driver(), first->deviceID, 3000) == noErr);
@@ -962,15 +1068,17 @@ static void CheckScopeStrictness(void) {
 static void CheckRunningRateRejected(void) {
     const MCDeviceInfo *info = &gDevices[0];
     assert(StartIO(Driver(), info->deviceID, 4000) == noErr);
+    assert(ReadStatus(info->deviceID) == MCLatencyStatusBusy);
     AudioObjectPropertyAddress rateAddress = Global(kAudioDevicePropertyNominalSampleRate);
     Float64 rate = 48000;
     assert(SetData(Driver(), info->deviceID, 0, &rateAddress, 0, NULL, sizeof(rate),
                    &rate) == kAudioHardwareIllegalOperationError);
-    assert(!gState[0].ratePending);
+    assert(gState[0].pendingKind == MCPendingNone);
     assert(StopIO(Driver(), info->deviceID, 4000) == noErr);
 }
 
 int main(void) {
+    gHostRequestSubmitter = MockHostRequestSubmit;
     assert(FlowVirtualAudioMultichannelFactory(NULL, kAudioServerPlugInTypeUUID) == Driver());
     assert(Initialize(Driver(), &gMockHost) == noErr);
     CheckPlugin();

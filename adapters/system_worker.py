@@ -22,6 +22,7 @@ from adapters.worker.protocol import (MAX_LINE_BYTES, IdHistory, ProtocolError,
     absolute_path, identifier, keys, number, session_id)
 from adapters.worker.server import Session, WorkerServer
 from adapters.live.volume import LiveVolumeControl, VolumeNotReady
+from adapters.live.latency_control import validate_latency_report
 
 COMMANDS = ("hello", "scan", "start", "stop", "shutdown", "set_volume")
 
@@ -120,12 +121,19 @@ def parse_system_request(line):
                 ids.add(output); addresses.add(host)
             if "input" in params:
                 config = params['input']
-                keys(config, ('backend', 'device_uid', 'layout'))
+                keys(config, ('backend', 'device_uid', 'layout'), ('latency_report',))
                 from adapters.live.pcm_v2 import CANONICAL_DEVICE_UID
                 if (config['backend'] != 'virtual_device_v2'
                         or not isinstance(config['layout'], str)
                         or CANONICAL_DEVICE_UID.get(config['layout']) != config['device_uid']):
                     raise ProtocolError('invalid_params', 'unsupported virtual input descriptor')
+                if 'latency_report' in config:
+                    try:
+                        normalized = validate_latency_report(config['latency_report'])
+                    except (ValueError, TypeError):
+                        raise ProtocolError('invalid_params', 'invalid verified Core Audio latency report')
+                    params['input'] = dict(config)
+                    params['input']['latency_report'] = normalized
                 try:
                     from adapters.live.routing_v2 import VirtualRoutePlan
                     VirtualRoutePlan(config['layout'], [r['output_id'] for r in routes],
@@ -261,9 +269,23 @@ class SystemWorkerServer(WorkerServer):
             else:
                 phase = "preparing"
             if phase != previous:
+                payload = {"state": phase, "execution": "system_audio",
+                    "actual_mode": report.get('actual_mode', 'same_stereo'),
+                    "acoustic_sync_verified": False}
+                if phase in ("capturing", "streaming"):
+                    scheduling = report.get("scheduling")
+                    if isinstance(scheduling, dict):
+                        payload["latency_plan"] = {
+                            "preparation_ms": scheduling.get("preparation_ms"),
+                            "negotiated_latency_ms": scheduling.get("negotiated_latency_ms"),
+                            "planned_presentation_ms": scheduling.get("planned_presentation_ms"),
+                            "report_verified": scheduling.get("report_verified", False),
+                        }
+                        comparison = scheduling.get("programmed_vs_reported_ms")
+                        if isinstance(comparison, dict):
+                            payload["programmed_vs_reported_ms"] = comparison
                 self.emit(session.request_id, "state", session.session_id,
-                    {"state": phase, "execution": "system_audio", "actual_mode": report.get('actual_mode', 'same_stereo'),
-                     "acoustic_sync_verified": False})
+                    payload)
                 previous = phase
             await asyncio.sleep(.05)
 

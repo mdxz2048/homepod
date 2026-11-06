@@ -11,6 +11,7 @@ from adapters.airplay_pyatv.source import CoreAudioSource
 from adapters.airplay_pyatv.timing import build_timing_plan, ntp_from_unix_ns
 from .capture import CaptureHost
 from .hub import LiveFailure, LiveHub
+from .latency_control import PREPARATION_MS, playback_lead_ns, plan_telemetry
 
 
 class LiveSource(CoreAudioSource):
@@ -39,8 +40,9 @@ class LiveSource(CoreAudioSource):
 
 
 class LivePatches(SessionPatches):
-    def __init__(self, hub, capture, report, volume_control=None):
+    def __init__(self, hub, capture, report, volume_control=None, latency_report=None):
         self.hub, self.capture, self.report = hub, capture, report
+        self.latency_report = latency_report
         self.library = None
         self.sample_rate, self.channels = 44100, 2
         self.routes = hub.routes
@@ -107,7 +109,7 @@ class LivePatches(SessionPatches):
                     raise LiveFailure("unsupported live receiver format")
                 self.report["status"] = "capturing"
                 await self.capture.start()
-                origin = self.hub.start(latency * 1_000_000_000 // rate + 500_000_000)
+                origin = self.hub.start(playback_lead_ns(latency, rate))
                 before = time.monotonic_ns()
                 ntp = ntp_from_unix_ns(time.time_ns())
                 after = time.monotonic_ns()
@@ -119,9 +121,11 @@ class LivePatches(SessionPatches):
                 self.report.update({"shared_start_ts": self.plan.start_ts,
                     "send_origin_ns": self.plan.send_origin_ns, "playback_origin_ns": origin,
                     "protocol_latency_samples": latency, "protocol_sample_rate": rate,
+                    "preparation_ms": PREPARATION_MS,
                     "prepared_receivers": len(self.clients), "anchor_uncertainty_ns": after - before,
                     "capture_to_receipt_uncertainty_ns": None,
-                    "converter_delay_known": False, "acoustic_sync_verified": False})
+                    "converter_delay_known": False, "acoustic_sync_verified": False,
+                    "scheduling": plan_telemetry(latency, rate, self.latency_report)})
             except BaseException as exc:
                 self.failure = exc
             finally:
@@ -177,7 +181,10 @@ async def play_system_audio(library, capture_host, routes, hosts, volume=15,
             raise LiveFailure("a selected AirPlay receiver was not discovered")
         import pyatv
         from pyatv.const import Protocol
-        with LivePatches(hub, capture, report, volume_control) as patch:
+        latency_report = None
+        if isinstance(input_config, dict):
+            latency_report = input_config.get("latency_report")
+        with LivePatches(hub, capture, report, volume_control, latency_report) as patch:
             patch.cleanup_confirmed = False
             try:
                 report["status"] = "connecting"

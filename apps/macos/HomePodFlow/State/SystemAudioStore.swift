@@ -16,6 +16,8 @@ import Observation
     private(set) var volumeStatus = ""
     private(set) var volumeUpdating = false
     private(set) var appliedVolumePercent: Double?
+    private(set) var latencyStatusText = ""
+    private(set) var latencyState: LatencyControlState?
     private var recovery = SystemSessionRecovery()
     var desiredEnabled: Bool { recovery.desiredEnabled }
     var recoveryAttempt: Int { recovery.attempts }
@@ -24,8 +26,10 @@ import Observation
 
     @ObservationIgnored private let serviceFactory: @MainActor () throws -> any SystemAudioRouting
     @ObservationIgnored private let retrySleep: @MainActor (Double) async throws -> Void
+    @ObservationIgnored private let latencyFactory: (@MainActor (SystemAudioRuntime) -> any LatencyControlPreparing)?
     @ObservationIgnored private let observesEnvironment: Bool
     @ObservationIgnored private var service: (any SystemAudioRouting)?
+    @ObservationIgnored private var verifiedLatencyReport: VerifiedLatencyReport?
     @ObservationIgnored private var generation = UUID()
     @ObservationIgnored private var disconnecting = false
     @ObservationIgnored private var retryTask: Task<Void, Never>?
@@ -120,9 +124,11 @@ import Observation
 
     init(serviceFactory: (@MainActor () throws -> any SystemAudioRouting)? = nil,
          retrySleep: (@MainActor (Double) async throws -> Void)? = nil,
+         latencyFactory: (@MainActor (SystemAudioRuntime) -> any LatencyControlPreparing)? = nil,
          observesEnvironment: Bool = true) {
         self.serviceFactory = serviceFactory ?? { try SystemRouterService.installed() }
         self.retrySleep = retrySleep ?? { delay in try await Task.sleep(for: .seconds(delay)) }
+        self.latencyFactory = latencyFactory
         self.observesEnvironment = observesEnvironment
     }
 
@@ -151,6 +157,7 @@ import Observation
             try await router.connect()
             guard generation == token else { return }
             serviceReady = true; statusText = "服务已就绪 · 尚未开始采集或播放"
+            await refreshLatencyReportIfEnabled()
         } catch {
             if generation == token { service = nil; serviceReady = false; statusText = error.localizedDescription }
         }
@@ -246,6 +253,7 @@ import Observation
         }
         var retryable = false
         do {
+            await refreshLatencyReportIfEnabled()
             var params: [String: JSONValue] = [
                 "session": .string(sid), "library": .string(service.runtime.library),
                 "capture_host": .string(service.runtime.virtual_capture_host ?? service.runtime.capture_host), "routes": .array(routes),
@@ -253,11 +261,15 @@ import Observation
                 "exclude_pids": .array([.integer(Int(ProcessInfo.processInfo.processIdentifier))])
             ]
             if service.runtime.virtual_capture_host != nil {
-                params["input"] = .object([
+                var input: [String: JSONValue] = [
                     "backend": .string("virtual_device_v2"),
                     "device_uid": .string("com.homepodflow.virtual-audio.surround71.v1"),
                     "layout": .string("7_1")
-                ])
+                ]
+                if let report = verifiedLatencyReport {
+                    input["latency_report"] = .object(report.workerObject)
+                }
+                params["input"] = .object(input)
             }
             let result = try await service.request("start", params: params, session: sid, timeout: nil)
             guard generation == token, session == sid else { return }
@@ -311,6 +323,27 @@ import Observation
             guard let self, self.session == sid else { return }
             await self.stopSession()
         }
+    }
+
+    /// Builds one controller per service instance. The default controller is a
+    /// bounded, shell-free helper wrapper; tests may inject a deterministic one.
+    @MainActor private func makeLatencyController() -> (any LatencyControlPreparing)? {
+        guard let service else { return nil }
+        if let factory = latencyFactory {
+            return factory(service.runtime)
+        }
+        return LatencyControlService(executablePath: service.runtime.latency_control,
+                                     configuredMS: service.runtime.latency_ms)
+    }
+
+    /// Runs once at service connect and again before each new session. It never
+    /// runs mid-session, so a reported value cannot change while audio flows.
+    @MainActor private func refreshLatencyReportIfEnabled() async {
+        guard let controller = makeLatencyController() else { return }
+        let preparation = await controller.prepare()
+        latencyState = preparation.state
+        latencyStatusText = preparation.state.statusText
+        verifiedLatencyReport = preparation.verified
     }
 
     private func stopSession() async {
@@ -457,6 +490,9 @@ import Observation
             return
         }
         guard event.event == "state", let phase = event.payload["state"]?.string else { return }
+        if let mismatch = Self.planMismatchText(event.payload) {
+            latencyStatusText = mismatch
+        }
         switch phase {
         case "preparing": statusText = "正在准备音箱与采集 · 尚未开始发送"
         case "capturing": statusText = "正在采集系统音频并准备播放"
@@ -489,5 +525,15 @@ import Observation
         case "stopped", "failed": isRunning = false
         default: break
         }
+    }
+
+    /// User-facing plan vs. report difference. This is a nominal-vs-read
+    /// comparison, explicitly not an acoustic sync conclusion.
+    private static func planMismatchText(_ payload: [String: JSONValue]) -> String? {
+        guard let comparison = payload["programmed_vs_reported_ms"]?.object,
+              let programmed = comparison["programmed_ms"]?.number,
+              let reported = comparison["reported_ms"]?.number,
+              let difference = comparison["signed_difference_ms"]?.number else { return nil }
+        return "计划 \(Int(programmed.rounded()))ms · 设备报告 \(Int(reported.rounded()))ms · 差值 \(Int(difference.rounded()))ms（非声学同步结论）"
     }
 }

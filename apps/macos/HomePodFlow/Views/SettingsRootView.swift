@@ -87,6 +87,10 @@ struct SettingsRootView: View {
                     .font(.caption).foregroundStyle(.secondary)
                 Text("状态栏使用保存后的布局。当前系统立体声在影院模式下按同声播放处理。")
                     .font(.caption).foregroundStyle(.secondary)
+                if !state.systemAudio.latencyStatusText.isEmpty {
+                    Text(state.systemAudio.latencyStatusText)
+                        .font(.caption).foregroundStyle(.secondary)
+                }
             }
         }
     }

@@ -13,9 +13,11 @@
 
 #include <CoreFoundation/CFPlugInCOM.h>
 #include <CoreAudio/AudioHardware.h>
+#include <dispatch/dispatch.h>
 #include <mach/mach_time.h>
 #include <os/log.h>
 #include <pthread.h>
+#include <stdlib.h>
 #include <stdatomic.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -92,6 +94,19 @@ static const MCDeviceInfo gDevices[MC_DEVICE_COUNT] = {
 _Static_assert(sizeof(gDevices) / sizeof(gDevices[0]) == MC_DEVICE_COUNT,
                "device table and MC_DEVICE_COUNT disagree");
 
+typedef enum {
+    MCPendingNone = 0,
+    MCPendingRate = 1,
+    MCPendingLatency = 2
+} MCPendingKind;
+
+enum {
+    MCLatencyStatusIdle = 0,
+    MCLatencyStatusPending = 1,
+    MCLatencyStatusBusy = 2,
+    MCLatencyStatusRejected = 3
+};
+
 typedef struct {
     _Atomic UInt32 running;
     _Atomic UInt32 rate;
@@ -102,8 +117,13 @@ typedef struct {
     _Atomic UInt64 seed;
     UInt32 latencyBudgetFrames;
     UInt32 latencyBudgetRate;
+    /* Single per-device pending transaction slot, shared by rate and latency. */
+    UInt32 pendingKind;
     Float64 pendingRate;
-    Boolean ratePending;
+    UInt32 pendingLatency;
+    UInt64 pendingAction;
+    UInt64 nextAction;
+    Boolean lastHostRejected;
     UInt32 runningClients[64];
     Boolean clientSlotUsed[64];
 } MCDeviceState;
@@ -112,6 +132,7 @@ static AudioServerPlugInHostRef gHost;
 static pthread_mutex_t gControl = PTHREAD_MUTEX_INITIALIZER;
 static _Atomic UInt32 gReferences = 1;
 static _Atomic UInt32 gPropertyErrorLogs;
+static _Atomic UInt32 gConfigEventLogs;
 static _Atomic Boolean gStateInitialized;
 static mach_timebase_info_data_t gTimebase;
 static MCDeviceState gState[MC_DEVICE_COUNT];
@@ -368,8 +389,12 @@ static void InitializeState(void) {
         atomic_store(&state->seed, 1);
         state->latencyBudgetFrames = 0;
         state->latencyBudgetRate = 48000;
+        state->pendingKind = MCPendingNone;
         state->pendingRate = 48000;
-        state->ratePending = false;
+        state->pendingLatency = 0;
+        state->pendingAction = 0;
+        state->nextAction = 0;
+        state->lastHostRejected = false;
         for (UInt32 client = 0; client < 64; ++client) {
             state->runningClients[client] = 0;
             state->clientSlotUsed[client] = false;
@@ -454,43 +479,158 @@ static OSStatus Client(AudioServerPlugInDriverRef driver, AudioObjectID object,
                : kAudioHardwareBadObjectError;
 }
 
-static OSStatus RequestRateChange(AudioObjectID deviceObject, int index, Float64 rate) {
-    if (rate != 44100 && rate != 48000) return kAudioDeviceUnsupportedFormatError;
+static UInt32 PendingStatus(int index) {
     MCDeviceState *state = &gState[index];
     pthread_mutex_lock(&gControl);
-    if (atomic_load(&state->running) || state->ratePending) {
+    UInt32 pending = state->pendingKind;
+    Boolean rejected = state->lastHostRejected;
+    Boolean running = atomic_load(&state->running) > 0;
+    pthread_mutex_unlock(&gControl);
+    if (pending != MCPendingNone) return MCLatencyStatusPending;
+    if (running) return MCLatencyStatusBusy;
+    if (rejected) return MCLatencyStatusRejected;
+    return MCLatencyStatusIdle;
+}
+
+/* Control-plane diagnostics only.  Never called by a realtime callback. */
+static void LogConfigEvent(AudioObjectID object, int index, const char *phase,
+                           UInt32 kind, UInt64 action, OSStatus status) {
+    UInt32 count = atomic_load(&gConfigEventLogs);
+    while (count < 64 &&
+           !atomic_compare_exchange_weak(&gConfigEventLogs, &count, count + 1)) {
+    }
+    if (count >= 64) return;
+    os_log_info(OS_LOG_DEFAULT,
+                "HomePodFlowAudioFamily config object=%{public}u device=%{public}d "
+                "phase=%{public}s kind=%{public}u action=%{public}llu status=%{public}d",
+                object, index, phase, kind, action, (int)status);
+}
+
+/*
+ * Reserve the single per-device pending slot, then enqueue the host request
+ * off the caller.  Apple's NullAudio sample dispatches every
+ * RequestDeviceConfigurationChange out of the property-set thread for both
+ * rate and latency setters; the host may otherwise run its transaction
+ * synchronously inside SetData and re-enter the driver.  The pending kind,
+ * target values, and unique action stay reserved in the per-device slot until
+ * the host's matching PerformChange commits them; refusal or AbortChange
+ * clears the reservation.  A missing host is a terminal failure and is
+ * refused synchronously because there is no request to enqueue.
+ */
+typedef void (*MCHostRequestFunction)(void *context);
+typedef void (*MCHostRequestSubmitter)(MCHostRequestFunction function,
+                                       void *context);
+
+static MCHostRequestSubmitter gHostRequestSubmitter;
+
+typedef struct {
+    AudioObjectID deviceObject;
+    UInt32 index;
+    UInt32 kind;
+    Float64 rate;
+    UInt32 latency;
+    UInt64 action;
+} MCHostRequest;
+
+static void MCHostRequestRun(void *context) {
+    MCHostRequest *request = (MCHostRequest *)context;
+    MCDeviceState *state = &gState[request->index];
+
+    pthread_mutex_lock(&gControl);
+    Boolean current = state->pendingKind != MCPendingNone &&
+                      state->pendingAction == request->action;
+    pthread_mutex_unlock(&gControl);
+    if (!current) {
+        LogConfigEvent(request->deviceObject, request->index, "stale-request",
+                       request->kind, request->action,
+                       kAudioHardwareIllegalOperationError);
+        free(request);
+        return;
+    }
+    if (!gHost) {
+        AbortChange(Driver(), request->deviceObject, request->action, NULL);
+        LogConfigEvent(request->deviceObject, request->index, "request-no-host",
+                       request->kind, request->action,
+                       kAudioHardwareNotReadyError);
+        free(request);
+        return;
+    }
+    OSStatus status = gHost->RequestDeviceConfigurationChange(
+        gHost, request->deviceObject, request->action, NULL);
+    LogConfigEvent(request->deviceObject, request->index, "request",
+                   request->kind, request->action, status);
+    if (status) {
+        AbortChange(Driver(), request->deviceObject, request->action, NULL);
+    }
+    free(request);
+}
+
+static OSStatus RequestConfigurationChange(AudioObjectID deviceObject, int index,
+                                           UInt32 kind, Float64 rate,
+                                           UInt32 latency) {
+    MCDeviceState *state = &gState[index];
+    pthread_mutex_lock(&gControl);
+    if (atomic_load(&state->running) || state->pendingKind != MCPendingNone) {
         pthread_mutex_unlock(&gControl);
         return kAudioHardwareIllegalOperationError;
     }
-    if (rate == atomic_load(&state->rate)) {
+    if (kind == MCPendingRate && rate == atomic_load(&state->rate)) {
+        state->lastHostRejected = false;
         pthread_mutex_unlock(&gControl);
         return noErr;
     }
-    state->pendingRate = rate;
-    state->ratePending = true;
+    if (kind == MCPendingLatency && latency == atomic_load(&state->latency)) {
+        state->lastHostRejected = false;
+        pthread_mutex_unlock(&gControl);
+        return noErr;
+    }
+    state->pendingKind = kind;
+    if (kind == MCPendingRate) {
+        state->pendingRate = rate;
+    } else {
+        state->pendingLatency = latency;
+    }
+    state->lastHostRejected = false;
+    UInt64 action = ++state->nextAction;
+    if (action == 0) {
+        state->nextAction = 1;
+        action = 1;
+    }
+    state->pendingAction = action;
     pthread_mutex_unlock(&gControl);
+
     if (!gHost) {
-        AbortChange(Driver(), deviceObject, (UInt64)rate, NULL);
+        AbortChange(Driver(), deviceObject, action, NULL);
+        LogConfigEvent(deviceObject, index, "request-no-host", kind, action,
+                       kAudioHardwareNotReadyError);
         return kAudioHardwareNotReadyError;
     }
-    OSStatus status =
-        gHost->RequestDeviceConfigurationChange(gHost, deviceObject, (UInt64)rate, NULL);
-    if (status) AbortChange(Driver(), deviceObject, (UInt64)rate, NULL);
-    return status;
+    MCHostRequest *request = (MCHostRequest *)malloc(sizeof(MCHostRequest));
+    if (!request) {
+        AbortChange(Driver(), deviceObject, action, NULL);
+        LogConfigEvent(deviceObject, index, "request-no-memory", kind, action,
+                       kAudioHardwareUnspecifiedError);
+        return kAudioHardwareUnspecifiedError;
+    }
+    request->deviceObject = deviceObject;
+    request->index = index;
+    request->kind = kind;
+    request->rate = rate;
+    request->latency = latency;
+    request->action = action;
+    if (gHostRequestSubmitter) {
+        gHostRequestSubmitter(MCHostRequestRun, request);
+    } else {
+        dispatch_async_f(
+            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+            request, MCHostRequestRun);
+    }
+    return noErr;
 }
 
-static OSStatus PerformChange(AudioServerPlugInDriverRef driver, AudioObjectID object,
-                              UInt64 action, void *info) {
-    (void)info;
-    int index = DeviceIndex(object);
-    if (!ValidDriver(driver) || index < 0) return kAudioHardwareBadObjectError;
+/* Both commit helpers run with gControl held. */
+static void CommitRateChange(int index) {
     MCDeviceState *state = &gState[index];
-    pthread_mutex_lock(&gControl);
-    if (!state->ratePending || action != (UInt64)state->pendingRate ||
-        atomic_load(&state->running)) {
-        pthread_mutex_unlock(&gControl);
-        return kAudioHardwareIllegalOperationError;
-    }
     UInt32 rate = (UInt32)state->pendingRate;
     UInt32 latency = (UInt32)(((UInt64)state->latencyBudgetFrames * rate +
                                state->latencyBudgetRate / 2) /
@@ -502,22 +642,60 @@ static OSStatus PerformChange(AudioServerPlugInDriverRef driver, AudioObjectID o
     atomic_fetch_add(&state->seed, 1);
     atomic_fetch_add(&state->clockSequence, 1);
     atomic_fetch_add(&state->revision, 1);
-    state->ratePending = false;
+}
+
+static void CommitLatencyChange(int index) {
+    MCDeviceState *state = &gState[index];
+    UInt32 frames = state->pendingLatency;
+    atomic_store(&state->latency, frames);
+    state->latencyBudgetFrames = frames;
+    state->latencyBudgetRate = atomic_load(&state->rate);
+    atomic_fetch_add(&state->revision, 1);
+}
+
+static OSStatus PerformChange(AudioServerPlugInDriverRef driver, AudioObjectID object,
+                              UInt64 action, void *info) {
+    (void)info;
+    int index = DeviceIndex(object);
+    if (!ValidDriver(driver) || index < 0) return kAudioHardwareBadObjectError;
+    MCDeviceState *state = &gState[index];
+    pthread_mutex_lock(&gControl);
+    if (state->pendingKind == MCPendingNone || action != state->pendingAction ||
+        atomic_load(&state->running)) {
+        pthread_mutex_unlock(&gControl);
+        return kAudioHardwareIllegalOperationError;
+    }
+    UInt32 kind = state->pendingKind;
+    if (kind == MCPendingRate) {
+        CommitRateChange(index);
+    } else {
+        CommitLatencyChange(index);
+    }
+    state->pendingKind = MCPendingNone;
+    state->lastHostRejected = false;
     pthread_mutex_unlock(&gControl);
+    LogConfigEvent(object, index, "commit", kind, action, noErr);
 
     const MCDeviceInfo *device = &gDevices[index];
-    AudioObjectPropertyAddress deviceAddresses[] = {
-        Global(kAudioDevicePropertyNominalSampleRate),
-        Global(kMCLatencyFrames),
-        Global(kMCLatencyRevision)};
-    AudioObjectPropertyAddress streamAddresses[] = {
-        Global(kAudioStreamPropertyVirtualFormat),
-        Global(kAudioStreamPropertyPhysicalFormat),
-        Global(kAudioStreamPropertyLatency),
-        {kAudioStreamPropertyLatency, kAudioObjectPropertyScopeOutput,
-         kAudioObjectPropertyElementMain}};
-    Notify(device->deviceID, 3, deviceAddresses);
-    Notify(device->streamID, 4, streamAddresses);
+    AudioObjectPropertyAddress deviceAddresses[4];
+    AudioObjectPropertyAddress streamAddresses[4];
+    UInt32 deviceCount = 0;
+    UInt32 streamCount = 0;
+    if (kind == MCPendingRate) {
+        deviceAddresses[deviceCount++] = Global(kAudioDevicePropertyNominalSampleRate);
+        streamAddresses[streamCount++] = Global(kAudioStreamPropertyVirtualFormat);
+        streamAddresses[streamCount++] = Global(kAudioStreamPropertyPhysicalFormat);
+    }
+    deviceAddresses[deviceCount++] = Global(kMCLatencyFrames);
+    deviceAddresses[deviceCount++] = Global(kMCLatencyRevision);
+    deviceAddresses[deviceCount++] = Global(kMCLatencyStatus);
+    streamAddresses[streamCount++] = Global(kAudioStreamPropertyLatency);
+    streamAddresses[streamCount++] =
+        (AudioObjectPropertyAddress){kAudioStreamPropertyLatency,
+                                     kAudioObjectPropertyScopeOutput,
+                                     kAudioObjectPropertyElementMain};
+    Notify(device->deviceID, deviceCount, deviceAddresses);
+    Notify(device->streamID, streamCount, streamAddresses);
     return noErr;
 }
 
@@ -528,10 +706,14 @@ static OSStatus AbortChange(AudioServerPlugInDriverRef driver, AudioObjectID obj
     if (!ValidDriver(driver) || index < 0) return kAudioHardwareBadObjectError;
     MCDeviceState *state = &gState[index];
     pthread_mutex_lock(&gControl);
-    if (state->ratePending && action == (UInt64)state->pendingRate) {
-        state->ratePending = false;
+    UInt32 kind = state->pendingKind;
+    Boolean matched = kind != MCPendingNone && action == state->pendingAction;
+    if (matched) {
+        state->pendingKind = MCPendingNone;
+        state->lastHostRejected = true;
     }
     pthread_mutex_unlock(&gControl);
+    if (matched) LogConfigEvent(object, index, "abort", kind, action, noErr);
     return noErr;
 }
 
@@ -683,12 +865,13 @@ static OSStatus PropertyDataSize(AudioObjectID object,
                 break;
             case kAudioObjectPropertyCustomPropertyInfoList:
                 if (global) {
-                    *size = 2 * sizeof(AudioServerPlugInCustomPropertyInfo);
+                    *size = 3 * sizeof(AudioServerPlugInCustomPropertyInfo);
                     return noErr;
                 }
                 break;
             case kMCLatencyFrames:
             case kMCLatencyRevision:
+            case kMCLatencyStatus:
                 if (global) {
                     *size = sizeof(CFNumberRef);
                     return noErr;
@@ -995,6 +1178,15 @@ static OSStatus GetData(AudioServerPlugInDriverRef driver, AudioObjectID object,
             *written = sizeof(number);
             return noErr;
         }
+        case kMCLatencyStatus: {
+            SInt32 status = (SInt32)PendingStatus(deviceIndex);
+            CFNumberRef number = CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type,
+                                                &status);
+            if (!number) return kAudioHardwareUnspecifiedError;
+            memcpy(data, &number, sizeof(number));
+            *written = sizeof(number);
+            return noErr;
+        }
         case kAudioDevicePropertyClockDomain:
         case kAudioDevicePropertySafetyOffset:
             value = 0;
@@ -1038,6 +1230,8 @@ static OSStatus GetData(AudioServerPlugInDriverRef driver, AudioObjectID object,
                 {kMCLatencyFrames, kAudioServerPlugInCustomPropertyDataTypeCFPropertyList,
                  kAudioServerPlugInCustomPropertyDataTypeNone},
                 {kMCLatencyRevision, kAudioServerPlugInCustomPropertyDataTypeCFPropertyList,
+                 kAudioServerPlugInCustomPropertyDataTypeNone},
+                {kMCLatencyStatus, kAudioServerPlugInCustomPropertyDataTypeCFPropertyList,
                  kAudioServerPlugInCustomPropertyDataTypeNone}};
             memcpy(data, properties, sizeof(properties));
             *written = sizeof(properties);
@@ -1112,31 +1306,13 @@ static OSStatus SetData(AudioServerPlugInDriverRef driver, AudioObjectID object,
         }
         UInt32 frames = (UInt32)raw;
         MCDeviceState *state = &gState[deviceIndex];
-        pthread_mutex_lock(&gControl);
-        if (atomic_load(&state->running) || state->ratePending ||
-            frames > 10 * atomic_load(&state->rate)) {
-            pthread_mutex_unlock(&gControl);
+        if (frames > 10 * atomic_load(&state->rate)) {
             return kAudioHardwareIllegalOperationError;
         }
-        Boolean changed = frames != atomic_load(&state->latency);
-        if (changed) {
-            atomic_store(&state->latency, frames);
-            atomic_fetch_add(&state->revision, 1);
-            state->latencyBudgetFrames = frames;
-            state->latencyBudgetRate = atomic_load(&state->rate);
-        }
-        pthread_mutex_unlock(&gControl);
-        if (changed) {
-            AudioObjectPropertyAddress streamAddresses[] = {
-                Global(kAudioStreamPropertyLatency),
-                {kAudioStreamPropertyLatency, kAudioObjectPropertyScopeOutput,
-                 kAudioObjectPropertyElementMain}};
-            AudioObjectPropertyAddress deviceAddresses[] = {
-                Global(kMCLatencyFrames), Global(kMCLatencyRevision)};
-            Notify(gDevices[deviceIndex].streamID, 2, streamAddresses);
-            Notify(gDevices[deviceIndex].deviceID, 2, deviceAddresses);
-        }
-        return noErr;
+        /* Defer the commit: the host owns the configuration transaction and
+         * the value must not be published until PerformChange runs. */
+        return RequestConfigurationChange(
+            gDevices[deviceIndex].deviceID, deviceIndex, MCPendingLatency, 0, frames);
     }
 
     Float64 rate = 0;
@@ -1161,7 +1337,8 @@ static OSStatus SetData(AudioServerPlugInDriverRef driver, AudioObjectID object,
         return kAudioHardwareUnknownPropertyError;
     }
     int index = deviceIndex >= 0 ? deviceIndex : streamIndex;
-    return RequestRateChange(gDevices[index].deviceID, index, rate);
+    return RequestConfigurationChange(gDevices[index].deviceID, index,
+                                      MCPendingRate, rate, 0);
 }
 
 static OSStatus StartIO(AudioServerPlugInDriverRef driver, AudioObjectID object, UInt32 client) {
@@ -1177,7 +1354,7 @@ static OSStatus StartIO(AudioServerPlugInDriverRef driver, AudioObjectID object,
         }
         if (!state->clientSlotUsed[i]) freeSlot = i;
     }
-    if (state->ratePending || freeSlot < 0) {
+    if (state->pendingKind != MCPendingNone || freeSlot < 0) {
         pthread_mutex_unlock(&gControl);
         return kAudioHardwareIllegalOperationError;
     }

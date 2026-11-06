@@ -6,6 +6,8 @@ struct SystemAudioRuntime: Codable, Sendable {
     let library: String
     let capture_host: String
     var virtual_capture_host: String? = nil
+    var latency_control: String? = nil
+    var latency_ms: Double? = nil
     func validate() throws {
         try WorkerRuntime(python: python, project: project, library: library).validate()
         guard capture_host.hasPrefix("/"), FileManager.default.isExecutableFile(atPath: capture_host) else {
@@ -14,6 +16,16 @@ struct SystemAudioRuntime: Codable, Sendable {
         if let path = virtual_capture_host {
             guard path.hasPrefix("/"), FileManager.default.isExecutableFile(atPath: path) else {
                 throw WorkerFailure.unavailable("Flow 虚拟声卡采集组件未安装")
+            }
+        }
+        if let path = latency_control {
+            guard path.hasPrefix("/"), FileManager.default.isExecutableFile(atPath: path) else {
+                throw WorkerFailure.unavailable("音画延迟校准工具未安装或不可执行")
+            }
+        }
+        if let value = latency_ms {
+            guard value.isFinite, (0...3000).contains(value) else {
+                throw WorkerFailure.unavailable("音画延迟校准配置超出 0…3000 ms")
             }
         }
     }
