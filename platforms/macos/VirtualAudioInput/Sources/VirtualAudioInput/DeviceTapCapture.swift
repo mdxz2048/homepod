@@ -37,10 +37,11 @@ private let deviceTapIOProc: AudioDeviceIOProc = { _, now, input, inputTime, out
     return noErr
 }
 
-/// Generic output-device tap source. It intentionally supports 2...8 channels
-/// and interleaved Float32, so a future 5.1/7.1 virtual device can use the same
-/// transport without changing the capture layer. Layout/label policy belongs to
-/// the multichannel contract, not this class.
+/// Generic output-device tap source. It intentionally supports 1...8 channels
+/// (native mono plus stereo..8ch) and interleaved Float32, so a future 5.1/7.1
+/// virtual device can use the same transport without changing the capture
+/// layer. Layout/label policy belongs to the multichannel contract, not this
+/// class.
 public final class DeviceTapCapture: @unchecked Sendable {
     private var tap = AudioObjectID(kAudioObjectUnknown)
     private var aggregate = AudioObjectID(kAudioObjectUnknown)
@@ -62,7 +63,7 @@ public final class DeviceTapCapture: @unchecked Sendable {
         let device = try deviceID(forUID: deviceUID)
         let stream = try firstOutputStream(device)
         let format = try readFormat(stream, kAudioStreamPropertyVirtualFormat)
-        try validate(format)
+        try Self.validate(format)
         let channels = format.mChannelsPerFrame
         let clockUID = try captureClockUID(excluding: deviceUID)
 
@@ -236,16 +237,18 @@ public final class DeviceTapCapture: @unchecked Sendable {
         target = nil
     }
 
-    private func validate(_ format: AudioStreamBasicDescription) throws {
+    /// Validates a device-tap virtual format. Internal so unit tests can
+    /// exercise the ASBD rules via @testable import without HAL calls.
+    static func validate(_ format: AudioStreamBasicDescription) throws {
         let flags = kAudioFormatFlagIsFloat | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked
         guard format.mFormatID == kAudioFormatLinearPCM,
               format.mFormatFlags == flags,
-              format.mChannelsPerFrame >= 2, format.mChannelsPerFrame <= 8,
+              format.mChannelsPerFrame >= 1, format.mChannelsPerFrame <= 8,
               (format.mSampleRate == 44_100 || format.mSampleRate == 48_000),
               format.mBitsPerChannel == 32, format.mFramesPerPacket == 1,
               format.mBytesPerFrame == 4 * format.mChannelsPerFrame,
               format.mBytesPerPacket == format.mBytesPerFrame else {
-            throw InputFailure.unsupportedFormat("device tap requires interleaved Float32 stereo..8ch at 44.1/48k")
+            throw InputFailure.unsupportedFormat("device tap requires interleaved Float32 1..8ch at 44.1/48k")
         }
     }
 

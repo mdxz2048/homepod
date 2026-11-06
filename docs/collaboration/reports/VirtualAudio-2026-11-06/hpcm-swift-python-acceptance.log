@@ -1,0 +1,15 @@
+PASS mono-44100.hpcm: 32 packets, 16384 frames
+PASS mono-48000.hpcm: 32 packets, 15052 frames
+PASS stereo-44100.hpcm: 32 packets, 16384 frames
+PASS stereo-48000.hpcm: 32 packets, 15052 frames
+PASS 3_0-44100.hpcm: 32 packets, 16384 frames
+PASS 3_0-48000.hpcm: 32 packets, 15052 frames
+PASS 4_0-44100.hpcm: 32 packets, 16384 frames
+PASS 4_0-48000.hpcm: 32 packets, 15052 frames
+PASS 5_1_side-44100.hpcm: 32 packets, 16384 frames
+PASS 5_1_side-48000.hpcm: 32 packets, 15052 frames
+PASS 5_1_back-44100.hpcm: 32 packets, 16384 frames
+PASS 5_1_back-48000.hpcm: 32 packets, 15052 frames
+PASS 7_1-44100.hpcm: 32 packets, 16384 frames
+PASS 7_1-48000.hpcm: 32 packets, 15052 frames
+PASS Swift -> Python: 14 cases, 220052 frames; channel order, continuity, provenance and frame ratio checked

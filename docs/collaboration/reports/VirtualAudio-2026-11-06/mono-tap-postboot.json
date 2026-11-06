@@ -1,0 +1,28 @@
+{
+  "blocks" : 0,
+  "bytesPerFrame" : 4,
+  "channelNonzero" : [
+    0
+  ],
+  "channelPeak" : [
+    0
+  ],
+  "channelRms" : [
+    0
+  ],
+  "channels" : 1,
+  "deviceUID" : "com.homepodflow.virtual-audio.mono.v1",
+  "droppedBefore" : 0,
+  "firstHostTime" : 0,
+  "firstSampleTime" : 0,
+  "frames" : 0,
+  "lastHostTime" : 0,
+  "lastSampleTime" : 0,
+  "nonzeroSamples" : 0,
+  "note" : "silent_or_permission_unconfirmed: this process may lack System Audio Recording permission; do not treat as driver failure",
+  "peak" : 0,
+  "rms" : 0,
+  "sampleRate" : 48000,
+  "tapVerified" : false,
+  "timestampFlags" : 0
+}

@@ -1,0 +1,72 @@
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version-3CD7052B146186F2.txt
+[4/10] Emitting module VirtualAudioInput
+[5/10] Compiling VirtualAudioInput VirtualPCMResampler.swift
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/VirtualPCMResampler.swift:72:41: error: argument 'interleaved' must precede argument 'channelLayout'
+ 70 |                                         sampleRate: sourceRate,
+ 71 |                                         channelLayout: nil,
+ 72 |                                         interleaved: true),
+    |                                         `- error: argument 'interleaved' must precede argument 'channelLayout'
+ 73 |               let output = AVAudioFormat(commonFormat: .pcmFormatFloat32,
+ 74 |                                          sampleRate: Self.outputSampleRate,
+
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/VirtualPCMResampler.swift:71:56: error: 'nil' is not compatible with expected argument type 'AVAudioChannelLayout'
+ 69 |         guard let input = AVAudioFormat(commonFormat: .pcmFormatFloat32,
+ 70 |                                         sampleRate: sourceRate,
+ 71 |                                         channelLayout: nil,
+    |                                                        `- error: 'nil' is not compatible with expected argument type 'AVAudioChannelLayout'
+ 72 |                                         interleaved: true),
+ 73 |               let output = AVAudioFormat(commonFormat: .pcmFormatFloat32,
+
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/VirtualPCMResampler.swift:76:42: error: argument 'interleaved' must precede argument 'channelLayout'
+ 74 |                                          sampleRate: Self.outputSampleRate,
+ 75 |                                          channelLayout: nil,
+ 76 |                                          interleaved: true) else {
+    |                                          `- error: argument 'interleaved' must precede argument 'channelLayout'
+ 77 |             throw VirtualPCMResamplerError.converterUnavailable
+ 78 |         }
+
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/VirtualPCMResampler.swift:75:57: error: 'nil' is not compatible with expected argument type 'AVAudioChannelLayout'
+ 73 |               let output = AVAudioFormat(commonFormat: .pcmFormatFloat32,
+ 74 |                                          sampleRate: Self.outputSampleRate,
+ 75 |                                          channelLayout: nil,
+    |                                                         `- error: 'nil' is not compatible with expected argument type 'AVAudioChannelLayout'
+ 76 |                                          interleaved: true) else {
+ 77 |             throw VirtualPCMResamplerError.converterUnavailable
+
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/VirtualPCMResampler.swift:94:34: error: cannot infer contextual base in reference to member 'none'
+ 92 |             throw VirtualPCMResamplerError.converterUnavailable
+ 93 |         }
+ 94 |         converter.primeMethod = .none
+    |                                  `- error: cannot infer contextual base in reference to member 'none'
+ 95 |         self.converter = converter
+ 96 |         leadingFrames = converter.primeInfo.leadingFrames
+
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/VirtualPCMResampler.swift:146:42: warning: reference to captured var 'offset' in concurrently-executing code [#SendableClosureCaptures]
+144 |             var error: NSError?
+145 |             let status = converter.convert(to: output, error: &error) { requested, inputStatus in
+146 |                 let remaining = frames - offset
+    |                                          `- warning: reference to captured var 'offset' in concurrently-executing code [#SendableClosureCaptures]
+147 |                 guard remaining > 0 else {
+148 |                     inputStatus.pointee = .noDataNow
+
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/VirtualPCMResampler.swift:160:68: error: reference to captured var 'offset' in concurrently-executing code [#SendableClosureCaptures]
+158 |                 input.frameLength = AVAudioFrameCount(count)
+159 |                 samples.withUnsafeBufferPointer { source in
+160 |                     destination.update(from: source.baseAddress! + offset * channels,
+    |                                                                    `- error: reference to captured var 'offset' in concurrently-executing code [#SendableClosureCaptures]
+161 |                                        count: count * channels)
+162 |                 }
+
+/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation/source/platforms/macos/VirtualAudioInput/Sources/VirtualAudioInput/VirtualPCMResampler.swift:163:17: warning: mutation of captured var 'offset' in concurrently-executing code [#SendableClosureCaptures]
+161 |                                        count: count * channels)
+162 |                 }
+163 |                 offset += count
+    |                 `- warning: mutation of captured var 'offset' in concurrently-executing code [#SendableClosureCaptures]
+164 |                 inputStatus.pointee = .haveData
+165 |                 return input
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+error: fatalError

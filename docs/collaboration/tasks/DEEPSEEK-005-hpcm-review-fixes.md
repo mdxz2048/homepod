@@ -1,0 +1,14 @@
+# 005 Coordinator review corrections to HPCM producer
+
+Implement these corrections directly, minimal investigation. Only edit VirtualHPCMEncoder.swift and VirtualHPCMEncoderTests.swift in platforms/macos/VirtualAudioInput. <=8 shell calls, no full-file dumps, final <=200 Chinese chars. No SSH/other files/commits/model calls. Current initial producer was NOT accepted by coordinator. Review found:
+
+1. Output packets are AFTER resampling. Never require source.block.frames == output frames, and NEVER compare payload bytes against source.block.samples. Input blocks remain 1..4096 frames, samples.count == input frames*channels and finite. Output independently 1..4096, bytes == output frames*channels*4, all finite [-1,1]. Distinct input/output frame counts are normal.
+2. inputFramesConsumedTotal uses source.frameStart+source.block.frames; header sourceFrames and lastSourceFrames must use source.block.frames, NOT output frames. Multiple output packets may share an identical source block.
+3. Never fabricate timestamp flags=3. Check actual source.block.timestampFlags & 3 == 3 and nowFlags & 2 == 2, preserve original flag values in BOTH header and sourceJSON snapshot. Invalid capture time flags must reject before any state mutation.
+4. Replace all wrapping arithmetic (&+, &+=) with checked addingReportingOverflow (source end/output counters/packet sequence/previous end). Throw explicit counterOverflow on overflow; ensure no state changed on any failure. Validate first block end overflow too. Keep sequence UInt64 or checked Int, both JSON compatible.
+5. raw.bindMemory(to:UInt32.self) is not guaranteed aligned for Data. Decode using loadUnaligned(fromByteOffset:as:) and littleEndian.
+6. Compute every throwing value (source snapshot JSON, header, next counters) BEFORE committing any state. No try after mutation. Keep source metadata in header and continuity snapshot consistent; use a shared source dictionary helper to remove duplication if simple.
+7. Keep source provenance conservative (device/os_mix/unverified/nativeClaim=false) and all current API signatures. Do not change the resampler or capture class.
+8. Update conflicting tests that expected payload equality/source frame equality. Add meaningful tests: 480 input frames ->441 output frames with different resampled payload accepted; same source block feeds two output packets; next source block advances based on INPUT count; original flags7 round-trip, invalid0 flags reject; source frameStart UInt64.max overflow rejects and subsequent valid frame still sequence0; malformed payload/samples leave counters unchanged. Use same API fixture methods if available; do not greatly expand code. No weakening channel/provenance/state checks.
+
+Mac compilation will be run by coordinator. No claims that full product integration or live audio passed.

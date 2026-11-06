@@ -1,0 +1,102 @@
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version-3CD7052B146186F2.txt
+[3/5] Emitting module VirtualAudioInputTests
+[4/5] Compiling VirtualAudioInputTests VirtualPCMResamplerTests.swift
+Build complete! (1.38s)
+Test Suite 'All tests' started at 2026-11-06 20:38:21.651.
+Test Suite 'VirtualAudioInputPackageTests.xctest' started at 2026-11-06 20:38:21.652.
+Test Suite 'ControlChecks' started at 2026-11-06 20:38:21.652.
+Test Case '-[VirtualAudioInputTests.ControlChecks testDefaultTakeoverBlockedWithoutIndependentHelper]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testDefaultTakeoverBlockedWithoutIndependentHelper]' passed (0.001 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testDiscoveryIsReadOnlyAndStartNeverPretendsReady]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testDiscoveryIsReadOnlyAndStartNeverPretendsReady]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testDriverRaceAndExternalRevisionDoNotConfirmSuccess]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testDriverRaceAndExternalRevisionDoNotConfirmSuccess]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testFailedJournalDoesNotSwitchOutput]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testFailedJournalDoesNotSwitchOutput]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testFileJournalRejectsStaleOwnerAndPersistsForNextProcess]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testFileJournalRejectsStaleOwnerAndPersistsForNextProcess]' passed (0.002 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testJournalBeforeSwitchAndRestoreLeavesSystemRoleAlone]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testJournalBeforeSwitchAndRestoreLeavesSystemRoleAlone]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testLatencyWriteConfirmsRevisionButNotCalibration]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testLatencyWriteConfirmsRevisionButNotCalibration]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testMissingOriginalRequiresVerifiedFallbackAndRetainsJournalOnFailure]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testMissingOriginalRequiresVerifiedFallbackAndRetainsJournalOnFailure]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testOversizedJournalIsRejectedByBoundedRead]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testOversizedJournalIsRejectedByBoundedRead]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testRunningStaleAndOutOfRangeNeverWrite]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testRunningStaleAndOutOfRangeNeverWrite]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.ControlChecks testUserOverrideIsPreservedAndOldOwnerCannotRestore]' started.
+Test Case '-[VirtualAudioInputTests.ControlChecks testUserOverrideIsPreservedAndOldOwnerCannotRestore]' passed (0.000 seconds).
+Test Suite 'ControlChecks' passed at 2026-11-06 20:38:21.657.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.005 (0.005) seconds
+Test Suite 'DeviceTapFormatTests' started at 2026-11-06 20:38:21.657.
+Test Case '-[VirtualAudioInputTests.DeviceTapFormatTests testAcceptsNativeMonoAndMultichannelAtBothRates]' started.
+Test Case '-[VirtualAudioInputTests.DeviceTapFormatTests testAcceptsNativeMonoAndMultichannelAtBothRates]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.DeviceTapFormatTests testRejectsIntegerAndPlanarFormats]' started.
+Test Case '-[VirtualAudioInputTests.DeviceTapFormatTests testRejectsIntegerAndPlanarFormats]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.DeviceTapFormatTests testRejectsUnsupportedSampleRatesAndNonPCM]' started.
+Test Case '-[VirtualAudioInputTests.DeviceTapFormatTests testRejectsUnsupportedSampleRatesAndNonPCM]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.DeviceTapFormatTests testRejectsWrongByteStrideAndPacketSizes]' started.
+Test Case '-[VirtualAudioInputTests.DeviceTapFormatTests testRejectsWrongByteStrideAndPacketSizes]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.DeviceTapFormatTests testRejectsZeroOrExcessChannels]' started.
+Test Case '-[VirtualAudioInputTests.DeviceTapFormatTests testRejectsZeroOrExcessChannels]' passed (0.000 seconds).
+Test Suite 'DeviceTapFormatTests' passed at 2026-11-06 20:38:21.657.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'FormatChecks' started at 2026-11-06 20:38:21.657.
+Test Case '-[VirtualAudioInputTests.FormatChecks testDescriptorRoundTripKeepsUnverifiedCaptureAndSourceProvenance]' started.
+Test Case '-[VirtualAudioInputTests.FormatChecks testDescriptorRoundTripKeepsUnverifiedCaptureAndSourceProvenance]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.FormatChecks testRejectsLabelCountAndNonFiniteRate]' started.
+Test Case '-[VirtualAudioInputTests.FormatChecks testRejectsLabelCountAndNonFiniteRate]' passed (0.000 seconds).
+Test Suite 'FormatChecks' passed at 2026-11-06 20:38:21.658.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'VirtualHPCMEncoderTests' started at 2026-11-06 20:38:21.658.
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testConfigurationRejections]' started.
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testConfigurationRejections]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testCounterAndTimestampRejections]' started.
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testCounterAndTimestampRejections]' passed (0.001 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testHeaderSchemaAcrossCanonicalLayouts]' started.
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testHeaderSchemaAcrossCanonicalLayouts]' passed (0.002 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testInputAndOutputFrameCountsMayDiffer]' started.
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testInputAndOutputFrameCountsMayDiffer]' passed (0.001 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testMalformedSizesAndNonFinitePCMRejected]' started.
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testMalformedSizesAndNonFinitePCMRejected]' passed (0.002 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testRejectionsLeaveStateUnchanged]' started.
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testRejectionsLeaveStateUnchanged]' passed (0.002 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testSourceFrameStartOverflowRejectsBeforeMutation]' started.
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testSourceFrameStartOverflowRejectsBeforeMutation]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testTimestampFlagsRoundTripAndInvalidReject]' started.
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testTimestampFlagsRoundTripAndInvalidReject]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testTwoPacketsSameSourceThenNextBlockAdvancesByInputCount]' started.
+Test Case '-[VirtualAudioInputTests.VirtualHPCMEncoderTests testTwoPacketsSameSourceThenNextBlockAdvancesByInputCount]' passed (0.002 seconds).
+Test Suite 'VirtualHPCMEncoderTests' passed at 2026-11-06 20:38:21.670.
+	 Executed 9 tests, with 0 failures (0 unexpected) in 0.011 (0.012) seconds
+Test Suite 'VirtualPCMResamplerTests' started at 2026-11-06 20:38:21.670.
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests test44k1PassthroughIdentityAcrossAllChannelCounts]' started.
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests test44k1PassthroughIdentityAcrossAllChannelCounts]' passed (0.006 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests test48kAccumulatedFramesNearRatioWithoutRemix]' started.
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests test48kAccumulatedFramesNearRatioWithoutRemix]' passed (0.122 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests test48kOneHotSignalsDoNotLeakAcrossChannels]' started.
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests test48kOneHotSignalsDoNotLeakAcrossChannels]' passed (0.483 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests testInvalidFrameCountsAndSampleCountsAreRejected]' started.
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests testInvalidFrameCountsAndSampleCountsAreRejected]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests testInvalidSourceRatesAreRejected]' started.
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests testInvalidSourceRatesAreRejected]' passed (0.000 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests testNonFiniteInputIsRejectedBeforeConsumption]' started.
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests testNonFiniteInputIsRejectedBeforeConsumption]' passed (0.001 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests testPayloadStridesAreInterleavedFiniteAndClamped]' started.
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests testPayloadStridesAreInterleavedFiniteAndClamped]' passed (0.003 seconds).
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests testUnsupportedChannelCountsAreRejected]' started.
+Test Case '-[VirtualAudioInputTests.VirtualPCMResamplerTests testUnsupportedChannelCountsAreRejected]' passed (0.000 seconds).
+Test Suite 'VirtualPCMResamplerTests' passed at 2026-11-06 20:38:22.286.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 0.616 (0.616) seconds
+Test Suite 'VirtualAudioInputPackageTests.xctest' passed at 2026-11-06 20:38:22.286.
+	 Executed 35 tests, with 0 failures (0 unexpected) in 0.633 (0.634) seconds
+Test Suite 'All tests' passed at 2026-11-06 20:38:22.286.
+	 Executed 35 tests, with 0 failures (0 unexpected) in 0.633 (0.635) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

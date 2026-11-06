@@ -1,0 +1,22 @@
+Building for debugging...
+[0/10] Write VirtualTransportCheck-entitlement.plist
+[1/10] Write sources
+[3/10] Write swift-version-3CD7052B146186F2.txt
+[4/10] Compiling CaptureRing ProcessIdentity.c
+[5/10] Compiling HALInputConstants HALInputConstants.c
+[6/10] Compiling CaptureRing CaptureRing.c
+[8/18] Compiling VirtualAudioInput VirtualHPCMEncoder.swift
+[9/18] Compiling VirtualAudioInput Control.swift
+[10/18] Compiling VirtualAudioInput HALVirtualDeviceBackend.swift
+[11/18] Compiling VirtualAudioInput DeviceTapCapture.swift
+[12/18] Emitting module VirtualAudioInput
+[13/18] Compiling VirtualAudioInput Models.swift
+[14/18] Compiling VirtualAudioInput Recovery.swift
+[15/18] Compiling VirtualAudioInput VirtualPCMResampler.swift
+[16/20] Compiling VirtualTransportCheck main.swift
+[17/20] Emitting module VirtualTransportCheck
+[17/20] Write Objects.LinkFileList
+[18/20] Linking VirtualTransportCheck
+[19/20] Applying VirtualTransportCheck
+Build of product 'VirtualTransportCheck' complete! (6.42s)
+Swift/ErrorType.swift:254: Fatal error: Error raised at top level: block_frame_mismatch

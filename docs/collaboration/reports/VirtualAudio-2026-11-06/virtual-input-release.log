@@ -1,0 +1,11 @@
+Building for production...
+[0/8] Write sources
+[2/8] Write swift-version-3CD7052B146186F2.txt
+[3/8] Compiling CaptureRing ProcessIdentity.c
+[4/8] Compiling HALInputConstants HALInputConstants.c
+[5/8] Compiling CaptureRing CaptureRing.c
+[7/9] Compiling VirtualAudioInput Control.swift
+[8/10] Compiling VirtualAudioInputCLI main.swift
+[8/10] Write Objects.LinkFileList
+[9/10] Linking virtual-audio-input
+Build complete! (7.89s)

@@ -2,6 +2,8 @@
 
 ## 2026-11-06
 
+- 多声道采集格式支持原生 mono；新增独立 1/2/3/4/6/8ch 转换器与 Swift HPCM v2 编码器。Mac35项单测、Release及跨语言14组合/220052帧验收通过；尚未接入产品 host/worker，实际多声道取声与声学未验。
+
 - 保存当前开发与声卡安装状态、原始日志和会话交接入口 docs/collaboration/SESSION_HANDOFF.md。
 
 - 当前开发基线已备份到 GitHub main（4331d3b）；这是开发进度快照，尚未通过完整正式版验收。

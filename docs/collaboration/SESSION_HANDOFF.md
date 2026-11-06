@@ -2,7 +2,11 @@
 
 更新：2026-11-06（Asia/Shanghai）。用户要求当前进度全部落盘、Git保存，准备换会话。先读本文，再读PROGRESS.md、TASKS.md、virtual-audio/CONTRACT.md与INTEGRATION_2026-11-06.md。不要凭历史成功覆盖当前未验项。
 
+2026-11-06 20:00 后更新：Mac 重启后已确认 3 个可见设备（2/6/8ch），默认输出为内置扬声器；11 份重复主 App 已移入废纸篓，保留用户 Applications 下此前已验证的音量构建及现有权限身份。详见 `reports/VirtualAudio-2026-11-06/Post-restart-and-app-cleanup.md`。Mac 新增专用公钥连接别名 `homepod-mac`，无需再索要密码。用户明确要求本聊天总调度，主要实现交给百炼 DeepSeek；入口、模型选择和派工约束见 `DEEPSEEK_WORKFLOW.md`，不要把当前聊天或其他 OpenAI 子进程称作 DeepSeek。
+
 ## Git与当前任务
+
+2026-11-06 20:35 阶段进展：DeepSeek 完成 mono 采集格式门禁、独立多声道重采样器与 Swift HPCM v2 编码器；协调器修正并在 Mac 验证 35 项单测及 Release 构建，独立 Swift→Python 验收 14 组/448 包/220052 帧通过。详见 `reports/VirtualAudio-2026-11-06/Multichannel-transport-stage.md`。这覆盖软件组件及合成输入传输，不是产品 App/worker 已接入。下一步做受管 v2 capture host 与有界输出/停止，再做 App 身份实际非零 PCM。mono 真机能打开但 0 回调，不能计实际采集通过。新 worker 统一经有时限/命令次数边界的项目脚本调用。
 
 仓库 https://github.com/mdxz2048/homepod 。当前开发分支codex/virtual-audio-mvp；main备份点4331d3b92cc2330e58dcf28ab50ffd4b7d6d283d，保持不动。分支fda6f14已保存虚拟驱动/输入/工具第一轮；本会话后续提交保存v0.3兼容修正、原始日志及本交接。最新保存点用git log -1查看，以远端核对为准。README只写变更记录。身份凭据不写进仓库。
 
