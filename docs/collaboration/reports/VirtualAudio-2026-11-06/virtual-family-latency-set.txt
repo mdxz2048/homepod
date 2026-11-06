@@ -1,0 +1,7 @@
+com.homepodflow.virtual-audio.dev.mono.v1 set=0 before=0 after=4800 rev=3->4 reset=0 rev2=5
+com.homepodflow.virtual-audio.dev.quad40.v1 set=0 before=0 after=4800 rev=3->4 reset=0 rev2=5
+com.homepodflow.virtual-audio.dev.stereo.v1 set=0 before=0 after=4800 rev=3->4 reset=0 rev2=5
+com.homepodflow.virtual-audio.dev.surround30.v1 set=0 before=0 after=4800 rev=3->4 reset=0 rev2=5
+com.homepodflow.virtual-audio.dev.surround51b.v1 set=0 before=0 after=4800 rev=3->4 reset=0 rev2=5
+com.homepodflow.virtual-audio.dev.surround51s.v1 set=0 before=0 after=4800 rev=3->4 reset=0 rev2=5
+com.homepodflow.virtual-audio.dev.surround71.v1 set=0 before=0 after=4800 rev=3->4 reset=0 rev2=5

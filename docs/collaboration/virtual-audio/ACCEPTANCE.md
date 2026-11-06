@@ -2,6 +2,8 @@
 
 日期：2026-11-06。驱动第六候选已有真机 HAL/属性/device Tap 结果；浏览器采用与声学项目仍未测。本文是验收设计加阶段记录，不是产品通过记录。原生设备既有属性数据引用 [原生延迟报告](../reports/Native-output-latency-2026-11-06.md)，不替代本阶段结果。
 
+多声道/源优先路由的独立验收设计见 [MULTICHANNEL_ACCEPTANCE.md](MULTICHANNEL_ACCEPTANCE.md)。当前驱动仍只声明 stereo 2ch；该文是 provisional 验收基线，且其 §0.1 明确列出与冻结 `MULTICHANNEL_CONTRACT.md` v1 的未关闭冲突，不是已完成能力。
+
 ## 必须区分的三层证据
 
 | 层级 | 要回答的问题 | 可接受证据 | 不能据此声称 |

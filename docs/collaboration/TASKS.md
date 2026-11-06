@@ -8,9 +8,9 @@
 |---|---|---|
 | T025 | 当前系统声音/动态音量开发基线Git备份 | 完成：远端main与本地main均4331d3b92cc2330e58dcf28ab50ffd4b7d6d283d |
 | T026 | 虚拟入口产品/架构及共享接口冻结 | 契约v0.3已冻结（含Chrome stream latency output scope及HAL初始化有限兼容），架构/驱动/QA对齐 |
-| T027 | 最小立体声虚拟输出驱动 | 第六候选已安装并真机枚举成功；hfla/hflr(CFPropertyList)可读写、revision单调、stream latency两scope同步；codesign/权限/默认输出恢复核验通过；buffer size实测由coreaudiod管理（15..4096） |
+| T027 | 最小立体声虚拟输出驱动 | 第六候选 stereo 已装并验证；多声道 dev family 完成 Gate 1（7设备枚举/ASBD/layout/element/延迟隔离）；8ch Tap 传输通过；产品默认 3 个可见设备，高级布局 hidden；dev family 已卸载，待重启清理内存设备 |
 | T028 | 原生输出/虚拟输出音画对照验收 | 工具Mac6/6通过，MP4素材已生成；浏览器采用及实际音画仍未测 |
-| T029 | 虚拟输入到现有实时核心的适配 | `--discover`真机退出0；TCC授权GUI进程的device Tap已取得非零、左右独立PCM；但产品Input尚无真实Tap采集/转换/HPCM实现，恢复helper/跨进程事务及App身份TCC未验 |
+| T029 | 虚拟输入到现有实时核心的适配 | `--discover`真机退出0；通用2..8ch DeviceTapCapture已实现并构建；8ch Tap 传输/时间戳通过；6/8ch逐通道非零仍需TCC GUI验证；产品Input/HPCM v2/Flow路由未实现 |
 
 统一入口：[虚拟音频MVP工作流](VIRTUAL_AUDIO_MVP_WORKFLOW.md)。本轮备份不代表正式版验收通过。
 

@@ -12,7 +12,7 @@
 | UI | 单布局页、真实型号/坐标/数量、保存/取消；菜单开关、两模式、动态音量；Debug/Release构建通过 | 从正常菜单操作的完整交互验收及必要状态文案；影院仍未实际接算法 |
 | 影院处理 | 独立processing库Mac Release构建、CTest1/1及Python真实绑定4项通过 | 接入真实音频链路及听感/路由验收；当前实际仍同一L/R复制 |
 | 音画延迟 | 已明确当前协议1.5秒+软件0.5秒余量=计划约2秒；现有控件禁用 | 实测总延迟、优化准备余量、有用的声音延后/可控播放器画面补偿；任意来源不能假承诺负延迟 |
-| 虚拟声卡/原生多声道 | 契约v0.4；第六候选已安装并真机枚举成功；`hfla`/`hflr`(CFPropertyList/CFNumber)可读写、revision单调、stream latency两scope同步；`--discover`退出0；TCC授权GUI进程的device Tap已取得非零、左右独立PCM | 产品Input尚未实现真实Tap采集/转换/HPCM；WriteMix仍sink；buffer size实测由coreaudiod管理（15..4096，非固定512）；浏览器/声学/恢复helper/正式包未验 |
+| 虚拟声卡/原生多声道 | 契约v0.4+多声道v1；第六候选 stereo 已装并验证；7设备 dev family 完成 Gate 1（mono/stereo/3.0/4.0/5.1 side/5.1 back/7.1 枚举、ASBD、UseChannelDescriptions、element 名、每设备 hfla/hflr 隔离）；8ch Tap 传输 481回调/246272帧/timestamp flags=7；产品默认收敛 3 个可见设备（stereo/5.1/7.1），其余 hidden | 6/8ch Tap 逐通道非零仍需 TCC 授权 GUI 进程；产品 Input/HPCM v2/Flow 路由未实现；dev family 已卸载但需重启清掉内存设备；浏览器/声学/恢复 helper/正式包未验 |
 | 安装与签名 | Mac固定路径内部构建可运行 | 当前依赖开发目录/Python环境；固定签名、独立安装/卸载/恢复和正式包尚缺。ad-hoc更新曾使旧录音授权不匹配，用户重新允许后动态音量实测通过 |
 | Git备份 | GitHub main已确认4331d3b，与本地main一致；35个冻结文件在Git内字节校验一致；README仅变更记录 | 这是开发快照，不是完整正式版；后续在codex/virtual-audio-mvp开发 |
 

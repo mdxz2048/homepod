@@ -1,0 +1,557 @@
+{
+  "failed_sections": [],
+  "fixture_case_count": 84,
+  "fixture_sources": {
+    "3.0": {
+      "channels": 3,
+      "frames": 48000,
+      "mask": 7,
+      "peak": 0.25,
+      "rate": 48000,
+      "sha256": "579f1aea45c24f75a301cff26d12a6fe15153f948e20e369cc6511350d50c472"
+    },
+    "4.0_quad": {
+      "channels": 4,
+      "frames": 48000,
+      "mask": 51,
+      "peak": 0.25,
+      "rate": 48000,
+      "sha256": "b188951e53ad52fa03befde75c5640e9fda6cf7b3c4c0d430f15e62fcb8bb141"
+    },
+    "5.1_back": {
+      "channels": 6,
+      "frames": 48000,
+      "mask": 63,
+      "peak": 0.25,
+      "rate": 48000,
+      "sha256": "ad11a0998d70dd6522f041add536c0325362fbc9244ea530d7863a94fdcb97c9"
+    },
+    "5.1_side": {
+      "channels": 6,
+      "frames": 48000,
+      "mask": 1551,
+      "peak": 0.25,
+      "rate": 48000,
+      "sha256": "482f55a970914a554e5b4ce3614ab6eff6eeac23a6dd06dfcca346cfd6acae73"
+    },
+    "7.1": {
+      "channels": 8,
+      "frames": 48000,
+      "mask": 1599,
+      "peak": 0.25,
+      "rate": 48000,
+      "sha256": "0d97e5b0416ed525eff18c9c6e6f56298f0dc35a8214bab3a579bbc6e1f72db9"
+    },
+    "7.1.2": {
+      "channels": 10,
+      "frames": 48000,
+      "mask": 13887,
+      "peak": 0.25,
+      "rate": 48000,
+      "sha256": "c510329935a188de354fedef8437895f3dd01159f0c5cfe04fbee82022eb234a"
+    },
+    "7.1.4": {
+      "channels": 12,
+      "frames": 48000,
+      "mask": 63039,
+      "peak": 0.25,
+      "rate": 48000,
+      "sha256": "779a1ecfc3e1bcf9200b2c0fa549ba02474ddbb573cba0003122f2ed50ac95b8"
+    },
+    "mono": {
+      "channels": 1,
+      "frames": 48000,
+      "mask": 4,
+      "peak": 0.25,
+      "rate": 48000,
+      "sha256": "d307c6b6da84e316f4bd7df9f5b36962b91071e357d862fdc55b67118539ec44"
+    },
+    "stereo": {
+      "channels": 2,
+      "frames": 48000,
+      "mask": 3,
+      "peak": 0.25,
+      "rate": 48000,
+      "sha256": "96e81def6a6f6edd6defd35f4557664257d5675c703f38d1c9ef552fa275ec05"
+    }
+  },
+  "limits": [
+    "Offline reference model only; no driver, player, browser, or HomePod was used.",
+    "Two HomePods can only verify downmix/front routing, not 5.1/7.1 acoustics.",
+    "10/12-channel height layouts are reserved, not first-round hardware gates.",
+    "Real captures still need source/player/container/acoustic evidence."
+  ],
+  "playback": false,
+  "sections": {
+    "buffer": {
+      "checks": {
+        "driver_value_not_authoritative": true,
+        "period_independent": true,
+        "revision_unchanged": true,
+        "valid_range_accepted": true
+      },
+      "failures": [],
+      "status": "pass"
+    },
+    "clipping": {
+      "clip_guard": true,
+      "failures": [],
+      "max_row_l1": 1.0000000000000002,
+      "render_info": {
+        "headroom_db": null,
+        "max_row_l1": 1.0000000000000002
+      },
+      "status": "pass",
+      "stress_peak": 0.9913330078125
+    },
+    "endpoint": {
+      "failures": [],
+      "matrix": {
+        "4.0_quad": {
+          "1": {
+            "acoustic_claim": "mono_downmix",
+            "mode": "downmix",
+            "target_layout": "mono"
+          },
+          "2": {
+            "acoustic_claim": "stereo_downmix",
+            "mode": "downmix",
+            "target_layout": "stereo"
+          },
+          "3": {
+            "acoustic_claim": "3.0_downmix",
+            "mode": "downmix",
+            "target_layout": "3.0"
+          },
+          "6": {
+            "acoustic_claim": "4.0_quad",
+            "mode": "passthrough",
+            "target_layout": "5.1_back"
+          },
+          "8": {
+            "acoustic_claim": "4.0_quad",
+            "mode": "passthrough",
+            "target_layout": "7.1"
+          }
+        },
+        "5.1_back": {
+          "1": {
+            "acoustic_claim": "mono_downmix",
+            "mode": "downmix",
+            "target_layout": "mono"
+          },
+          "2": {
+            "acoustic_claim": "stereo_downmix",
+            "mode": "downmix",
+            "target_layout": "stereo"
+          },
+          "3": {
+            "acoustic_claim": "3.0_downmix",
+            "mode": "downmix",
+            "target_layout": "3.0"
+          },
+          "6": {
+            "acoustic_claim": "5.1_back",
+            "mode": "identity",
+            "target_layout": "5.1_back"
+          },
+          "8": {
+            "acoustic_claim": "5.1_back",
+            "mode": "passthrough",
+            "target_layout": "7.1"
+          }
+        },
+        "5.1_side": {
+          "1": {
+            "acoustic_claim": "mono_downmix",
+            "mode": "downmix",
+            "target_layout": "mono"
+          },
+          "2": {
+            "acoustic_claim": "stereo_downmix",
+            "mode": "downmix",
+            "target_layout": "stereo"
+          },
+          "3": {
+            "acoustic_claim": "3.0_downmix",
+            "mode": "downmix",
+            "target_layout": "3.0"
+          },
+          "6": {
+            "acoustic_claim": "5.1_side",
+            "mode": "identity",
+            "target_layout": "5.1_side"
+          },
+          "8": {
+            "acoustic_claim": "5.1_side",
+            "mode": "passthrough",
+            "target_layout": "7.1"
+          }
+        },
+        "7.1": {
+          "1": {
+            "acoustic_claim": "mono_downmix",
+            "mode": "downmix",
+            "target_layout": "mono"
+          },
+          "2": {
+            "acoustic_claim": "stereo_downmix",
+            "mode": "downmix",
+            "target_layout": "stereo"
+          },
+          "3": {
+            "acoustic_claim": "3.0_downmix",
+            "mode": "downmix",
+            "target_layout": "3.0"
+          },
+          "6": {
+            "acoustic_claim": "5.1_side_downmix",
+            "mode": "downmix",
+            "target_layout": "5.1_side"
+          },
+          "8": {
+            "acoustic_claim": "7.1",
+            "mode": "identity",
+            "target_layout": "7.1"
+          }
+        },
+        "mono": {
+          "1": {
+            "acoustic_claim": "mono",
+            "mode": "identity",
+            "target_layout": "mono"
+          },
+          "2": {
+            "acoustic_claim": "stereo_upmix",
+            "mode": "upmix",
+            "target_layout": "stereo"
+          },
+          "3": {
+            "acoustic_claim": "mono",
+            "mode": "passthrough",
+            "target_layout": "3.0"
+          },
+          "6": {
+            "acoustic_claim": "mono",
+            "mode": "passthrough",
+            "target_layout": "5.1_side"
+          },
+          "8": {
+            "acoustic_claim": "mono",
+            "mode": "passthrough",
+            "target_layout": "7.1"
+          }
+        },
+        "stereo": {
+          "1": {
+            "acoustic_claim": "mono_downmix",
+            "mode": "downmix",
+            "target_layout": "mono"
+          },
+          "2": {
+            "acoustic_claim": "stereo",
+            "mode": "identity",
+            "target_layout": "stereo"
+          },
+          "3": {
+            "acoustic_claim": "stereo",
+            "mode": "passthrough",
+            "target_layout": "3.0"
+          },
+          "6": {
+            "acoustic_claim": "stereo",
+            "mode": "passthrough",
+            "target_layout": "5.1_side"
+          },
+          "8": {
+            "acoustic_claim": "stereo",
+            "mode": "passthrough",
+            "target_layout": "7.1"
+          }
+        }
+      },
+      "status": "pass"
+    },
+    "latency": {
+      "checks": {
+        "idempotent": true,
+        "monotonic": true,
+        "per_device_isolation": true,
+        "rate_recomputes_frames": true,
+        "rediscovery_invalidates_old_revision": true
+      },
+      "failures": [],
+      "status": "pass"
+    },
+    "layers": {
+      "claim_rejections": [
+        {
+          "actual": "acoustic_endpoints_insufficient",
+          "expected": "acoustic_endpoints_insufficient",
+          "name": "five_1_on_two_endpoints",
+          "status": "pass"
+        },
+        {
+          "actual": "acoustic_not_measured",
+          "expected": "acoustic_not_measured",
+          "name": "unmeasured_six_endpoints",
+          "status": "pass"
+        }
+      ],
+      "claims": {
+        "5.1_side->2": "stereo_downmix",
+        "5.1_side->6": "5.1_side",
+        "7.1->2": "stereo_downmix",
+        "7.1->8": "7.1",
+        "mono->1": "mono",
+        "stereo->2": "stereo"
+      },
+      "failures": [],
+      "status": "pass"
+    },
+    "matrix": {
+      "case_count": 84,
+      "failures": [],
+      "status": "pass"
+    },
+    "rejections": {
+      "items": [
+        {
+          "actual": "unsupported_layout",
+          "expected": "unsupported_layout",
+          "name": "unknown_source_layout",
+          "status": "pass"
+        },
+        {
+          "actual": "ambiguous_layout",
+          "expected": "ambiguous_layout",
+          "name": "ambiguous_5_1",
+          "status": "pass"
+        },
+        {
+          "actual": "ambiguous_layout",
+          "expected": "ambiguous_layout",
+          "name": "ambiguous_8ch",
+          "status": "pass"
+        },
+        {
+          "actual": "unsupported_layout",
+          "expected": "unsupported_layout",
+          "name": "swapped_surround_labels",
+          "status": "pass"
+        },
+        {
+          "actual": "duplicate_label",
+          "expected": "duplicate_label",
+          "name": "duplicate_labels",
+          "status": "pass"
+        },
+        {
+          "actual": "layout_mismatch",
+          "expected": "layout_mismatch",
+          "name": "side_to_back_relabel",
+          "status": "pass"
+        },
+        {
+          "actual": "layout_mismatch",
+          "expected": "layout_mismatch",
+          "name": "wider_target_missing_center",
+          "status": "pass"
+        },
+        {
+          "actual": "silence_does_not_identify_layout",
+          "expected": "silence_does_not_identify_layout",
+          "name": "silence_inference",
+          "status": "pass"
+        },
+        {
+          "actual": "false_native_claim",
+          "expected": "false_native_claim",
+          "name": "stereo_native_claim",
+          "status": "pass"
+        },
+        {
+          "actual": "false_native_claim",
+          "expected": "false_native_claim",
+          "name": "5_1_carrier_7_1_claim",
+          "status": "pass"
+        },
+        {
+          "actual": "unsupported_layout",
+          "expected": "unsupported_layout",
+          "name": "mask_zero",
+          "status": "pass"
+        }
+      ],
+      "status": "pass"
+    },
+    "wav": {
+      "failures": [],
+      "results": [
+        {
+          "case": "MC-A01",
+          "channels": 1,
+          "container_layout": "mono",
+          "failures": [],
+          "source_layout": "mono",
+          "status": "pass"
+        },
+        {
+          "case": "MC-A02",
+          "channels": 2,
+          "container_layout": "stereo",
+          "failures": [],
+          "source_layout": "stereo",
+          "status": "pass"
+        },
+        {
+          "case": "MC-A05",
+          "channels": 6,
+          "container_layout": "5.1_side",
+          "failures": [],
+          "source_layout": "5.1_side",
+          "status": "pass"
+        },
+        {
+          "case": "MC-A07",
+          "channels": 8,
+          "container_layout": "7.1",
+          "failures": [],
+          "source_layout": "7.1",
+          "status": "pass"
+        },
+        {
+          "case": "MC-A08",
+          "channels": 10,
+          "container_layout": "7.1.2",
+          "failures": [],
+          "source_layout": "7.1.2",
+          "status": "pass"
+        },
+        {
+          "case": "MC-B02",
+          "channels": 6,
+          "container_layout": "5.1_side",
+          "failures": [],
+          "source_layout": "mono",
+          "status": "pass"
+        },
+        {
+          "case": "MC-B05",
+          "channels": 6,
+          "container_layout": "5.1_side",
+          "failures": [],
+          "source_layout": "stereo",
+          "status": "pass"
+        },
+        {
+          "case": "MC-B07",
+          "channels": 6,
+          "container_layout": "5.1_back",
+          "failures": [],
+          "source_layout": "4.0_quad",
+          "status": "pass"
+        },
+        {
+          "case": "MC-B11",
+          "channels": 10,
+          "container_layout": "7.1.2",
+          "failures": [],
+          "source_layout": "7.1",
+          "status": "pass"
+        },
+        {
+          "case": "MC-C01",
+          "channels": 1,
+          "container_layout": "mono",
+          "failures": [],
+          "source_layout": "stereo",
+          "status": "pass"
+        },
+        {
+          "case": "MC-C05",
+          "channels": 2,
+          "container_layout": "stereo",
+          "failures": [],
+          "source_layout": "4.0_quad",
+          "status": "pass"
+        },
+        {
+          "case": "MC-C08",
+          "channels": 2,
+          "container_layout": "stereo",
+          "failures": [],
+          "source_layout": "5.1_side",
+          "status": "pass"
+        },
+        {
+          "case": "MC-C13",
+          "channels": 6,
+          "container_layout": "5.1_side",
+          "failures": [],
+          "source_layout": "7.1",
+          "status": "pass"
+        },
+        {
+          "case": "MC-C18",
+          "channels": 8,
+          "container_layout": "7.1",
+          "failures": [],
+          "source_layout": "7.1.2",
+          "status": "pass"
+        },
+        {
+          "case": "MC-D01",
+          "channels": 6,
+          "container_layout": "5.1_side",
+          "failures": [],
+          "source_layout": "stereo",
+          "status": "pass"
+        },
+        {
+          "case": "MC-D02",
+          "channels": 8,
+          "container_layout": "7.1",
+          "failures": [],
+          "source_layout": "stereo",
+          "status": "pass"
+        },
+        {
+          "case": "MC-F-7_1-1",
+          "channels": 1,
+          "container_layout": "mono",
+          "failures": [],
+          "source_layout": "7.1",
+          "status": "pass"
+        },
+        {
+          "case": "MC-F-7_1-3",
+          "channels": 3,
+          "container_layout": "3.0",
+          "failures": [],
+          "source_layout": "7.1",
+          "status": "pass"
+        },
+        {
+          "case": "MC-F-7_1-6",
+          "channels": 6,
+          "container_layout": "5.1_side",
+          "failures": [],
+          "source_layout": "7.1",
+          "status": "pass"
+        },
+        {
+          "case": "MC-F-5_1_side-2",
+          "channels": 2,
+          "container_layout": "stereo",
+          "failures": [],
+          "source_layout": "5.1_side",
+          "status": "pass"
+        }
+      ],
+      "selected": 20,
+      "status": "pass"
+    }
+  },
+  "status": "pass"
+}

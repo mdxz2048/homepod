@@ -33,12 +33,20 @@
 - device Tap：在带 `NSAudioCaptureUsageDescription`、TCC 已授权的临时 GUI app 中，以内置扬声器为时钟，对虚拟设备创建 device tap；只播左声道时 `callbacks=301 frames=154112 nonzero=142436 rmsL=0.169940 rmsR=0.000000 peakL=0.25 peakR=0`，时间戳 flags=7。证明 Tap 数据面与非复制左右声道成立；但这是临时 probe，不是产品 Input。
 - 一次 Tap 测试前发现默认输出被改为虚拟设备，已用 CoreAudio 恢复为 `BuiltInSpeakerDevice`；未观察到驱动代码主动切换，但不能据此断言人为/其他进程原因。任何后续测试结束都必须检查默认输出。
 
+多声道 dev family（2026-11-06 傍晚）：
+
+- 7 设备 dev bundle 曾安装并完成 Gate 1：mono/stereo/3.0/4.0/5.1 side/5.1 back/7.1 全部枚举；通道数、ASBD、UseChannelDescriptions 布局、element 名称、每设备 hfla/hflr 隔离均通过；AudioUnit create/init 全 0。
+- 8ch device Tap 传输通过：channels=8、bytesPerFrame=32、481 回调/246272 帧、timestamp flags=7；样本仍为 0 仅因 CLI 无 TCC，尚未在授权 GUI 进程验证逐通道非零。
+- 用户认为 7 个设备过多，产品默认收敛为 3 个可见设备（stereo/5.1 side/7.1）；mono/3.0/4.0/5.1 back 标记 `IsHidden`，仍可按 UID 使用。
+- dev family bundle 已从 `/Library/Audio/Plug-Ins/HAL/HomePodFlowAudioFamily.driver` 卸载；因未重启，7 个 dev 设备仍在 coreaudiod 内存中，下一次重启后消失。当前系统只剩 stereo bundle。
+- 证据见 `reports/VirtualAudio-2026-11-06/Family-driver-runtime-2026-11-06.md`。
+
 仍未实现/未验：产品 Input 的真实 Tap 采集、ring、48k→44.1k 转换与 HPCM；App 身份下的 TCC；WriteMix 转发（当前 sink，若 Tap 产品化成立则不必改，但要保留系统 Tap 兜底）；源 render time/延迟校准、Chrome/Safari 采用、声学音画；恢复 helper/lease 跨进程事务/自动默认输出接管；6/8ch；正式签名与自包含安装包。
 
 ## Mac连接与位置
 
 - Tailscale已用tailscale up开启，地址100.99.190.37；Windows→Mac ping曾3ms。重启后能否自恢复须检查。
-- 最近局域网地址192.168.0.102（可能改变），SSH账号lvzhipeng。严格known-host使用HostKeyAlias=192.168.0.108（原地址别名，非当前地址）；不得关闭hostkey验证。密码不落盘，必要时由用户或安全凭据流程取得。
+- 最近局域网地址 **192.168.0.100**（mDNS `MacBook-Pro.local`；2026-11-06 17:30 起，旧 .102 已失效），SSH账号lvzhipeng。严格known-host使用HostKeyAlias=192.168.0.108（原地址别名，非当前地址）；不得关闭hostkey验证。密码不落盘，必要时由用户或安全凭据流程取得。
 - Mac根目录 `/Users/lvzhipeng/Developer/HomePodSpatialRouter/live-validation`（以下base）。源码base/source。
 - 已安装App `/Users/lvzhipeng/Applications/HomePod Flow.app`；不要无故重签，之前ad-hoc重签曾使录音授权失效。
 - Python `/Users/lvzhipeng/Developer/HomePodSpatialRouter/.venv/bin/python`。

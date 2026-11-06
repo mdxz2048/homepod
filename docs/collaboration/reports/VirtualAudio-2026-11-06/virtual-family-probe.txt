@@ -1,0 +1,41 @@
+DEFAULT BuiltInSpeakerDevice
+com.homepodflow.virtual-audio.dev.mono.v1 | HomePod Flow Audio Mono (Dev) | cfgCh=1 asbdCh=1 bpf=4 rate=48000 tag=0x00000000 hfla=0 hflr=3
+   1=M
+com.homepodflow.virtual-audio.dev.quad40.v1 | HomePod Flow Audio 4.0 (Dev) | cfgCh=4 asbdCh=4 bpf=16 rate=48000 tag=0x00000000 hfla=0 hflr=3
+   1=FL
+   2=FR
+   3=BL
+   4=BR
+com.homepodflow.virtual-audio.dev.stereo.v1 | HomePod Flow Audio Stereo (Dev) | cfgCh=2 asbdCh=2 bpf=8 rate=48000 tag=0x00000000 hfla=0 hflr=3
+   1=FL
+   2=FR
+com.homepodflow.virtual-audio.dev.surround30.v1 | HomePod Flow Audio 3.0 (Dev) | cfgCh=3 asbdCh=3 bpf=12 rate=48000 tag=0x00000000 hfla=0 hflr=3
+   1=FL
+   2=FR
+   3=FC
+com.homepodflow.virtual-audio.dev.surround51b.v1 | HomePod Flow Audio 5.1 Back (Dev) | cfgCh=6 asbdCh=6 bpf=24 rate=48000 tag=0x00000000 hfla=0 hflr=3
+   1=FL
+   2=FR
+   3=FC
+   4=LFE
+   5=BL
+   6=BR
+com.homepodflow.virtual-audio.dev.surround51s.v1 | HomePod Flow Audio 5.1 Side (Dev) | cfgCh=6 asbdCh=6 bpf=24 rate=48000 tag=0x00000000 hfla=0 hflr=3
+   1=FL
+   2=FR
+   3=FC
+   4=LFE
+   5=SL
+   6=SR
+com.homepodflow.virtual-audio.dev.surround71.v1 | HomePod Flow Audio 7.1 (Dev) | cfgCh=8 asbdCh=8 bpf=32 rate=48000 tag=0x00000000 hfla=0 hflr=3
+   1=FL
+   2=FR
+   3=FC
+   4=LFE
+   5=SL
+   6=SR
+   7=BL
+   8=BR
+com.homepodflow.virtual-audio.stereo.v1 | HomePod Flow Audio | cfgCh=2 asbdCh=2 bpf=8 rate=48000 tag=0x00000000 hfla=0 hflr=1
+   1=Left
+   2=Right

@@ -1,0 +1,49 @@
+{
+  "blocks" : 481,
+  "bytesPerFrame" : 32,
+  "channelNonzero" : [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "channelPeak" : [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "channelRms" : [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "channels" : 8,
+  "deviceUID" : "com.homepodflow.virtual-audio.dev.surround71.v1",
+  "droppedBefore" : 0,
+  "firstHostTime" : 12805903463,
+  "firstSampleTime" : 21,
+  "frames" : 246272,
+  "lastHostTime" : 12928785843,
+  "lastSampleTime" : 245785,
+  "nonzeroSamples" : 0,
+  "note" : "silent_or_permission_unconfirmed: this process may lack System Audio Recording permission; do not treat as driver failure",
+  "peak" : 0,
+  "rms" : 0,
+  "sampleRate" : 48000,
+  "tapVerified" : false,
+  "timestampFlags" : 7
+}

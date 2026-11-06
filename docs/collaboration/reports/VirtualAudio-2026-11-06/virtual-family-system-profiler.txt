@@ -1,0 +1,45 @@
+          Current SampleRate: 44100
+          Transport: Built-in
+          Output Channels: 2
+          Current SampleRate: 48000
+          Transport: Built-in
+        HomePod Flow Audio Mono (Dev):
+          Manufacturer: HomePod Flow
+          Output Channels: 1
+          Current SampleRate: 48000
+          Transport: Virtual
+        HomePod Flow Audio 4.0 (Dev):
+          Manufacturer: HomePod Flow
+          Output Channels: 4
+          Current SampleRate: 48000
+          Transport: Virtual
+        HomePod Flow Audio Stereo (Dev):
+          Manufacturer: HomePod Flow
+          Output Channels: 2
+          Current SampleRate: 48000
+          Transport: Virtual
+        HomePod Flow Audio 3.0 (Dev):
+          Manufacturer: HomePod Flow
+          Output Channels: 3
+          Current SampleRate: 48000
+          Transport: Virtual
+        HomePod Flow Audio 5.1 Back (Dev):
+          Manufacturer: HomePod Flow
+          Output Channels: 6
+          Current SampleRate: 48000
+          Transport: Virtual
+        HomePod Flow Audio 5.1 Side (Dev):
+          Manufacturer: HomePod Flow
+          Output Channels: 6
+          Current SampleRate: 48000
+          Transport: Virtual
+        HomePod Flow Audio 7.1 (Dev):
+          Manufacturer: HomePod Flow
+          Output Channels: 8
+          Current SampleRate: 48000
+          Transport: Virtual
+        HomePod Flow Audio:
+          Manufacturer: HomePod Flow
+          Output Channels: 2
+          Current SampleRate: 48000
+          Transport: Virtual

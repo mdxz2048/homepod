@@ -1,6 +1,6 @@
 # 虚拟音频入口架构与实施边界
 
-日期：2026-11-06。阶段：立体声可证伪原型；正式主路径尚未通过。具体接口见 [CONTRACT.md v0.3](CONTRACT.md)。
+日期：2026-11-06。阶段：立体声可证伪原型；正式主路径尚未通过。具体接口见 [CONTRACT.md v0.4](CONTRACT.md)。
 
 ## 产品目标与当前事实
 
@@ -45,6 +45,12 @@ App controller → prepare / latency revision / output takeover lease
 MVP只声明真实2ch。统一输入描述保留格式、channel labels、provenance和转换历史，以后新增真实6/8ch配置和HPCM协商版本，不能静默改旧v1字段。每路媒体都输出到同一设备时，OS可能混音，因此设备8slot不等于原片7.1，无法靠静音自动鉴定。原生多声道路由、立体声空间矩阵和同步复制是不同策略，不互相冒充。
 
 播放器负责解码；本产品仍无文件入口。受保护内容与encoded passthrough不属于承诺的通用PCM。播放器绑定其他设备时可能首次需要选择虚拟设备，自动切系统默认不能强制接管它。
+
+## 多声道契约（v1，源优先）
+
+多声道阶段的设备家族、源布局/容器布局分离、Flow 路由矩阵、HPCM v2 与三层验收门槛以 [MULTICHANNEL_CONTRACT.md](MULTICHANNEL_CONTRACT.md) 为准；立体声仍以 [CONTRACT.md v0.4](CONTRACT.md) 为准，多声道不改变冻结 core C ABI v1 与 HPCM v1。
+
+首轮真实实现 mono/stereo/3.0/4.0/5.1 side/5.1 back/7.1；5.1.2/7.1.2/7.1.4 只预留 UID/通道顺序，不枚举。捕获层只做 identity/pad/refuse，不做 downmix/upmix；两台 HomePod 只能 downmix/前置路由，true 5.1 必须 N 端点。
 
 ## 交付与风险门槛
 
