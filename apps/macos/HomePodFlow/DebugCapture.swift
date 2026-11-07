@@ -15,8 +15,10 @@ import Darwin
         if ProcessInfo.processInfo.arguments.contains("--capture-directory") {
             let suite = "homepod-flow-ui-capture-\(UUID().uuidString)"
             captureSuite = suite
-            return AppState(defaults: UserDefaults(suiteName: suite)!,
+            let state = AppState(defaults: UserDefaults(suiteName: suite)!,
                 visualDemo: !ProcessInfo.processInfo.arguments.contains("--capture-empty-layout"))
+            if state.visualDemo { state.volume = 55 }
+            return state
         }
         #endif
         return AppState()
@@ -173,6 +175,11 @@ import Darwin
         if arguments.contains("--selected-mini") {
             state.selectedDeviceID = state.draftLayout.devices.first(where: { $0.kind == .mini })?.id
         }
+        if arguments.contains("--capture-directory"),
+           !arguments.contains("--capture-empty-layout"),
+           state.visualDemo, !state.isRunning {
+            state.setRunning(true)
+        }
         if arguments.contains("--moved-layout"), !state.draftLayout.devices.isEmpty {
             state.draftLayout.devices[0].position = .init(x: 0.67, y: 0.38)
             state.draftLayout.listener = .init(x: 0.43, y: 0.8)
@@ -241,28 +248,42 @@ import Darwin
     }
     private enum CaptureError: Error { case windowUnavailable, encodingFailed }
     private static func captureMenu(state: AppState, directory: URL) {
+        // The 1:1 popover has a natural fixed canvas; do not measure or clamp it.
+        let size = MenuPopoverView.naturalSize
+        let production = ProcessInfo.processInfo.arguments.contains("--capture-empty-layout")
+        let imageName = production ? "menu-content-production" : "menu-content"
         let menu = NSHostingView(rootView: MenuPopoverView(state: state, onOpenSettings: {}))
-        menu.frame = NSRect(x: 0, y: 0, width: 372, height: 650)
-        menu.layoutSubtreeIfNeeded()
-        let height = max(620, min(1000, menu.fittingSize.height))
-        menu.frame = NSRect(x: 0, y: 0, width: 372, height: height)
+        menu.frame = NSRect(origin: .zero, size: size)
         let host = DebugMenuWindow(contentRect: menu.frame, styleMask: [.borderless], backing: .buffered, defer: false)
         host.isReleasedWhenClosed = false
+        host.isOpaque = false
+        host.backgroundColor = .clear
+        host.hasShadow = false
         host.contentView = menu
+        host.setContentSize(size)
         host.center()
         host.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-            defer {
-                host.orderOut(nil)
-                if let suite = captureSuite { UserDefaults.standard.removePersistentDomain(forName: suite) }
+            Task { @MainActor in
+                defer {
+                    host.orderOut(nil)
+                    if let suite = captureSuite { UserDefaults.standard.removePersistentDomain(forName: suite) }
+                }
+                do {
+                    try await writeOwnWindow(host, to: directory.appendingPathComponent("\(imageName).png"))
+                } catch {
+                    NSLog("DEBUG menu own-window capture failed: %@", String(describing: error))
+                    do {
+                        menu.layoutSubtreeIfNeeded()
+                        try write(view: menu, to: directory.appendingPathComponent("\(imageName).png"))
+                        try Data("AppKit view cache fallback\n".utf8)
+                            .write(to: directory.appendingPathComponent("\(imageName).capture-method.txt"))
+                    } catch {
+                        NSLog("DEBUG menu cache capture failed: %@", String(describing: error))
+                    }
+                }
             }
-            do {
-                menu.layoutSubtreeIfNeeded()
-                try write(view: menu, to: directory.appendingPathComponent("menu-content.png"))
-                try Data("AppKit view cache; active temporary host, not system menu popover\n".utf8)
-                    .write(to: directory.appendingPathComponent("menu-content.capture-method.txt"))
-            } catch { NSLog("DEBUG menu capture failed: %@", String(describing: error)) }
         }
     }
     private static func write(view: NSView, to url: URL) throws {

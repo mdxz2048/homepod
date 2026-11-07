@@ -1,0 +1,14 @@
+{
+  "images" : [
+    {
+      "filename" : "large_homepod.png",
+      "idiom" : "mac",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "mac",
+      "scale" : "1x"
+    }
+  ],
+  "info" : { "author" : "xcode", "version" : 1 }
+}

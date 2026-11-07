@@ -32,6 +32,7 @@ private struct StoredPreferences: Codable {
     }
     private(set) var isRunning = false
     let isDemo: Bool
+    let visualDemo: Bool
     private(set) var layout: RoomLayout
     private var storedDraftLayout: RoomLayout
     var draftLayout: RoomLayout {
@@ -57,6 +58,7 @@ private struct StoredPreferences: Codable {
          systemAudio: SystemAudioStore? = nil) {
         self.defaults = defaults
         self.systemAudio = systemAudio ?? SystemAudioStore()
+        self.visualDemo = visualDemo
         let router = service ?? DemoRouterService()
         self.service = router
         isDemo = router.isDemo
