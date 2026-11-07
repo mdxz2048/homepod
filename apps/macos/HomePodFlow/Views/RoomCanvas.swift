@@ -6,6 +6,7 @@ struct RoomCanvas: View {
     @Binding var selectedDeviceID: UUID?
     var editable: Bool = false
     var compact: Bool = false
+    var showsDeviceLabels: Bool = true
 
     var body: some View {
         GeometryReader { proxy in
@@ -50,6 +51,8 @@ struct RoomCanvas: View {
                 .lineLimit(1)
                 .padding(.horizontal, compact ? 6 : 9).padding(.vertical, 4)
                 .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 7))
+                .opacity(showsDeviceLabels ? 1 : 0)
+                .accessibilityHidden(!showsDeviceLabels)
         }
         .position(x: device.position.x * size.width, y: device.position.y * size.height)
         .onTapGesture { if editable { selectedDeviceID = device.id } }

@@ -4,7 +4,7 @@ struct SystemAudioRuntime: Codable, Sendable {
     let python: String
     let project: String
     let library: String
-    let capture_host: String
+    var capture_host: String
     var virtual_capture_host: String? = nil
     var latency_control: String? = nil
     var latency_ms: Double? = nil
@@ -27,6 +27,83 @@ struct SystemAudioRuntime: Codable, Sendable {
             guard value.isFinite, (0...3000).contains(value) else {
                 throw WorkerFailure.unavailable("音画延迟校准配置超出 0…3000 ms")
             }
+        }
+    }
+}
+
+/// Exact identity of the capture hosts embedded inside HomePod Flow.app/Contents/Helpers.
+/// Kept here, not in generic configuration, so packaging and loading share one source of truth.
+extension SystemAudioRuntime {
+    enum PackagedHost {
+        static let helpersDirectory = "Helpers"
+        static let tapApp = "TapCaptureHost.app"
+        static let virtualApp = "VirtualCaptureHost.app"
+        static let tapExecutable = "tap-capture-host"
+        static let virtualExecutable = "virtual-audio-host"
+        static let tapBundleIdentifier = "com.homepodflow.tap-capture-host"
+        static let virtualBundleIdentifier = "com.homepodflow.virtual-capture-host"
+    }
+
+    /// Replaces `capture_host` and `virtual_capture_host` with the embedded helper
+    /// executables only when BOTH are present and fully valid. Returns false and leaves
+    /// the decoded runtime.json host paths untouched when neither helper exists (legacy
+    /// app without embedded helpers). Throws when exactly one helper exists or either
+    /// bundle is malformed, so a partially packaged app fails loudly instead of quietly
+    /// using stale external host paths. All other config fields are preserved.
+    @discardableResult
+    mutating func preferEmbeddedCaptureHosts(in helpers: URL) throws -> Bool {
+        func executableURL(_ appName: String, _ executableName: String) -> URL {
+            helpers.appendingPathComponent(appName)
+                .appendingPathComponent("Contents/MacOS")
+                .appendingPathComponent(executableName)
+        }
+        let tap = executableURL(PackagedHost.tapApp, PackagedHost.tapExecutable)
+        let virtual = executableURL(PackagedHost.virtualApp, PackagedHost.virtualExecutable)
+        let manager = FileManager.default
+        let hasTap = manager.fileExists(atPath: helpers.appendingPathComponent(PackagedHost.tapApp).path)
+        let hasVirtual = manager.fileExists(atPath: helpers.appendingPathComponent(PackagedHost.virtualApp).path)
+
+        guard hasTap || hasVirtual else { return false }
+        guard hasTap && hasVirtual else {
+            let missing = hasTap ? PackagedHost.virtualApp : PackagedHost.tapApp
+            throw WorkerFailure.unavailable("内置采集组件不完整：缺少 \(missing)，已拒绝使用旧的外部组件")
+        }
+        try Self.requireValidEmbeddedHost(app: helpers.appendingPathComponent(PackagedHost.tapApp),
+                                          executableName: PackagedHost.tapExecutable,
+                                          bundleIdentifier: PackagedHost.tapBundleIdentifier,
+                                          label: "TapCaptureHost")
+        try Self.requireValidEmbeddedHost(app: helpers.appendingPathComponent(PackagedHost.virtualApp),
+                                          executableName: PackagedHost.virtualExecutable,
+                                          bundleIdentifier: PackagedHost.virtualBundleIdentifier,
+                                          label: "VirtualCaptureHost")
+        capture_host = tap.path
+        virtual_capture_host = virtual.path
+        return true
+    }
+
+    private static func requireValidEmbeddedHost(app: URL, executableName: String,
+                                                 bundleIdentifier: String, label: String) throws {
+        let manager = FileManager.default
+        var isDirectory: ObjCBool = false
+        guard manager.fileExists(atPath: app.path, isDirectory: &isDirectory), isDirectory.boolValue else {
+            throw WorkerFailure.unavailable("内置采集组件 \(label) 的 App 包不存在")
+        }
+        let executable = app.appendingPathComponent("Contents/MacOS").appendingPathComponent(executableName)
+        guard manager.isExecutableFile(atPath: executable.path) else {
+            throw WorkerFailure.unavailable("内置采集组件 \(label) 缺少可执行文件 \(executableName)")
+        }
+        guard let data = try? Data(contentsOf: app.appendingPathComponent("Contents/Info.plist")),
+              let info = (try? PropertyListSerialization.propertyList(from: data, format: nil)) as? [String: Any] else {
+            throw WorkerFailure.unavailable("内置采集组件 \(label) 的 Info.plist 无效")
+        }
+        guard info["CFBundleExecutable"] as? String == executableName else {
+            throw WorkerFailure.unavailable("内置采集组件 \(label) 的可执行文件名不匹配（期望 \(executableName)）")
+        }
+        guard info["CFBundleIdentifier"] as? String == bundleIdentifier else {
+            throw WorkerFailure.unavailable("内置采集组件 \(label) 的 Bundle ID 不匹配")
+        }
+        guard let usage = info["NSAudioCaptureUsageDescription"] as? String, !usage.isEmpty else {
+            throw WorkerFailure.unavailable("内置采集组件 \(label) 缺少音频采集用途说明")
         }
     }
 }
@@ -67,7 +144,12 @@ extension SystemAudioRouting {
             throw WorkerFailure.unavailable("无法定位本机运行环境")
         }
         let url = support.appendingPathComponent("HomePod Flow/runtime.json")
-        return SystemRouterService(runtime: try JSONDecoder().decode(SystemAudioRuntime.self, from: Data(contentsOf: url)))
+        var runtime = try JSONDecoder().decode(SystemAudioRuntime.self, from: Data(contentsOf: url))
+        let helpers = Bundle.main.bundleURL
+            .appendingPathComponent("Contents")
+            .appendingPathComponent(SystemAudioRuntime.PackagedHost.helpersDirectory)
+        try runtime.preferEmbeddedCaptureHosts(in: helpers)
+        return SystemRouterService(runtime: runtime)
     }
     func connect() async throws {
         try runtime.validate()

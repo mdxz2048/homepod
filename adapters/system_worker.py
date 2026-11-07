@@ -121,12 +121,15 @@ def parse_system_request(line):
                 ids.add(output); addresses.add(host)
             if "input" in params:
                 config = params['input']
-                keys(config, ('backend', 'device_uid', 'layout'), ('latency_report',))
+                keys(config, ('backend', 'device_uid', 'layout'),
+                     ('latency_report', 'latency_control'))
                 from adapters.live.pcm_v2 import CANONICAL_DEVICE_UID
                 if (config['backend'] != 'virtual_device_v2'
                         or not isinstance(config['layout'], str)
                         or CANONICAL_DEVICE_UID.get(config['layout']) != config['device_uid']):
                     raise ProtocolError('invalid_params', 'unsupported virtual input descriptor')
+                if 'latency_control' in config:
+                    absolute_path(config['latency_control'], 'latency_control')
                 if 'latency_report' in config:
                     try:
                         normalized = validate_latency_report(config['latency_report'])
@@ -211,6 +214,10 @@ class SystemWorkerServer(WorkerServer):
                 if (not Path(params["library"]).is_file() or not Path(params["capture_host"]).is_file()
                         or not os.access(params["capture_host"], os.X_OK)):
                     self.error(rid, "invalid_params", "native library or capture host is unavailable", sid); return
+                helper = params.get("input", {}).get("latency_control")
+                if (helper is not None and (not Path(helper).is_file()
+                                            or not os.access(helper, os.X_OK))):
+                    self.error(rid, "invalid_params", "latency helper is unavailable", sid); return
                 self.sessions.add(sid.lower())
                 runtime_params = dict(params)
                 runtime_params["_volume_control"] = LiveVolumeControl()
@@ -268,10 +275,15 @@ class SystemWorkerServer(WorkerServer):
                 phase = "capturing"
             else:
                 phase = "preparing"
-            if phase != previous:
+            latency_state = report.get("latency_state")
+            signature = (phase, json.dumps(latency_state, sort_keys=True)
+                         if isinstance(latency_state, dict) else None)
+            if signature != previous:
                 payload = {"state": phase, "execution": "system_audio",
                     "actual_mode": report.get('actual_mode', 'same_stereo'),
                     "acoustic_sync_verified": False}
+                if isinstance(latency_state, dict):
+                    payload["latency_state"] = latency_state
                 if phase in ("capturing", "streaming"):
                     scheduling = report.get("scheduling")
                     if isinstance(scheduling, dict):
@@ -286,7 +298,7 @@ class SystemWorkerServer(WorkerServer):
                             payload["programmed_vs_reported_ms"] = comparison
                 self.emit(session.request_id, "state", session.session_id,
                     payload)
-                previous = phase
+                previous = signature
             await asyncio.sleep(.05)
 
     async def _run_session(self, session):

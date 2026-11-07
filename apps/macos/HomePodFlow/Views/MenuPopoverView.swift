@@ -149,7 +149,7 @@ struct MenuPopoverView: View {
             } else {
                 RoomCanvas(layout: .constant(state.layout),
                            selectedDeviceID: $state.selectedDeviceID,
-                           editable: false, compact: false)
+                           editable: false, compact: false, showsDeviceLabels: false)
                     .frame(width: Theater.P(956), height: Theater.P(709))
             }
         }
@@ -191,7 +191,6 @@ struct MenuPopoverView: View {
             tv
             speakerShadows
             speakers
-            speakerLabels
             sofa
             listener
         }
@@ -248,28 +247,6 @@ struct MenuPopoverView: View {
                 .frame(width: Theater.P(76), height: Theater.P(74))
                 .offset(x: Theater.P(825 - 83), y: Theater.P(769 - 344))
         }
-    }
-
-    private var speakerLabels: some View {
-        ZStack(alignment: .topLeading) {
-            speakerLabel("示例 HomePod")
-                .frame(width: Theater.P(244), height: Theater.P(49))
-                .offset(x: Theater.P(439 - 83), y: Theater.P(674 - 344))
-            speakerLabel("示例左 mini")
-                .frame(width: Theater.P(183), height: Theater.P(48))
-                .offset(x: Theater.P(165 - 83), y: Theater.P(853 - 344))
-            speakerLabel("示例右 mini")
-                .frame(width: Theater.P(181), height: Theater.P(48))
-                .offset(x: Theater.P(777 - 83), y: Theater.P(853 - 344))
-        }
-    }
-
-    private func speakerLabel(_ text: String) -> some View {
-        Text(text)
-            .font(.system(size: 9.5, weight: .semibold))
-            .foregroundStyle(Theater.labelInk)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Capsule().fill(Theater.labelFill))
     }
 
     // MARK: - Listener and sofa (sofa behind listener)
@@ -534,8 +511,6 @@ private enum Theater {
     static let track = Color(red: 215.0 / 255, green: 220.0 / 255, blue: 230.0 / 255)
     static let toggleTrackOff = Color(red: 202.0 / 255, green: 208.0 / 255, blue: 219.0 / 255)
     static let segmentTrack = Color(red: 226.0 / 255, green: 230.0 / 255, blue: 238.0 / 255)
-    static let labelFill = Color.white.opacity(0.78)
-    static let labelInk = Color(red: 43.0 / 255, green: 49.0 / 255, blue: 59.0 / 255)
 
     static let settingsFill = Color(red: 245.0 / 255, green: 248.0 / 255, blue: 252.0 / 255)
     static let settingsInk = Color(red: 51.0 / 255, green: 56.0 / 255, blue: 66.0 / 255)

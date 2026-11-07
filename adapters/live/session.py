@@ -11,7 +11,8 @@ from adapters.airplay_pyatv.source import CoreAudioSource
 from adapters.airplay_pyatv.timing import build_timing_plan, ntp_from_unix_ns
 from .capture import CaptureHost
 from .hub import LiveFailure, LiveHub
-from .latency_control import PREPARATION_MS, playback_lead_ns, plan_telemetry
+from .latency_control import (PREPARATION_MS, playback_lead_ns,
+                              planned_presentation_ms, plan_telemetry)
 
 
 class LiveSource(CoreAudioSource):
@@ -40,9 +41,11 @@ class LiveSource(CoreAudioSource):
 
 
 class LivePatches(SessionPatches):
-    def __init__(self, hub, capture, report, volume_control=None, latency_report=None):
+    def __init__(self, hub, capture, report, volume_control=None, latency_report=None,
+                 latency_control=None):
         self.hub, self.capture, self.report = hub, capture, report
         self.latency_report = latency_report
+        self.latency_control = latency_control
         self.library = None
         self.sample_rate, self.channels = 44100, 2
         self.routes = hub.routes
@@ -107,6 +110,19 @@ class LivePatches(SessionPatches):
                 rate, channels, width, latency = next(iter(formats))
                 if (rate, channels, width) != (44100, 2, 2) or type(latency) is not int or latency < 0:
                     raise LiveFailure("unsupported live receiver format")
+                if self.latency_control:
+                    from .latency_apply import LatencyApplyError, apply_planned_latency
+                    self.latency_report = None
+                    try:
+                        applied = await apply_planned_latency(self.latency_control, latency, rate)
+                    except LatencyApplyError as exc:
+                        self.report["latency_state"] = {
+                            "status": "failure",
+                            "target_ms": planned_presentation_ms(latency, rate),
+                            "detail": " ".join(str(exc).split())[:256]}
+                    else:
+                        self.report["latency_state"] = applied.report()
+                        self.latency_report = applied.verified_report
                 self.report["status"] = "capturing"
                 await self.capture.start()
                 origin = self.hub.start(playback_lead_ns(latency, rate))
@@ -182,9 +198,12 @@ async def play_system_audio(library, capture_host, routes, hosts, volume=15,
         import pyatv
         from pyatv.const import Protocol
         latency_report = None
+        latency_control = None
         if isinstance(input_config, dict):
             latency_report = input_config.get("latency_report")
-        with LivePatches(hub, capture, report, volume_control, latency_report) as patch:
+            latency_control = input_config.get("latency_control")
+        with LivePatches(hub, capture, report, volume_control, latency_report,
+                         latency_control) as patch:
             patch.cleanup_confirmed = False
             try:
                 report["status"] = "connecting"
