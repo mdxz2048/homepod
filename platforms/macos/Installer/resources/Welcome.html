@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><style>
+body { font: 13px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; color: #222; margin: 18px 20px; }
+h1 { font-size: 17px; margin: 0 0 10px; }
+p { line-height: 1.55; margin: 8px 0; }
+.note { color: #666; }
+</style></head>
+<body>
+<h1>安装 HomePod Flow</h1>
+<p>这个安装包会把 <b>HomePod Flow App</b> 和 <b>HomePod Flow Audio 虚拟声卡</b> 一起安装到本机。</p>
+<p>App 内已包含冻结的 Python 音频服务、runtime 项目、核心库和延迟 helper，不需要另外安装 Python 或配置路径。</p>
+<p>安装程序需要管理员权限，并会做两件事：</p>
+<ul>
+  <li>备份并替换旧的 HomePod Flow 音频组件；</li>
+  <li>重新加载系统音频服务，让新声卡出现在“声音”设置和播放器的输出列表中。</li>
+</ul>
+<p class="note">重新加载音频服务时，正在播放的声音可能短暂中断。安装程序不会把虚拟声卡设为默认输出，也不会删除你的音箱布局或偏好设置。</p>
+<p class="note">macOS 可能因 System Integrity Protection 拒绝重启 coreaudiod。如果安装完成后没有看到 HomePod Flow Audio，请重启 Mac。</p>
+</body>
+</html>

@@ -1,5 +1,16 @@
 # 变更记录
 
+## 2026-11-08
+
+- 新增统一安装镜像流程 `platforms/macos/Installer`：一个 `.pkg` 同时安装 HomePod Flow.app、生产 HAL 虚拟声卡和只读设备探针，`.dmg` 承载安装包与卸载入口；preinstall 备份旧 Flow 驱动并拒绝无关 bundle/symlink，postinstall 校验签名、写清单、重载 `coreaudiod` 并探测固定设备 UID，不改默认输出。
+- App 新增“音频组件”状态与首次安装入口：未安装、等待系统加载、已就绪、重复副本、文件无效分别显示；未就绪时禁用系统声音开关，并把安装按钮指向同目录或 `HOMEPODFLOW_INSTALLER_PKG` 的签名 pkg。
+- 新增 `AudioComponentChecks`、安装脚本静态检查、可选 universal 驱动/probe 构建参数和 VirtualCaptureHost 打包脚本。
+- 已在 Mac（macOS 26.5.2、Xcode 26.6）通过安装脚本静态检查、`AudioComponentChecks`、`StateChecks`、App Debug 构建、驱动多声道测试、生产单设备驱动构建，以及 `build-release.sh` 的 `pkgbuild/productbuild/hdiutil` 全流程；产物为 arm64 的 `HomePod Flow 0.3.0.dmg` 与 `Install HomePod Flow.pkg`，App/驱动签名校验和 DMG 校验通过。
+- 旧版卸载真机验证：App、HAL 驱动、系统 Support、receipts 和进程均移除，旧 App/驱动备份到 `~/HomePodFlow-Backups/`；macOS 26 SIP 拒绝 `launchctl kickstart` 重启 coreaudiod，残留设备需要再次重启才消失。安装/卸载流程已改为明确提示“可能需要重启 Mac”，不宣称自动重载成功。
+- 新增自包含运行环境：`build-bundled-runtime.sh` 用 PyInstaller 冻结 Python worker，把 runtime 项目、`libflow_bridge.dylib`、`hflctl` 和 worker 放进 App 的 `Contents/Resources/Runtime`；App 优先使用内置 manifest，不再要求 Homebrew Python 或外部 `runtime.json`。冻结 worker 已通过 `hello`、真实 mDNS `scan` 与无音频 `start` 失败清理检查，且 Mach-O 无 `/opt/homebrew`/`/usr/local` 依赖；整包当前为 arm64。
+- 统一安装包已在本机成功安装：`pkgutil` 写入 App/驱动/Support 三个 receipt，App 0.3.0、HAL 驱动、内置 Runtime 和冻结 worker 均落盘并通过签名/hello 检查。首次安装失败的两个根因已修复：旧 App 备份以 `.app` 形式留在用户目录，被 Installer 当作 1.0.0 已安装而跳过 App 组件；Support postinstall 用 `plutil -lint` 校验 JSON 失败。现在旧 App/驱动备份改为 zip，manifest 改用 `python3 -m json.tool`。因 macOS 26 SIP 拒绝重启 coreaudiod，仍需重启 Mac 才能加载新声卡；TCC、实际出声、声学尚未验证。
+- 发布 0.3.1 升级包（CFBundleVersion 2）：同一个 pkg 可覆盖升级 App/驱动并保留用户偏好；Installer 使用 `onConclusion="Restart"` 在完成后提示重启。App 组件卡显示 App/驱动版本和“升级/重装…”入口，会优先找到 `/Users/Shared/HomePodFlow-*` 中最新的 pkg。空间布局支持在同步模式移除已保存/断电音箱。0.3.1 构建、pkg 查找和脚本检查通过；实际覆盖安装/重启/升级后状态待验收。
+
 ## 2026-11-06
 
 - 多声道采集格式支持原生 mono；新增独立 1/2/3/4/6/8ch 转换器与 Swift HPCM v2 编码器。Mac35项单测、Release及跨语言14组合/220052帧验收通过；尚未接入产品 host/worker，实际多声道取声与声学未验。

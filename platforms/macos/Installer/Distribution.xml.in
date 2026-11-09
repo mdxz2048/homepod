@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2" onConclusion="Restart">
+    <title>HomePod Flow</title>
+    <organization>com.homepodflow</organization>
+    <domains enable_localSystem="true" enable_currentUserHome="false" enable_anywhere="false"/>
+    <options customize="never" require-scripts="true" rootVolumeOnly="true"
+             hostArchitectures="@ARCHS@"/>
+    <volume-check>
+        <allowed-os-versions>
+            <os-version min="14.2"/>
+        </allowed-os-versions>
+    </volume-check>
+    <choices-outline>
+        <line choice="default">
+            <line choice="driver"/>
+            <line choice="app"/>
+            <line choice="support"/>
+        </line>
+    </choices-outline>
+    <choice id="default" visible="false"/>
+    <choice id="driver" visible="false">
+        <pkg-ref id="com.homepodflow.audio.driver.pkg"/>
+    </choice>
+    <choice id="app" visible="false">
+        <pkg-ref id="com.homepodflow.mac"/>
+    </choice>
+    <choice id="support" visible="false">
+        <pkg-ref id="com.homepodflow.support.pkg"/>
+    </choice>
+    <pkg-ref id="com.homepodflow.audio.driver.pkg" version="@VERSION@">Driver.pkg</pkg-ref>
+    <pkg-ref id="com.homepodflow.mac" version="@VERSION@">App.pkg</pkg-ref>
+    <pkg-ref id="com.homepodflow.support.pkg" version="@VERSION@">Support.pkg</pkg-ref>
+    <welcome file="Welcome.html" mime-type="text/html"/>
+    <readme file="ReadMe.html" mime-type="text/html"/>
+    <license file="License.html" mime-type="text/html"/>
+</installer-gui-script>

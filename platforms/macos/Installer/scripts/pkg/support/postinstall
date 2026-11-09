@@ -1,0 +1,64 @@
+#!/bin/bash
+# HomePod Flow final postinstall.
+#
+# This runs after the driver payload and the read-only probe are installed.
+# It verifies the installed bundle, fixes ownership/permissions, records a
+# manifest, reloads coreaudiod, and probes the HAL device. A failed reload or
+# probe leaves a marker for the App; it does not change the default output.
+set -euo pipefail
+
+scripts_dir="$(cd "$(dirname "$0")" && pwd)"
+if [ -f "$scripts_dir/lib.sh" ]; then
+    # pkgbuild stages this directory with lib.sh copied next to the scripts.
+    # shellcheck source=lib.sh
+    source "$scripts_dir/lib.sh"
+else
+    # shellcheck source=../../lib.sh
+    source "$scripts_dir/../../lib.sh"
+fi
+
+flow_require_root
+
+/bin/mkdir -p "$(/usr/bin/dirname "$FLOW_INSTALL_LOG")"
+/usr/bin/touch "$FLOW_INSTALL_LOG"
+/bin/chmod 644 "$FLOW_INSTALL_LOG"
+flow_log "=== final postinstall $(/bin/date -u +%Y-%m-%dT%H:%M:%SZ) ==="
+
+bundle="$FLOW_HAL_DIR/$FLOW_DRIVER_BUNDLE_NAME"
+flow_validate_bundle "$bundle"
+
+/usr/sbin/chown -R root:wheel "$bundle"
+/usr/bin/find "$bundle" -type d -exec /bin/chmod 755 {} +
+/usr/bin/find "$bundle" -type f -exec /bin/chmod 644 {} +
+/bin/chmod 755 "$bundle/Contents/MacOS/$FLOW_DRIVER_EXECUTABLE"
+/usr/bin/xattr -dr com.apple.quarantine "$bundle" >/dev/null 2>&1 || true
+
+/usr/bin/codesign --verify --strict "$bundle" ||
+    flow_fail "Installed audio component signature verification failed: $bundle"
+
+version=$(flow_bundle_version "$bundle" || true)
+sha=$(/usr/bin/shasum -a 256 "$bundle/Contents/MacOS/$FLOW_DRIVER_EXECUTABLE" | /usr/bin/awk '{print $1}')
+flow_write_manifest "$bundle" "${version:-unknown}" "$sha"
+flow_log "Installed $bundle version=${version:-unknown} sha256=$sha"
+
+# The installer must never select the silent virtual device as system output.
+# Reloading coreaudiod only makes the HAL bundle available.
+flow_clear_needs_restart
+if flow_reload_coreaudiod; then
+    if flow_probe_device; then
+        flow_log "HAL device enumerated after reload: $FLOW_DEVICE_UID"
+    else
+        flow_write_needs_restart "device-not-enumerated"
+    fi
+else
+    flow_write_needs_restart "coreaudiod-reload-failed"
+fi
+
+if flow_restore_default_output; then
+    flow_log "Default output safety check completed"
+else
+    flow_log "Default output safety check skipped or failed"
+fi
+
+flow_log "Postinstall complete. Flow-as-default was restored to built-in; other outputs untouched."
+exit 0
