@@ -12,25 +12,29 @@ flow_reject_symlink "$bundle" "$bundle/Contents" "$bundle/Contents/MacOS" \
 mkdir -p "$bundle/Contents/MacOS"
 
 if [[ "${MC_PRODUCTION_IDENTITY:-0}" == "1" ]]; then
-  identity_flag="-DMC_PRODUCTION_IDENTITY=1"
   info_plist="$source_root/Info-Multichannel-Production.plist"
 else
-  identity_flag=""
   info_plist="$source_root/Info-Multichannel.plist"
 fi
 
-if [[ "${MC_SINGLE_DEVICE:-0}" == "1" ]]; then
-  single_flag="-DMC_SINGLE_DEVICE=1"
-else
-  single_flag=""
+compile=(xcrun clang -std=c11 -O2 -Wall -Wextra -Werror -mmacosx-version-min=14.2 \
+  -fvisibility=hidden -bundle)
+if [[ -n "${FLOW_ARCHS:-}" ]]; then
+  for arch in $FLOW_ARCHS; do
+    compile+=(-arch "$arch")
+  done
 fi
-
-xcrun clang -std=c11 -O2 -Wall -Wextra -Werror -mmacosx-version-min=14.2 \
-  -fvisibility=hidden -bundle $identity_flag $single_flag \
-  "$source_root/src/FlowVirtualAudioMultichannel.c" \
+if [[ "${MC_PRODUCTION_IDENTITY:-0}" == "1" ]]; then
+  compile+=(-DMC_PRODUCTION_IDENTITY=1)
+fi
+if [[ "${MC_SINGLE_DEVICE:-0}" == "1" ]]; then
+  compile+=(-DMC_SINGLE_DEVICE=1)
+fi
+compile+=("$source_root/src/FlowVirtualAudioMultichannel.c" \
   "$source_root/src/FlowMultichannelMap.c" \
   -framework CoreAudio -framework CoreFoundation \
-  -o "$bundle/Contents/MacOS/HomePodFlowAudioFamily"
+  -o "$bundle/Contents/MacOS/HomePodFlowAudioFamily")
+"${compile[@]}"
 cp "$info_plist" "$bundle/Contents/Info.plist"
 plutil -lint "$bundle/Contents/Info.plist"
 codesign --force --sign - --timestamp=none "$bundle"

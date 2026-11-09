@@ -8,11 +8,17 @@ bundle="$stage_root/HomePodFlowAudio.driver"
 flow_reject_symlink "$bundle" "$bundle/Contents" "$bundle/Contents/MacOS" \
   "$bundle/Contents/MacOS/HomePodFlowAudio" "$bundle/Contents/Info.plist"
 mkdir -p "$bundle/Contents/MacOS"
-xcrun clang -std=c11 -O2 -Wall -Wextra -Werror -mmacosx-version-min=14.2 \
-  -fvisibility=hidden -bundle \
-  "$source_root/src/FlowVirtualAudio.c" \
+compile=(xcrun clang -std=c11 -O2 -Wall -Wextra -Werror -mmacosx-version-min=14.2 \
+  -fvisibility=hidden -bundle)
+if [[ -n "${FLOW_ARCHS:-}" ]]; then
+  for arch in $FLOW_ARCHS; do
+    compile+=(-arch "$arch")
+  done
+fi
+compile+=("$source_root/src/FlowVirtualAudio.c" \
   -framework CoreAudio -framework CoreFoundation \
-  -o "$bundle/Contents/MacOS/HomePodFlowAudio"
+  -o "$bundle/Contents/MacOS/HomePodFlowAudio")
+"${compile[@]}"
 cp "$source_root/Info.plist" "$bundle/Contents/Info.plist"
 plutil -lint "$bundle/Contents/Info.plist"
 codesign --force --sign - --timestamp=none "$bundle"

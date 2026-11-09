@@ -114,6 +114,8 @@ enum {
     kMCObjectStream51B = 13,
     kMCObjectDevice71 = 14,
     kMCObjectStream71 = 15,
+    kMCObjectControlVolumeBase = 400,
+    kMCObjectControlMuteBase = 401,
     kMCLatencyFrames = 'hfla',
     kMCLatencyRevision = 'hflr',
     kMCLatencyStatus = 'hfls',
