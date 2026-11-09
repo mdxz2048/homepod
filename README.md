@@ -1,5 +1,13 @@
 # 变更记录
 
+## 2026-11-09
+
+- **音量键打通**：HAL 驱动改为发布标准 Core Audio **control 对象**（`kAudioLevelControlClassID` + `kAudioBooleanControlClassID`，标量 0…1 / -96…0 dB，每设备一对）。macOS 从此把 Flow 当成有硬件音量的设备，音量键、控制中心滑块、静音键都直接作用在它上面；驱动不做 DSP，App 监听 control 值再通过 `set_volume` 下发 AirPlay 组，避免双重衰减。重复写入同值不再发通知，消除"回写—通知"回环。
+- **默认输出切换改为"确认后才算成功"**：写 `kAudioHardwarePropertyDefaultOutputDevice` 返回 `noErr` 不再等同于成功。开启时轮询到系统真的把 Flow 报成默认输出（50 ms 一次，上限 3 s）才启动采集；关闭时同样确认 Mac 已回到原设备才停 worker。超时则回滚路由并明确报错。已打开的应用迁移较慢时，状态栏显示"正在等待已打开的应用迁移到 Flow…"，而不是提前宣称完成。
+- **异常退出自愈**：`SIGTERM/SIGINT` 改走正常退出流程（先还原默认输出）；启动时若上次异常退出把默认输出留在 Flow 且没有会话，会自动切回当初借用的设备，并清空残留记录——避免"App 被杀 → 整机没声音"。
+- **音箱图形改为官方产品图**：从 Apple 商店抓取透明底 PNG（HomePod 白/午夜，mini 白/午夜/黄/橙/蓝/绿/粉），裁掉透明边并按同一像素比例归一化，因此 HomePod 与 mini 的相对大小（168 mm 对 84 mm）是真实的；mini 在画布上取 0.62 比例以免过小。型号下拉默认布局改为"1 台午夜色 HomePod + 2 台白色 mini"；选中光晕只出现在布局编辑页，且改成贴合产品的胶囊/圆形柔光。
+- 真机验收：驱动 control 探针（`clst` 2 个 control、`base=levl/vlme`、`base=togl/mute`）、`osascript set volume output volume 37 → scalar 0.37`、`set volume output muted true → mute 1`、App 侧 `SystemOutputVolumeService` 读写/监听全部通过；`DefaultOutputRouteChecks`（含新增的"未发布切换则不得开始采集""未确认恢复则明确报错"两项）、`StateChecks`、`SystemVolumeChecks`、`MultichannelChecks` 全部通过。安装包仍为 0.3.1（CFBundleVersion 2），二进制已更新并安装。
+
 ## 2026-11-08
 
 - 新增统一安装镜像流程 `platforms/macos/Installer`：一个 `.pkg` 同时安装 HomePod Flow.app、生产 HAL 虚拟声卡和只读设备探针，`.dmg` 承载安装包与卸载入口；preinstall 备份旧 Flow 驱动并拒绝无关 bundle/symlink，postinstall 校验签名、写清单、重载 `coreaudiod` 并探测固定设备 UID，不改默认输出。
