@@ -7,14 +7,16 @@ import CoreAudio
 @main struct DefaultOutputRouteChecks {
     @MainActor static func main() async throws {
         try assertServiceUIDLookupReadbackAndRestore()
-        await assertSwitchOnceOnCapturingThenRestoreOnStop()
-        await assertStreamingFallbackWhenCapturingNeverArrives()
+        await assertSwitchBeforeStartAndRestoreBeforeStop()
+        await assertStopDuringPreStartRoutingRestoresOutput()
+        await assertStartRequiresPublishedSwitch()
+        await assertStopWaitsForPublishedRestore()
         await assertLegacyCaptureNeverSwitches()
         await assertManualUserSelectionIsPreserved()
         await assertPreviousAlreadyFlowIsNotDisturbed()
         await assertSwitchFailureStopsOwnedSession()
         await assertStartupErrorRestoresBeforeRecoveryDecision()
-        print("DefaultOutputRouteChecks: UID lookup/set/read-back/restore, single live switch, legacy exclusion, manual selection preservation and fail-safe stop passed")
+        print("DefaultOutputRouteChecks: UID lookup/set/read-back/restore, route-before-start, restore-before-stop, legacy exclusion, manual selection preservation and fail-safe stop passed")
     }
 
     // MARK: Service (fake CoreAudio hardware)
@@ -23,10 +25,14 @@ import CoreAudio
         let hardware = FakeHardware(defaultID: 1, uids: [1: "built-in", 2: FlowVirtualDevice.uid, 3: "hdmi"])
         let service = DefaultOutputRouteService(hardware: hardware)
         precondition(service.currentDefaultOutputUID() == "built-in")
+        hardware.runningIDs = [1]
+        precondition(service.isDeviceRunning(uid: "built-in") == true)
+        precondition(service.isDeviceRunning(uid: FlowVirtualDevice.uid) == false)
         let didSetFlow = try service.setDefaultOutput(uid: FlowVirtualDevice.uid)
         precondition(didSetFlow)
         precondition(hardware.defaultID == 2)
         precondition(service.currentDefaultOutputUID() == FlowVirtualDevice.uid)
+        precondition(service.isDeviceRunning(uid: "missing") == nil)
 
         // Restore resolves by UID, so a re-enumerated device ID still works.
         hardware.uids = [10: "built-in", 2: FlowVirtualDevice.uid]
@@ -64,17 +70,20 @@ import CoreAudio
 
     // MARK: Store lifecycle (fake controller + fake worker)
 
-    @MainActor private static func assertSwitchOnceOnCapturingThenRestoreOnStop() async {
-        let ctl = FakeDefaultOutputController(current: "built-in")
-        let worker = RoutingWorker(virtual: true)
+    @MainActor private static func assertSwitchBeforeStartAndRestoreBeforeStop() async {
+        let log = OrderLog()
+        let ctl = FakeDefaultOutputController(current: "built-in", log: log)
+        ctl.running = ["built-in"]
+        let worker = RoutingWorker(virtual: true, log: log)
         let store = SystemAudioStore(serviceFactory: { worker }, observesEnvironment: false, defaultOutput: ctl)
         await store.connectLocalWorker(); await store.scanDevices(); store.selectedDeviceIDs = ["receiver"]
         let run = Task { await store.start(mode: .synchronized, volume: 15) }
-        await until { worker.starts == 1 }
+        await until { log.values.contains("start") }
+        precondition(worker.starts == 1)
+        precondition(log.values == ["set:\(FlowVirtualDevice.uid)", "start"])
         let sid = worker.startSession!
 
         worker.emit("preparing", session: sid)
-        precondition(ctl.setCalls.isEmpty)
         worker.emit("capturing", session: sid)
         precondition(ctl.setCalls == [FlowVirtualDevice.uid] && ctl.current == FlowVirtualDevice.uid)
         worker.emit("capturing", session: sid)
@@ -84,24 +93,11 @@ import CoreAudio
 
         await store.stop(); await run.value
         precondition(ctl.restoreCalls == ["built-in"] && ctl.current == "built-in")
+        precondition(Array(log.values.suffix(2)) == ["restore:built-in", "stop"],
+                      "the Mac output must be restored before the worker stop command")
         precondition(!store.hasActiveSession && !store.isRunning)
         await store.prepareForTermination()
         precondition(worker.shutdowns == 1)
-    }
-
-    @MainActor private static func assertStreamingFallbackWhenCapturingNeverArrives() async {
-        let ctl = FakeDefaultOutputController(current: "built-in")
-        let worker = RoutingWorker(virtual: true)
-        let store = SystemAudioStore(serviceFactory: { worker }, observesEnvironment: false, defaultOutput: ctl)
-        await store.connectLocalWorker(); await store.scanDevices(); store.selectedDeviceIDs = ["receiver"]
-        let run = Task { await store.start(mode: .synchronized, volume: 15) }
-        await until { worker.starts == 1 }
-        worker.emit("streaming", session: worker.startSession!)
-        await until { ctl.setCalls == [FlowVirtualDevice.uid] }
-        precondition(store.isRunning)
-        await store.stop(); await run.value
-        precondition(ctl.restoreCalls == ["built-in"])
-        await store.prepareForTermination()
     }
 
     @MainActor private static func assertLegacyCaptureNeverSwitches() async {
@@ -116,6 +112,67 @@ import CoreAudio
         precondition(ctl.setCalls.isEmpty && ctl.restoreCalls.isEmpty)
         precondition(store.isRunning)
         await store.stop(); await run.value
+        await store.prepareForTermination()
+    }
+
+    @MainActor private static func assertStopDuringPreStartRoutingRestoresOutput() async {
+        let gate = SettleGate()
+        let ctl = FakeDefaultOutputController(current: "built-in")
+        // Keep the route unpublished so the store is genuinely still waiting
+        // when the stop arrives; that is the window this check covers.
+        ctl.publishDelayReads = 2
+        let worker = RoutingWorker(virtual: true)
+        let store = SystemAudioStore(serviceFactory: { worker },
+                                     routeSettleSleep: { _ in await gate.wait() },
+                                     observesEnvironment: false,
+                                     defaultOutput: ctl)
+        await store.connectLocalWorker(); await store.scanDevices(); store.selectedDeviceIDs = ["receiver"]
+        let run = Task { await store.start(mode: .synchronized, volume: 15) }
+        await until { ctl.setCalls == [FlowVirtualDevice.uid] }
+        store.requestStop()
+        gate.open()
+        await run.value
+        precondition(worker.starts == 0 && worker.stops == 0)
+        precondition(ctl.current == "built-in" && ctl.restoreCalls == ["built-in"])
+        precondition(!store.desiredEnabled && !store.hasActiveSession && !store.isBusy)
+        await store.prepareForTermination()
+    }
+
+    /// A setter that returns noErr is not proof the system applied the route.
+    /// Without a published change the switch must fail and capture stays closed.
+    @MainActor private static func assertStartRequiresPublishedSwitch() async {
+        let ctl = FakeDefaultOutputController(current: "built-in")
+        ctl.publishDelayReads = .max
+        let worker = RoutingWorker(virtual: true)
+        let store = SystemAudioStore(serviceFactory: { worker }, observesEnvironment: false,
+                                     defaultOutput: ctl)
+        await store.connectLocalWorker(); await store.scanDevices()
+        store.selectedDeviceIDs = ["receiver"]
+        await store.start(mode: .synchronized, volume: 15)
+        precondition(worker.starts == 0,
+                     "capture must not start before the switch is published")
+        precondition(!store.hasActiveSession && !store.desiredEnabled)
+        precondition(store.statusText.contains("未在限定时间内切换"), store.statusText)
+        await store.prepareForTermination()
+    }
+
+    /// The mirror case: turning the switch off must not report success before
+    /// the Mac is really back on its own output.
+    @MainActor private static func assertStopWaitsForPublishedRestore() async {
+        let ctl = FakeDefaultOutputController(current: "built-in")
+        let worker = RoutingWorker(virtual: true)
+        let store = SystemAudioStore(serviceFactory: { worker }, observesEnvironment: false,
+                                     defaultOutput: ctl)
+        await store.connectLocalWorker(); await store.scanDevices()
+        store.selectedDeviceIDs = ["receiver"]
+        let run = Task { await store.start(mode: .synchronized, volume: 15) }
+        await until { worker.starts == 1 }
+        worker.emit("capturing", session: worker.startSession!)
+        ctl.publishDelayReads = .max
+        await store.stop(); await run.value
+        precondition(ctl.restoreCalls == ["built-in"])
+        precondition(worker.stops == 1)
+        precondition(store.statusText.contains("未在限定时间内切回"), store.statusText)
         await store.prepareForTermination()
     }
 
@@ -155,12 +212,13 @@ import CoreAudio
         let store = SystemAudioStore(serviceFactory: { worker }, observesEnvironment: false, defaultOutput: ctl)
         await store.connectLocalWorker(); await store.scanDevices(); store.selectedDeviceIDs = ["receiver"]
         let run = Task { await store.start(mode: .synchronized, volume: 15) }
-        await until { worker.starts == 1 }
-        worker.emit("capturing", session: worker.startSession!)
-        await until { worker.stops == 1 && !store.hasActiveSession && !store.desiredEnabled }
         await run.value
+        precondition(worker.starts == 0 && worker.stops == 0,
+                     "a failed pre-start route must never open capture")
+        precondition(ctl.current == "built-in")
+        precondition(!store.hasActiveSession && !store.desiredEnabled)
         precondition(store.statusText.contains("默认输出切换"))
-        precondition(!store.cleanupRequiresAttention, "a clean owned-session stop must not look like an uncertain cleanup")
+        precondition(!store.cleanupRequiresAttention)
         await store.prepareForTermination()
     }
 
@@ -187,30 +245,91 @@ import CoreAudio
     }
 }
 
+@MainActor private final class OrderLog {
+    var values: [String] = []
+    func append(_ value: String) { values.append(value) }
+}
+
+@MainActor private final class SettleGate {
+    private var continuation: CheckedContinuation<Void, Never>?
+    private var isOpen = false
+    func wait() async {
+        if isOpen { return }
+        await withCheckedContinuation { continuation = $0 }
+    }
+    func open() {
+        isOpen = true
+        let pending = continuation
+        continuation = nil
+        pending?.resume()
+    }
+}
+
 @MainActor private final class FakeDefaultOutputController: DefaultOutputControlling {
     var current: String?
+    var running: Set<String> = []
     var setCalls: [String] = []
     var restoreCalls: [String] = []
     var failOnSet: Error?
+    /// Number of reads the system takes before a write becomes visible.
+    /// `Int.max` models a route that never publishes (Core Audio refused it).
+    var publishDelayReads = 0
+    private var pendingUID: String?
+    private var pendingReads = 0
+    private let log: OrderLog?
     private let known: Set<String> = ["built-in", FlowVirtualDevice.uid, "hdmi"]
 
-    init(current: String?) { self.current = current }
+    init(current: String?, log: OrderLog? = nil) {
+        self.current = current
+        self.log = log
+    }
 
-    func currentDefaultOutputUID() -> String? { current }
+    func currentDefaultOutputUID() -> String? {
+        if let pending = pendingUID {
+            pendingReads += 1
+            if pendingReads >= publishDelayReads {
+                current = pending
+                pendingUID = nil
+                pendingReads = 0
+            }
+        }
+        return current
+    }
+
+    func isDeviceRunning(uid: String) -> Bool? { running.contains(uid) }
 
     func setDefaultOutput(uid: String) throws -> Bool {
         setCalls.append(uid)
+        log?.append("set:\(uid)")
         if let failOnSet { throw failOnSet }
         guard known.contains(uid) else { return false }
-        current = uid
+        if let old = current, running.contains(old) {
+            running.remove(old)
+            running.insert(uid)
+        }
+        publish(uid)
         return true
     }
 
     func restoreDefaultOutput(uid: String) -> Bool {
         restoreCalls.append(uid)
+        log?.append("restore:\(uid)")
         guard known.contains(uid) else { return false }
-        current = uid
+        if let old = current, running.contains(old) {
+            running.remove(old)
+            running.insert(uid)
+        }
+        publish(uid)
         return true
+    }
+
+    private func publish(_ uid: String) {
+        if publishDelayReads > 0 {
+            pendingUID = uid
+            pendingReads = 0
+        } else {
+            current = uid
+        }
     }
 }
 
@@ -218,6 +337,7 @@ import CoreAudio
     var defaultID: AudioObjectID
     var uids: [AudioObjectID: String]
     var streamCounts: [AudioObjectID: Int?]
+    var runningIDs: Set<AudioObjectID> = []
     var setShouldFail = false
 
     init(defaultID: AudioObjectID, uids: [AudioObjectID: String],
@@ -242,6 +362,10 @@ import CoreAudio
     func outputStreamCount(_ device: AudioObjectID) -> Int? {
         streamCounts[device] ?? 2
     }
+
+    func isRunning(_ device: AudioObjectID) -> Bool? {
+        runningIDs.contains(device)
+    }
 }
 
 @MainActor private final class RoutingWorker: SystemAudioRouting {
@@ -254,10 +378,12 @@ import CoreAudio
     var shutdowns = 0
     var startSession: String?
     private var startContinuation: CheckedContinuation<WorkerEvent, any Error>?
+    private let log: OrderLog?
 
-    init(virtual: Bool) {
+    init(virtual: Bool, log: OrderLog? = nil) {
         runtime = .init(python: "/python", project: "/project", library: "/core",
                         capture_host: "/legacy", virtual_capture_host: virtual ? "/virtual" : nil)
+        self.log = log
     }
 
     func connect() async throws {}
@@ -270,9 +396,11 @@ import CoreAudio
                 .object(["name": .string("Receiver"), "address": .string("receiver"),
                          "model": .string("HomePod")])])])
         case "start":
+            log?.append("start")
             starts += 1; startSession = session
             return try await withCheckedThrowingContinuation { startContinuation = $0 }
         case "stop":
+            log?.append("stop")
             stops += 1; finishStart()
             return event("result", session: session, payload: ["state": .string("stopped"),
                 "cleanup_complete": .bool(true)])

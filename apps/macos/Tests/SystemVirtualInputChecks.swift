@@ -6,9 +6,13 @@ import Foundation
         let old = Data(#"{"python":"/python","project":"/project","library":"/core","capture_host":"/legacy"}"#.utf8)
         let decodedOld = try JSONDecoder().decode(SystemAudioRuntime.self, from: old)
         precondition(decodedOld.virtual_capture_host == nil)
+        precondition(decodedOld.worker_executable == nil)
         let new = Data(#"{"python":"/python","project":"/project","library":"/core","capture_host":"/legacy","virtual_capture_host":"/virtual"}"#.utf8)
         let decodedNew = try JSONDecoder().decode(SystemAudioRuntime.self, from: new)
         precondition(decodedNew.virtual_capture_host == "/virtual")
+        let bundled = Data(#"{"python":"/worker","project":"/project","library":"/core","capture_host":"/legacy","worker_executable":"/worker"}"#.utf8)
+        let decodedBundled = try JSONDecoder().decode(SystemAudioRuntime.self, from: bundled)
+        precondition(decodedBundled.worker_executable == "/worker")
 
         // Cross-component contract: capability gate, capture-host selection, v1 unchanged request.
         for (configured, supported) in [(false, false), (true, false), (true, true)] {

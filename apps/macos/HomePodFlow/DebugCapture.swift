@@ -173,12 +173,25 @@ import Darwin
             state.selectedDeviceID = state.draftLayout.devices.first?.id
         }
         if arguments.contains("--selected-mini") {
-            state.selectedDeviceID = state.draftLayout.devices.first(where: { $0.kind == .mini })?.id
+            state.selectedDeviceID = state.draftLayout.devices.first(where: { $0.kind.form == .mini })?.id
         }
         if arguments.contains("--capture-directory"),
            !arguments.contains("--capture-empty-layout"),
            state.visualDemo, !state.isRunning {
             state.setRunning(true)
+        }
+        if arguments.contains("--capture-all-finishes") {
+            // Screenshot helper: every finish side by side, so the asset
+            // catalogue can be eyeballed without opening the picker.
+            let kinds = SpeakerKind.menuChoices
+            state.draftLayout = RoomLayout(
+                devices: kinds.enumerated().map { index, kind in
+                    RoomDevice(name: kind.displayName,
+                               position: .init(x: 0.1 + 0.1 * Double(index), y: 0.42),
+                               kind: kind,
+                               role: .front)
+                },
+                listener: .init(x: 0.5, y: 0.85))
         }
         if arguments.contains("--moved-layout"), !state.draftLayout.devices.isEmpty {
             state.draftLayout.devices[0].position = .init(x: 0.67, y: 0.38)

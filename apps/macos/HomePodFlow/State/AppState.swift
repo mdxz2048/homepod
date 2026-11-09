@@ -12,6 +12,7 @@ private struct StoredPreferences: Codable {
 @Observable @MainActor final class AppState {
     let worker = WorkerStore()
     let systemAudio: SystemAudioStore
+    let audioComponent: AudioComponentService
     private var storedMode: PlaybackMode
     var mode: PlaybackMode {
         get { storedMode }
@@ -23,6 +24,7 @@ private struct StoredPreferences: Codable {
         set {
             storedVolume = Self.bounded(newValue, 0...100, fallback: 15)
             persist(); systemAudio.setVolume(storedVolume)
+            systemAudio.setSystemOutputVolume(storedVolume)
         }
     }
     private var storedAVOffsetMS: Double
@@ -45,6 +47,9 @@ private struct StoredPreferences: Codable {
     var notice = "尚未配置音箱 · 添加发现的设备并应用布局后即可开启系统音频。"
     var sessionControlsLocked: Bool { systemAudio.desiredEnabled || systemAudio.hasActiveSession || systemAudio.isBusy }
     var layoutEditable: Bool { mode == .cinema && !sessionControlsLocked }
+    /// Removing a saved speaker is allowed in either playback mode. A powered-
+    /// off speaker must not force the user to switch to cinema mode first.
+    var canRemoveDevice: Bool { !sessionControlsLocked }
     var previewLayout: RoomLayout { layout }
     var hasUnsavedLayout: Bool { draftLayout != layout }
     var deviceCount: Int { layout.devices.count }
@@ -55,9 +60,10 @@ private struct StoredPreferences: Codable {
     private static let storageKey = "homepod-flow.preferences.v1"
 
     init(defaults: UserDefaults = .standard, service: (any RouterService)? = nil, visualDemo: Bool = false,
-         systemAudio: SystemAudioStore? = nil) {
+         systemAudio: SystemAudioStore? = nil, audioComponent: AudioComponentService? = nil) {
         self.defaults = defaults
         self.systemAudio = systemAudio ?? SystemAudioStore()
+        self.audioComponent = audioComponent ?? AudioComponentService()
         self.visualDemo = visualDemo
         let router = service ?? DemoRouterService()
         self.service = router
@@ -80,6 +86,22 @@ private struct StoredPreferences: Codable {
         self.systemAudio.selectedDeviceIDs = Set(restoredLayout.devices.compactMap(\.host))
         if visualDemo { notice = "界面演示：布局与参数仅保存在本机，未应用到音箱。" }
         else if !restoredLayout.devices.isEmpty { notice = "已恢复保存的音箱布局 · 尚未连接或开始采集。" }
+        self.audioComponent.refresh()
+        self.systemAudio.onSystemVolumeChanged = { [weak self] value, muted in
+            self?.systemVolumeDidChange(value, muted: muted)
+        }
+        self.systemAudio.recoverStaleRouteIfNeeded()
+    }
+
+    /// The virtual device is the system's volume authority while Flow owns the
+    /// output. Update the menu slider from the hardware value, but do not
+    /// overwrite the saved level with a temporary mute value.
+    private func systemVolumeDidChange(_ value: Double, muted: Bool) {
+        guard !muted else { return }
+        let bounded = Self.bounded(value, 0...100, fallback: storedVolume)
+        guard abs(bounded - storedVolume) > 0.01 else { return }
+        storedVolume = bounded
+        persist()
     }
 
     func setRunning(_ running: Bool) {
@@ -91,7 +113,7 @@ private struct StoredPreferences: Codable {
         statusText = result.message
     }
     func applyLayout() {
-        guard layoutEditable else { return }
+        guard canRemoveDevice else { return }
         guard !sessionControlsLocked else {
             notice = "请先停止系统音频或等待设备操作完成，再保存布局。"; return
         }
@@ -209,14 +231,20 @@ private struct StoredPreferences: Codable {
     }
 
     func removeDevice(_ id: UUID) {
-        guard layoutEditable, !systemAudio.hasActiveSession,
+        guard canRemoveDevice, !systemAudio.hasActiveSession,
               let device = draftLayout.devices.first(where: { $0.id == id }) else { return }
         if let host = device.host { unconfirmedSpeakerHosts.remove(host) }
-        draftLayout.devices.removeAll { $0.id == id }
+        var updated = storedDraftLayout
+        updated.devices.removeAll { $0.id == id }
+        storedDraftLayout = updated
         if selectedDeviceID == id { selectedDeviceID = nil }
     }
 
     func startSystemAudio() async {
+        guard audioComponent.allowsStart else {
+            notice = audioComponent.snapshot.message
+            return
+        }
         let requestedLayout = layout
         let hosts = Set(requestedLayout.devices.compactMap(\.host))
         guard !hosts.isEmpty, hosts.count == requestedLayout.devices.count, hosts.count <= 8 else {
@@ -252,6 +280,7 @@ private struct StoredPreferences: Codable {
         persist()
         systemAudio.selectedDeviceIDs = Set(resolved.devices.compactMap(\.host))
         notice = "正在准备系统音频与保存的音箱…"
+        systemAudio.setSystemOutputVolume(volume)
         handedOff = true
         await systemAudio.start(mode: mode, volume: volume)
         notice = systemAudio.statusText

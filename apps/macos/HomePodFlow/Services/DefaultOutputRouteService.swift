@@ -13,6 +13,11 @@ enum FlowVirtualDevice {
 @MainActor protocol DefaultOutputControlling: AnyObject {
     /// UID of the current default output device, or nil when unavailable.
     func currentDefaultOutputUID() -> String?
+    /// Whether Core Audio currently reports the device as running somewhere
+    /// (any client has live IO). nil means the property is unavailable.
+    /// Used only to observe the asynchronous effect of a route change; it
+    /// never gates the default-output write itself.
+    func isDeviceRunning(uid: String) -> Bool?
     /// Sets the default output by UID and verifies with a read-back.
     /// Returns true when the read-back confirms the requested UID became default.
     func setDefaultOutput(uid: String) throws -> Bool
@@ -27,6 +32,7 @@ enum DefaultOutputRouteError: Error, LocalizedError, Equatable {
     case noOutputCapability(String)
     case setFailed(Int32)
     case readbackUnverified
+    case switchNotConfirmed(String)
 
     var errorDescription: String? {
         switch self {
@@ -35,6 +41,8 @@ enum DefaultOutputRouteError: Error, LocalizedError, Equatable {
         case .noOutputCapability(let uid): "目标设备无输出能力：\(uid)"
         case .setFailed(let status): "写入默认输出失败（\(status)）"
         case .readbackUnverified: "默认输出回读校验未通过"
+        case .switchNotConfirmed(let uid):
+            "Mac 默认输出未在限定时间内切换到 \(uid)，请稍后重试"
         }
     }
 }
@@ -46,6 +54,7 @@ enum DefaultOutputRouteError: Error, LocalizedError, Equatable {
     func setDefaultOutputDevice(_ device: AudioObjectID) throws
     func deviceUIDMap() -> [AudioObjectID: String]
     func outputStreamCount(_ device: AudioObjectID) -> Int?
+    func isRunning(_ device: AudioObjectID) -> Bool?
 }
 
 /// Production CoreAudio access. UID lookup never reads friendly device names,
@@ -94,6 +103,17 @@ enum DefaultOutputRouteError: Error, LocalizedError, Equatable {
         return Int(size) / MemoryLayout<AudioObjectID>.size
     }
 
+    func isRunning(_ device: AudioObjectID) -> Bool? {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioDevicePropertyDeviceIsRunningSomewhere,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain)
+        var running: UInt32 = 0
+        var size = UInt32(MemoryLayout<UInt32>.size)
+        let status = AudioObjectGetPropertyData(device, &address, 0, nil, &size, &running)
+        return status == noErr ? running != 0 : nil
+    }
+
     private func allDevices() -> [AudioObjectID] {
         var address = AudioObjectPropertyAddress(
             mSelector: kAudioHardwarePropertyDevices,
@@ -139,6 +159,11 @@ enum DefaultOutputRouteError: Error, LocalizedError, Equatable {
     func currentDefaultOutputUID() -> String? {
         guard let device = hardware.defaultOutputDevice else { return nil }
         return hardware.deviceUIDMap()[device]
+    }
+
+    func isDeviceRunning(uid: String) -> Bool? {
+        guard let device = device(byUID: uid) else { return nil }
+        return hardware.isRunning(device)
     }
 
     func setDefaultOutput(uid: String) throws -> Bool {

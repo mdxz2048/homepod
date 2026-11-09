@@ -2,7 +2,9 @@
 # Single-app packaging for HomePod Flow: embed the two signed capture hosts into
 # HomePod Flow.app/Contents/Helpers/{TapCaptureHost,VirtualCaptureHost}.app, set
 # LSUIElement for them, and re-sign children first then the parent last with the
-# same ad-hoc default. Never uses codesign --deep as a signing strategy; verification
+# same identity. CODE_SIGN_IDENTITY defaults to "-" (ad-hoc); a release build can
+# pass "Developer ID Application: ...". Never uses codesign --deep as a signing
+# strategy; verification
 # uses codesign --verify --deep --strict on the staged result.
 #
 # Usage:
@@ -16,6 +18,9 @@
 # and only moved to the output path after verification passes. When output-app is
 # omitted the result is "<main-app>.packaged.app" next to the input.
 set -eu
+
+identity="${CODE_SIGN_IDENTITY:--}"
+[ -n "$identity" ] || { echo 'error: CODE_SIGN_IDENTITY is empty' >&2; exit 2; }
 
 if [ "$#" -lt 3 ] || [ "$#" -gt 4 ]; then
     echo "usage: $0 <main-app> <tap-capture-host.app> <virtual-capture-host.app> [output-app]" >&2
@@ -82,9 +87,9 @@ set_lsui_element() {
 set_lsui_element "$helpers/TapCaptureHost.app/Contents/Info.plist"
 set_lsui_element "$helpers/VirtualCaptureHost.app/Contents/Info.plist"
 
-codesign --force --sign - "$helpers/TapCaptureHost.app"
-codesign --force --sign - "$helpers/VirtualCaptureHost.app"
-codesign --force --sign - "$staged_app"
+codesign --force --sign "$identity" "$helpers/TapCaptureHost.app"
+codesign --force --sign "$identity" "$helpers/VirtualCaptureHost.app"
+codesign --force --sign "$identity" "$staged_app"
 
 codesign --verify --deep --strict "$staged_app"
 

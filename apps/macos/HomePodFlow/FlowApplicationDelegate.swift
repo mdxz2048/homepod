@@ -4,6 +4,22 @@ import AppKit
     weak var worker: WorkerStore?
     weak var systemAudio: SystemAudioStore?
     private var terminationPending = false
+    private var signalSources: [DispatchSourceSignal] = []
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // A plain SIGTERM (kill, logout script, our own installer) bypasses
+        // AppKit's termination path and would leave Core Audio on the virtual
+        // device. Route it through the normal cleanup instead.
+        for sig in [SIGTERM, SIGINT] {
+            signal(sig, SIG_IGN)
+            let source = DispatchSource.makeSignalSource(signal: sig, queue: .main)
+            source.setEventHandler {
+                NSApplication.shared.terminate(nil)
+            }
+            source.resume()
+            signalSources.append(source)
+        }
+    }
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         guard !terminationPending else { return .terminateLater }
         guard worker != nil || systemAudio != nil else { return .terminateNow }

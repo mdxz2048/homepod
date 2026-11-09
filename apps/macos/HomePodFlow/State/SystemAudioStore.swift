@@ -26,17 +26,26 @@ import Observation
 
     @ObservationIgnored private let serviceFactory: @MainActor () throws -> any SystemAudioRouting
     @ObservationIgnored private let retrySleep: @MainActor (Double) async throws -> Void
+    @ObservationIgnored private let routeSettleSleep: @MainActor (Double) async throws -> Void
+    @ObservationIgnored private let systemOutputVolume: any SystemOutputVolumeControlling
     @ObservationIgnored private let observesEnvironment: Bool
     @ObservationIgnored private var service: (any SystemAudioRouting)?
     @ObservationIgnored private var generation = UUID()
     @ObservationIgnored private var disconnecting = false
     @ObservationIgnored private var retryTask: Task<Void, Never>?
     @ObservationIgnored private var stableTask: Task<Void, Never>?
+    @ObservationIgnored private var routeObservationTask: Task<Void, Never>?
+    @ObservationIgnored private var systemVolumeObservationStarted = false
+    @ObservationIgnored var onSystemVolumeChanged: ((Double, Bool) -> Void)?
     @ObservationIgnored private var environmentController: SystemAudioEnvironmentController?
     @ObservationIgnored private let defaultOutput: any DefaultOutputControlling
     @ObservationIgnored private var defaultOutputRoutedForSession: String?
     @ObservationIgnored private var defaultOutputPreviousUID: String?
     @ObservationIgnored private var defaultOutputFailure: String?
+    @ObservationIgnored private var defaultOutputSettleWarning: String?
+    /// True while the default output is Flow but already-playing apps have not
+    /// been observed on the new route yet.
+    @ObservationIgnored private var audioMigrationPending = false
     private var session: String?
     private var sessionUsesVirtualInput = false
     private var activeMode: PlaybackMode = .synchronized
@@ -77,6 +86,34 @@ import Observation
         pendingVolume = value; volumeUpdating = true
         volumeStatus = isRunning ? "正在更新音量…" : "开始播放时应用当前音量"
         pumpVolume()
+    }
+
+    /// Writes the app's chosen level into the Flow HAL device so the system
+    /// volume keys, Control Center and the app slider share one value.
+    func setSystemOutputVolume(_ value: Double) {
+        guard value.isFinite, (0...100).contains(value) else { return }
+        let target = Float(value / 100)
+        _ = systemOutputVolume.setVolume(target)
+        if systemOutputVolume.readState()?.muted == true {
+            _ = systemOutputVolume.setMuted(false)
+        }
+    }
+
+    private func startSystemVolumeObservationIfNeeded() {
+        guard !systemVolumeObservationStarted else { return }
+        systemVolumeObservationStarted = systemOutputVolume.startObserving { [weak self] in
+            self?.systemOutputVolumeDidChange()
+        }
+    }
+
+    private func systemOutputVolumeDidChange() {
+        guard let state = systemOutputVolume.readState() else { return }
+        let target = state.muted ? 0 : Double(state.volume) * 100
+        let clamped = min(100, max(0, target))
+        if abs(activeVolume - clamped) > 0.05 {
+            setVolume(clamped)
+        }
+        onSystemVolumeChanged?(clamped, state.muted)
     }
 
     private func invalidateVolumeUpdates(clearStatus: Bool = true) {
@@ -127,10 +164,24 @@ import Observation
 
     init(serviceFactory: (@MainActor () throws -> any SystemAudioRouting)? = nil,
          retrySleep: (@MainActor (Double) async throws -> Void)? = nil,
+         routeSettleSleep: (@MainActor (Double) async throws -> Void)? = nil,
+         systemOutputVolume: (any SystemOutputVolumeControlling)? = nil,
          observesEnvironment: Bool = true,
          defaultOutput: (any DefaultOutputControlling)? = nil) {
         self.serviceFactory = serviceFactory ?? { try SystemRouterService.installed() }
         self.retrySleep = retrySleep ?? { delay in try await Task.sleep(for: .seconds(delay)) }
+        let settleSleep: @MainActor (Double) async throws -> Void
+        if let routeSettleSleep {
+            settleSleep = routeSettleSleep
+        } else if observesEnvironment {
+            settleSleep = { delay in try await Task.sleep(for: .seconds(delay)) }
+        } else {
+            settleSleep = { _ in }
+        }
+        self.routeSettleSleep = settleSleep
+        self.systemOutputVolume = systemOutputVolume ?? (observesEnvironment
+            ? (SystemOutputVolumeService() as any SystemOutputVolumeControlling)
+            : (SilentSystemOutputVolumeController() as any SystemOutputVolumeControlling))
         self.observesEnvironment = observesEnvironment
         // Hermetic stores (`observesEnvironment == false`) never touch the real
         // default output, so existing silent checks stay side-effect free.
@@ -165,6 +216,7 @@ import Observation
             try await router.connect()
             guard generation == token else { return }
             serviceReady = true; statusText = "服务已就绪 · 尚未开始采集或播放"
+            startSystemVolumeObservationIfNeeded()
         } catch {
             if generation == token { service = nil; serviceReady = false; statusText = error.localizedDescription }
         }
@@ -176,6 +228,7 @@ import Observation
         isBusy = true; lastDiscoverySucceeded = false; let token = generation
         scanning = true; discoveryFailure = nil
         defer { if generation == token { scanning = false } }
+        statusText = "正在查找音箱…"
         do {
             let result = try await service.request("scan", params: [:], session: nil, timeout: 20)
             guard generation == token else { return }
@@ -249,17 +302,39 @@ import Observation
     private func runSession(hosts: [String], intent: UUID) async {
         guard let service, serviceReady, desiredEnabled, recovery.intent == intent,
               !cleanupRequiresAttention, !sleeping, networkAvailable, session == nil, !disconnecting else { return }
-        // A previous session must not leave Flow as the default while the next
-        // negotiated latency write expects an idle driver.
         restoreDefaultOutputOwned()
         defaultOutputFailure = nil
+        defaultOutputSettleWarning = nil
         sessionUsesVirtualInput = service.runtime.virtual_capture_host != nil
-        let sid = UUID().uuidString; session = sid
-        invalidateVolumeUpdates(); outputCount = hosts.count
+        let sid = UUID().uuidString
         let token = generation
         isBusy = true; isRunning = false; lastFailure = nil; lastCleanupConfirmed = false
         lastResultPayload = [:]; recoveryPending = false
-        statusText = "正在准备系统音频 · 首次启动可能需要系统授权"
+        // The route is changed before the worker receives `start`, so capture
+        // never opens against a virtual device that is not yet the system
+        // default. The write itself is read-back verified; downstream audio
+        // clients are observed asynchronously below instead of blocking start.
+        if sessionUsesVirtualInput {
+            statusText = "正在切换 Mac 默认输出到 Flow…"
+            let routed = await prepareDefaultOutputForPlayback(owner: sid, intent: intent)
+            guard routed else {
+                if generation == token, session == nil { isBusy = false; isRunning = false }
+                return
+            }
+            startSystemVolumeObservationIfNeeded()
+        }
+        guard generation == token, desiredEnabled, recovery.intent == intent,
+              !cleanupRequiresAttention, !sleeping, networkAvailable,
+              session == nil, !disconnecting else {
+            restoreDefaultOutputOwned()
+            if generation == token { isBusy = false; isRunning = false }
+            return
+        }
+        session = sid
+        invalidateVolumeUpdates(); outputCount = hosts.count
+        statusText = sessionUsesVirtualInput
+            ? "Mac 默认输出已切到 Flow · 正在准备系统音频（首次可能需要授权）…"
+            : "正在准备系统音频 · 首次启动可能需要系统授权"
         let routes: [JSONValue] = hosts.enumerated().map { index, host in
             .object(["output_id": .integer(index), "channels": .array([.integer(0), .integer(1)]), "host": .string(host)])
         }
@@ -331,8 +406,24 @@ import Observation
     func requestStop() {
         revokePlaybackIntent()
         guard let sid = session else {
-            restoreDefaultOutputOwned()
-            if !cleanupRequiresAttention { statusText = "系统音频已停止" }
+            // A stop that arrives during pre-start routing has no worker
+            // session yet; hand the output back immediately.
+            if let restored = restoreDefaultOutputOwned() {
+                statusText = "正在切回 Mac 默认输出…"
+                Task { [weak self] in
+                    guard let self else { return }
+                    let confirmed = await self.confirmDefaultOutput(
+                        restored, timeout: Self.defaultOutputConfirmTimeout)
+                    if !confirmed, self.defaultOutputFailure == nil {
+                        self.defaultOutputFailure = "默认输出未在限定时间内切回 \(restored)"
+                    }
+                    guard !self.cleanupRequiresAttention else { return }
+                    self.statusText = self.defaultOutputFailure.map { "系统音频已停止 · \($0)" }
+                        ?? "系统音频已停止"
+                }
+            } else if !cleanupRequiresAttention {
+                statusText = defaultOutputFailure.map { "系统音频已停止 · \($0)" } ?? "系统音频已停止"
+            }
             return
         }
         Task { [weak self] in
@@ -343,26 +434,44 @@ import Observation
 
     private func stopSession() async {
         guard let service, let sid = session else {
-            restoreDefaultOutputOwned()
-            if !cleanupRequiresAttention { statusText = "系统音频已停止" }
+            if let restored = restoreDefaultOutputOwned() {
+                statusText = "正在切回 Mac 默认输出…"
+                let confirmed = await confirmDefaultOutput(
+                    restored, timeout: Self.defaultOutputConfirmTimeout)
+                if !confirmed, defaultOutputFailure == nil {
+                    defaultOutputFailure = "默认输出未在限定时间内切回 \(restored)"
+                }
+            }
+            if !cleanupRequiresAttention {
+                statusText = defaultOutputFailure.map { "系统音频已停止 · \($0)" } ?? "系统音频已停止"
+            }
             return
         }
         guard stoppingSession != sid else { return }
         stoppingSession = sid
         invalidateVolumeUpdates()
         defer { if stoppingSession == sid { stoppingSession = nil } }
-        let token = generation; statusText = "正在停止采集与音箱发送…"
+        let token = generation
+        if let restored = restoreDefaultOutputOwned() {
+            // Only tear the worker down once the Mac really is back on its own
+            // output; otherwise the two steps race and leave a silent gap.
+            statusText = "正在切回 Mac 默认输出…"
+            let confirmed = await confirmDefaultOutput(
+                restored, timeout: Self.defaultOutputConfirmTimeout)
+            if !confirmed, defaultOutputFailure == nil {
+                defaultOutputFailure = "默认输出未在限定时间内切回 \(restored)"
+            }
+        }
+        statusText = "正在停止采集与音箱发送…"
         do {
             let result = try await service.request("stop", params: ["session": .string(sid)], session: sid, timeout: 15)
             guard generation == token, session == nil || session == sid else { return }
             guard result.payload["cleanup_complete"]?.bool == true else { throw WorkerFailure.cleanupUnconfirmed }
             // start's terminal result remains the authoritative session-completion barrier.
-            restoreDefaultOutputOwned()
             statusText = defaultOutputFailure.map { "系统音频已停止 · \($0)" }
                 ?? "系统音频已停止 · 清理已确认"
         } catch {
             guard generation == token else { return }
-            restoreDefaultOutputOwned()
             lastCleanupConfirmed = false; cleanupRequiresAttention = true; recovery.block(); cancelTimers()
             statusText = error.localizedDescription
         }
@@ -391,6 +500,7 @@ import Observation
     }
 
     func prepareForTermination() async {
+        systemOutputVolume.stopObserving(); systemVolumeObservationStarted = false
         revokePlaybackIntent(); environmentController?.invalidate(); environmentController = nil
         await disconnect()
     }
@@ -439,6 +549,7 @@ import Observation
 
     private func cancelTimers() {
         retryTask?.cancel(); retryTask = nil; stableTask?.cancel(); stableTask = nil
+        routeObservationTask?.cancel(); routeObservationTask = nil
     }
     private func installEnvironmentControllerIfNeeded() {
         guard observesEnvironment, environmentController == nil else { return }
@@ -480,7 +591,7 @@ import Observation
         if scanning, event.session == nil, event.event == "error" {
             discoveryFailure = SystemSessionFailure(payload: event.payload); return
         }
-        guard event.session == session, let sid = session else { return }
+        guard event.session == session, session != nil else { return }
         if event.event == "error" {
             lastFailure = SystemSessionFailure(payload: event.payload)
             if event.payload["code"]?.string == "volume_failed" {
@@ -500,11 +611,9 @@ import Observation
         switch phase {
         case "preparing": statusText = "正在准备音箱与采集 · 尚未开始发送"
         case "capturing":
-            switchDefaultOutputForCurrentSessionIfNeeded(sid)
             guard desiredEnabled, stoppingSession == nil else { break }
             statusText = "正在采集系统音频并准备播放"
         case "streaming":
-            switchDefaultOutputForCurrentSessionIfNeeded(sid)
             guard desiredEnabled, stoppingSession == nil else { break }
             isRunning = true
             pumpVolume()
@@ -522,6 +631,7 @@ import Observation
             case .unknown:
                 statusText = activeMode == .cinema ? "影院模式当前同声退化" : "正在同步发送"
             }
+            refreshRouteSuffix()
             if stableTask == nil {
                 let intent = recovery.intent, sid = session
                 stableTask = Task { [weak self] in
@@ -536,58 +646,183 @@ import Observation
         }
     }
 
-    /// Sets the MEDIA default output to Flow exactly once per live virtual
-    /// session. Called from the first `capturing` state (fallback `streaming`),
-    /// never from start preflight, so a browser-triggered virtual device cannot
-    /// make the negotiated latency helper busy before its write.
-    private func switchDefaultOutputForCurrentSessionIfNeeded(_ sid: String) {
-        guard sessionUsesVirtualInput, desiredEnabled, session == sid, stoppingSession == nil,
-              !cleanupRequiresAttention, !disconnecting else { return }
-        guard defaultOutputRoutedForSession == nil else { return }
+    private static let defaultOutputObservationLimit = 1.5
+    /// Core Audio publishes a default-output change asynchronously, so the
+    /// route is polled until it is really in effect. A setter that returned
+    /// noErr is not evidence that the system applied the change.
+    private static let defaultOutputConfirmTimeout = 3.0
+    private static let defaultOutputPollInterval = 0.05
+    /// Survives a crash or SIGKILL so the next launch can hand the output back
+    /// to the device we took it from instead of leaving a silent virtual sink.
+    private static let routedFromKey = "homepod-flow.route.routedFromUID"
+
+    /// Startup self-heal. If a previous run died while Flow owned the default
+    /// output, Core Audio would stay pointed at a device nobody feeds, which
+    /// makes the Mac silent. Restore the device we borrowed it from.
+    func recoverStaleRouteIfNeeded() {
+        let stored = UserDefaults.standard.string(forKey: Self.routedFromKey)
+        guard let previous = stored else { return }
+        guard !desiredEnabled, !hasActiveSession, session == nil else { return }
+        defer { UserDefaults.standard.removeObject(forKey: Self.routedFromKey) }
+        guard defaultOutput.currentDefaultOutputUID() == FlowVirtualDevice.uid else { return }
+        _ = defaultOutput.restoreDefaultOutput(uid: previous)
+        defaultOutputRoutedForSession = nil
+        defaultOutputPreviousUID = nil
+        statusText = "已把 Mac 默认输出从上次未正常退出的 Flow 切回 \(previous)"
+    }
+
+    /// Bounded wait until Core Audio really reports `uid` as the default
+    /// output. Returns false if the system never published the change.
+    private func confirmDefaultOutput(_ uid: String, timeout: Double) async -> Bool {
+        if defaultOutput.currentDefaultOutputUID() == uid { return true }
+        var waited = 0.0
+        while waited < timeout {
+            do { try await routeSettleSleep(Self.defaultOutputPollInterval) } catch { return false }
+            waited += Self.defaultOutputPollInterval
+            if defaultOutput.currentDefaultOutputUID() == uid { return true }
+        }
+        return false
+    }
+
+    /// Changes the MEDIA default output before the worker is asked to start
+    /// capture. The Core Audio property write is synchronous and read-back
+    /// verified; already-running media clients can take a little longer to
+    /// reopen their streams, so that migration is observed without delaying
+    /// the capture start (delaying it would make the driver busy and prevent
+    /// the negotiated latency write).
+    private func prepareDefaultOutputForPlayback(owner: String, intent: UUID) async -> Bool {
+        guard sessionUsesVirtualInput else { return true }
+        guard defaultOutputRoutedForSession == nil else { return true }
         let flow = FlowVirtualDevice.uid
         let previousUID = defaultOutput.currentDefaultOutputUID()
         if previousUID == flow {
             // Already routed; nothing to restore later, and the user's manual
             // Flow selection (or an inherited state) is left untouched.
-            defaultOutputRoutedForSession = sid
+            defaultOutputRoutedForSession = owner
             defaultOutputPreviousUID = nil
-            return
+            return true
         }
+        guard let previousUID else {
+            let note = "默认输出切换失败：无法读取当前默认输出"
+            defaultOutputFailure = note
+            statusText = note
+            revokePlaybackIntent()
+            return false
+        }
+        let sourceWasRunning = defaultOutput.isDeviceRunning(uid: previousUID) ?? false
         do {
-            guard previousUID != nil else { throw DefaultOutputRouteError.currentOutputUnavailable }
             let verified = try defaultOutput.setDefaultOutput(uid: flow)
             guard verified else { throw DefaultOutputRouteError.readbackUnverified }
             defaultOutputPreviousUID = previousUID
-            defaultOutputRoutedForSession = sid
+            defaultOutputRoutedForSession = owner
+            UserDefaults.standard.set(previousUID, forKey: Self.routedFromKey)
+            // Wait until the system really published the new route. Only then
+            // does the switch count as done; opening capture against a device
+            // that is not yet the default would send audio to the wrong place.
+            statusText = "正在切换 Mac 默认输出到 Flow…"
+            let confirmed = await confirmDefaultOutput(
+                flow, timeout: Self.defaultOutputConfirmTimeout)
+            guard desiredEnabled, recovery.intent == intent else {
+                restoreDefaultOutputOwned()
+                return false
+            }
+            guard confirmed else { throw DefaultOutputRouteError.switchNotConfirmed(flow) }
+            if sourceWasRunning {
+                audioMigrationPending = true
+                observeDefaultOutputEffect(previousUID: previousUID, owner: owner)
+            }
+            statusText = "Mac 默认输出已切到 Flow · 正在启动音箱"
+            return true
         } catch {
+            if !desiredEnabled || recovery.intent != intent {
+                restoreDefaultOutputOwned()
+                return false
+            }
             // A half-applied write must not leave Flow as the default.
-            if defaultOutput.currentDefaultOutputUID() == flow, let previousUID {
+            if defaultOutput.currentDefaultOutputUID() == flow {
                 _ = defaultOutput.restoreDefaultOutput(uid: previousUID)
             }
+            defaultOutputRoutedForSession = nil
+            defaultOutputPreviousUID = nil
             let note = "默认输出切换未验证：\(error.localizedDescription)"
             defaultOutputFailure = note
-            statusText = note + " · 正在停止本次播放"
+            statusText = note
             revokePlaybackIntent()
-            let active = session
-            Task { [weak self] in
-                guard let self, self.session == active else { return }
-                await self.stopSession()
+            return false
+        }
+    }
+
+    /// Post-start observation only. Some apps keep rendering to the old
+    /// device for a few hundred milliseconds after the system default changes.
+    /// Starting capture early loses nothing, but a truthful warning is useful
+    /// when the migration is not observed within a bounded window.
+    private func observeDefaultOutputEffect(previousUID: String, owner: String) {
+        routeObservationTask?.cancel()
+        routeObservationTask = Task { [weak self] in
+            guard let self else { return }
+            var waited = 0.0
+            while waited < Self.defaultOutputObservationLimit {
+                if Task.isCancelled || self.defaultOutputRoutedForSession != owner { return }
+                if self.defaultOutput.currentDefaultOutputUID() != FlowVirtualDevice.uid { return }
+                // The previous output going idle is the best available signal
+                // that already-running media clients reopened on the new route.
+                if self.defaultOutput.isDeviceRunning(uid: previousUID) != true {
+                    self.audioMigrationPending = false
+                    self.refreshRouteSuffix()
+                    return
+                }
+                do { try await self.routeSettleSleep(0.1) } catch { return }
+                waited += 0.1
             }
+            guard !Task.isCancelled, self.defaultOutputRoutedForSession == owner else { return }
+            let warning = "默认输出已切到 Flow，但旧输出设备仍在运行（音频客户端可能尚未迁移）"
+            self.defaultOutputSettleWarning = warning
+            self.audioMigrationPending = false
+            if self.isRunning, !self.statusText.contains(warning) {
+                self.statusText += " · \(warning)"
+            }
+        }
+    }
+
+    private static let migrationPendingSuffix = " · 正在等待已打开的应用迁移到 Flow…"
+
+    /// Keeps the status line honest while the audio engine finishes moving.
+    private func refreshRouteSuffix() {
+        var base = statusText
+        for suffix in [Self.migrationPendingSuffix] where base.hasSuffix(suffix) {
+            base.removeLast(suffix.count)
+        }
+        statusText = base
+        if let warning = defaultOutputSettleWarning {
+            if !statusText.contains(warning) { statusText += " · \(warning)" }
+        } else if audioMigrationPending {
+            statusText += Self.migrationPendingSuffix
         }
     }
 
     /// Restores the previous default output only while Flow still owns it.
     /// A user who manually picked another device during the session keeps it.
-    private func restoreDefaultOutputOwned() {
-        guard let _ = defaultOutputRoutedForSession else { return }
+    /// Returns the UID it handed the output back to, or nil when nothing was
+    /// owned (or the user had already moved the output elsewhere).
+    @discardableResult
+    private func restoreDefaultOutputOwned() -> String? {
+        routeObservationTask?.cancel(); routeObservationTask = nil
+        defaultOutputSettleWarning = nil
+        audioMigrationPending = false
+        guard defaultOutputRoutedForSession != nil else { return nil }
         defaultOutputRoutedForSession = nil
         guard let previous = defaultOutputPreviousUID else {
             defaultOutputPreviousUID = nil
-            return
+            return nil
         }
         defaultOutputPreviousUID = nil
-        guard defaultOutput.currentDefaultOutputUID() == FlowVirtualDevice.uid else { return }
-        _ = defaultOutput.restoreDefaultOutput(uid: previous)
+        guard defaultOutput.currentDefaultOutputUID() == FlowVirtualDevice.uid else { return nil }
+        let restored = defaultOutput.restoreDefaultOutput(uid: previous)
+        UserDefaults.standard.removeObject(forKey: Self.routedFromKey)
+        if !restored, defaultOutput.currentDefaultOutputUID() == FlowVirtualDevice.uid {
+            defaultOutputFailure = "默认输出恢复失败：无法切回 \(previous)"
+        }
+        return previous
     }
 
     /// User-facing plan vs. report difference. This is a nominal-vs-read
@@ -603,7 +838,9 @@ import Observation
 
 /// Hermetic stores are never allowed to probe or move a real default output.
 @MainActor private final class SilentDefaultOutputController: DefaultOutputControlling {
-    func currentDefaultOutputUID() -> String? { "silent-default-output" }
-    func setDefaultOutput(uid: String) throws -> Bool { true }
-    func restoreDefaultOutput(uid: String) -> Bool { true }
+    private var current = "silent-default-output"
+    func currentDefaultOutputUID() -> String? { current }
+    func isDeviceRunning(uid: String) -> Bool? { nil }
+    func setDefaultOutput(uid: String) throws -> Bool { current = uid; return true }
+    func restoreDefaultOutput(uid: String) -> Bool { current = uid; return true }
 }

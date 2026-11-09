@@ -8,8 +8,16 @@ struct SystemAudioRuntime: Codable, Sendable {
     var virtual_capture_host: String? = nil
     var latency_control: String? = nil
     var latency_ms: Double? = nil
+    /// Frozen PyInstaller worker inside the App bundle. When present, the
+    /// service launches this executable directly instead of `python -m`.
+    var worker_executable: String? = nil
     func validate() throws {
         try WorkerRuntime(python: python, project: project, library: library).validate()
+        if let path = worker_executable {
+            guard path.hasPrefix("/"), FileManager.default.isExecutableFile(atPath: path) else {
+                throw WorkerFailure.unavailable("内置音频服务工作进程不可执行")
+            }
+        }
         guard capture_host.hasPrefix("/"), FileManager.default.isExecutableFile(atPath: capture_host) else {
             throw WorkerFailure.unavailable("系统音频采集组件未安装")
         }
@@ -143,18 +151,68 @@ extension SystemAudioRouting {
         guard let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
             throw WorkerFailure.unavailable("无法定位本机运行环境")
         }
-        let url = support.appendingPathComponent("HomePod Flow/runtime.json")
-        var runtime = try JSONDecoder().decode(SystemAudioRuntime.self, from: Data(contentsOf: url))
         let helpers = Bundle.main.bundleURL
             .appendingPathComponent("Contents")
             .appendingPathComponent(SystemAudioRuntime.PackagedHost.helpersDirectory)
+        // A release App carries its frozen worker, project, core dylib and
+        // latency helper in Contents/Resources/Runtime. An explicit external
+        // runtime.json remains available for development overrides.
+        if ProcessInfo.processInfo.environment["HOMEPODFLOW_USE_EXTERNAL_RUNTIME"] != "1",
+           var bundled = try bundledRuntime(in: Bundle.main.resourceURL) {
+            try bundled.preferEmbeddedCaptureHosts(in: helpers)
+            return SystemRouterService(runtime: bundled)
+        }
+        let url = support.appendingPathComponent("HomePod Flow/runtime.json")
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            throw WorkerFailure.unavailable(
+                "本机运行环境未配置：缺少内置 Runtime 和 runtime.json。")
+        }
+        var runtime = try JSONDecoder().decode(SystemAudioRuntime.self, from: Data(contentsOf: url))
         try runtime.preferEmbeddedCaptureHosts(in: helpers)
         return SystemRouterService(runtime: runtime)
     }
+
+    private struct BundledRuntimeManifest: Decodable {
+        let schemaVersion: Int
+        let workerExecutable: String
+        let project: String
+        let library: String
+        let latencyControl: String?
+    }
+
+    nonisolated static func bundledRuntime(in resources: URL?) throws -> SystemAudioRuntime? {
+        guard let resources else { return nil }
+        let root = resources.appendingPathComponent("Runtime", isDirectory: true)
+        let manifestURL = root.appendingPathComponent("manifest.json")
+        guard FileManager.default.fileExists(atPath: manifestURL.path) else { return nil }
+        let manifest = try JSONDecoder().decode(BundledRuntimeManifest.self,
+                                                from: Data(contentsOf: manifestURL))
+        guard manifest.schemaVersion == 1 else {
+            throw WorkerFailure.unavailable("内置运行环境版本不受支持")
+        }
+        func resolved(_ relative: String) -> String {
+            root.appendingPathComponent(relative).path
+        }
+        let worker = resolved(manifest.workerExecutable)
+        return SystemAudioRuntime(python: worker,
+                                  project: resolved(manifest.project),
+                                  library: resolved(manifest.library),
+                                  capture_host: "",
+                                  virtual_capture_host: nil,
+                                  latency_control: manifest.latencyControl.map { resolved($0) },
+                                  latency_ms: nil,
+                                  worker_executable: worker)
+    }
     func connect() async throws {
         try runtime.validate()
-        try client.launch(executable: URL(fileURLWithPath: runtime.python),
-            arguments: ["-u", "-m", "adapters.system_worker"], directory: URL(fileURLWithPath: runtime.project))
+        if let worker = runtime.worker_executable {
+            try client.launch(executable: URL(fileURLWithPath: worker),
+                arguments: [], directory: URL(fileURLWithPath: runtime.project))
+        } else {
+            try client.launch(executable: URL(fileURLWithPath: runtime.python),
+                arguments: ["-u", "-m", "adapters.system_worker"],
+                directory: URL(fileURLWithPath: runtime.project))
+        }
         do {
             let hello = try await client.request("hello")
             guard hello.payload["protocol_version"]?.number == 1,
