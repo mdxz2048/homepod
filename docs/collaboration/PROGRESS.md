@@ -9,7 +9,7 @@
 
 驱动 dev/production/single-device 检查、27 项 Python 延迟测试、8 项 Swift helper 测试、默认输出/虚拟输入/会话检查及 App Release 构建通过。用户已授权并执行清理安装，当前 /Applications/HomePod Flow.app 为自包含0.3.2/build3，签名及App/driver二进制核对通过，coreaudiod已重新加载。
 
-真实HAL验证：空闲0→2000ms通过；静音IO占用时2000→1500ms提交与两scope回读通过，revision4→5；退出/终止客户端后idle，无遗留busy。现已恢复2000ms，revision6。该值为驱动验证后保留值，后续Flow激活仍按AirPlay协商更新；不冒充本轮已测声学同步。浏览器实际对口型与App真实菜单交互仍待用户复验。安装包/大部分旧构建已删除，5个管理员所有的旧备份/临时目录待最后清理命令完成。
+真实HAL验证：空闲0→2000ms通过；静音IO占用时2000→1500ms提交与两scope回读通过，revision4→5；退出/终止客户端后idle，无遗留busy。现已恢复2000ms，revision6。该值为驱动验证后保留值，后续Flow激活仍按AirPlay协商更新；不冒充本轮已测声学同步。浏览器实际对口型与App真实菜单交互仍待用户复验。安装包与旧构建已删除；用户完成最后清理后再次核对，5个管理员所有的旧备份/临时目录均已不存在，cleanup-result 为 CLEANUP_COMPLETE。最终复核延迟2000ms/revision6，当前IO运行中，busy与实际运行状态一致。
 
 
 更新：2026-11-07（Asia/Shanghai）。当前源码基线 `b343216`，分支 `codex/virtual-audio-mvp`。

@@ -46,3 +46,7 @@ sudo -n 检查显示需要密码，尚未替换系统 App/驱动或重启 coreau
 - 恢复2000ms/revision6；另一个静音客户端被终止后running=false/hfls=idle，没有遗留busy。
 - 已启动安装路径App（PID22997），未自动采集/播放。本轮未验证真实菜单开关或最终浏览器声学同步。
 - 删除Downloads旧pkg、Desktop旧dmg、本次pkg/dmg、生成运行时/driver/host/Xcode构建及历史旧bundle共21项；剩5个root旧目录通过finish-cleanup脚本等待用户完成。不删除源码和个人布局配置。
+
+## 最终清理复核
+
+用户执行finish-cleanup后，完成标记CLEANUP_COMPLETE，5个指定旧目录逐一核对均不存在；安装包此前已删除。当前正式App仍为0.3.2，HAL延迟2000ms/revision6；IO正在运行，hfls=busy与实际占用一致，不是此前空闲遗留busy。浏览器声学效果仍需用户播放反馈。

@@ -4,7 +4,7 @@
 
 已拉取远端ae6c844并合并，修复提交eedb939/f6b0a93。当前安装路径 /Applications/HomePod Flow.app，版本0.3.2/build3，自包含运行时。用户执行清理安装并补装，签名和二进制比对通过，coreaudiod重新加载（原kickstart被SIP拒绝，正常TERM后由launchd重启成功）。真实HAL已通过空闲延迟更新及静音IO占用中2000→1500ms host事务；客户端退出后idle；现保留2000ms/revision6。App开关改用默认输出回读确认状态，离线延迟/失败恢复检查通过，真实菜单/浏览器声学效果仍待复验。
 
-PackageKit曾把App重定位至构建目录，component plist已禁用relocation；已补装到正确路径。用户要求删除旧版和安装包：pkg/dmg及大部分旧构建已删，等待finish-cleanup-20261113.sh最后清理5个root旧目录；个人布局和源码保留。详情见reports/Latency-and-route-fix-2026-11-13.md。
+PackageKit曾把App重定位至构建目录，component plist已禁用relocation；已补装到正确路径。用户要求删除旧版和安装包：pkg/dmg、旧构建及5个root旧目录均已删除，finish-cleanup完成标记及路径核对通过；个人布局和源码保留。详情见reports/Latency-and-route-fix-2026-11-13.md。
 
 
 ## 2026-11-07 最新接续（优先于下文历史记录）
