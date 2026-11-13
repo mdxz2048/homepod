@@ -125,7 +125,19 @@ spec="$work/spec"
 
 /bin/mkdir -p "$output/lib" "$output/bin"
 /usr/bin/ditto --norsrc --noextattr "$dist/$name" "$output/$name"
-/usr/bin/ditto --norsrc --noextattr "$project" "$output/project"
+# Copy only runtime modules. The source checkout may contain this very output
+# under build/; copying the whole checkout recurses into itself and also leaks
+# development files into the shipped runtime.
+/usr/bin/python3 - "$project" "$output/project" <<'PYCODE'
+import pathlib
+import shutil
+import sys
+source, target = map(pathlib.Path, sys.argv[1:])
+target.mkdir(parents=True, exist_ok=True)
+for module in ("adapters", "bindings", "processing"):
+    shutil.copytree(source / module, target / module,
+                    ignore=shutil.ignore_patterns("build", ".build", "__pycache__", ".git", "*.pyc"))
+PYCODE
 /usr/bin/ditto --norsrc --noextattr "$library" "$output/lib/libflow_bridge.dylib"
 /usr/bin/ditto --norsrc --noextattr "$latency_control" "$output/bin/hflctl"
 /usr/bin/find "$output" -type d -exec /bin/chmod 755 {} +

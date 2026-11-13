@@ -124,7 +124,7 @@ func usage() -> String {
           and contract consistency. Prints JSON. Exits non-zero on any error.
 
       hflctl set-ms MILLISECONDS [--expect-revision N]
-          Explicit latency write, 0...3000 ms. Requires no running IO, checks
+          Explicit latency write, 0...3000 ms. Requests host IO quiescence, checks
           the expected hflr revision before writing, converts ms to frames at
           the current rate, writes, then waits up to 2s for the host device
           configuration transaction to commit and verifies read-back plus both
@@ -144,7 +144,7 @@ func usage() -> String {
 
     SAFETY
       - No default device, no other UID, no rate change, no install/delete.
-      - set-ms/rollback fail closed when IO is running, the revision moved,
+      - set-ms/rollback fail closed when the revision moved,
         the rate changed, the host rejects the transaction (write_rejected),
         or the commit is not confirmed within the bounded wait (commit_timeout).
       - Exit codes: 0 verified success, 1 any failure, 2 usage error.

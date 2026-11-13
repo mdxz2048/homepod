@@ -993,10 +993,20 @@ static void CheckClockAndIO(void) {
     UInt32 revisionBefore = ReadCustom64(first->deviceID, kMCLatencyRevision);
     UInt32 latencyBefore = ReadCustom32(first->deviceID, kMCLatencyFrames);
     assert(ReadStatus(first->deviceID) == MCLatencyStatusBusy);
-    assert(SetCustom32(first->deviceID, kMCLatencyFrames, latencyBefore + 1) ==
-           kAudioHardwareIllegalOperationError);
+    gRequestResult = noErr;
+    assert(SetCustom32(first->deviceID, kMCLatencyFrames, latencyBefore + 1) == noErr);
     assert(ReadCustom64(first->deviceID, kMCLatencyRevision) == revisionBefore);
-    assert(gState[0].pendingKind == MCPendingNone);
+    assert(ReadStatus(first->deviceID) == MCLatencyStatusPending);
+    UInt64 activeAction = gState[0].pendingAction;
+    /* Never mutate the live timeline: only the host can quiesce then commit. */
+    assert(PerformChange(Driver(), first->deviceID, activeAction, NULL) ==
+           kAudioHardwareIllegalOperationError);
+    assert(StopIO(Driver(), first->deviceID, 3000) == noErr);
+    assert(PerformChange(Driver(), first->deviceID, activeAction, NULL) == noErr);
+    assert(ReadCustom32(first->deviceID, kMCLatencyFrames) == latencyBefore + 1);
+    assert(ReadCustom64(first->deviceID, kMCLatencyRevision) == revisionBefore + 1);
+    latencyBefore += 1;
+    assert(StartIO(Driver(), first->deviceID, 3000) == noErr);
     if (MC_DEVICE_COUNT > 1) {
         const MCDeviceInfo *second = &gDevices[1];
         UInt32 secondRevision = ReadCustom64(second->deviceID, kMCLatencyRevision);
@@ -1016,7 +1026,14 @@ static void CheckClockAndIO(void) {
         assert(ReadStatus(second->deviceID) == MCLatencyStatusIdle);
         assert(ReadCustom32(first->deviceID, kMCLatencyFrames) == latencyBefore);
     }
-    assert(StopIO(Driver(), first->deviceID, 3000) == noErr);
+    /* Client removal cleans orphan IO, stays idempotent, and preserves peers. */
+    assert(StartIO(Driver(), first->deviceID, 3001) == noErr);
+    AudioServerPlugInClientInfo removed = {.mClientID = 3000};
+    assert(RemoveClient(Driver(), first->deviceID, &removed) == noErr);
+    assert(RemoveClient(Driver(), first->deviceID, &removed) == noErr);
+    assert(ReadStatus(first->deviceID) == MCLatencyStatusBusy);
+    assert(StopIO(Driver(), first->deviceID, 3001) == noErr);
+    assert(ReadStatus(first->deviceID) == MCLatencyStatusIdle);
 }
 
 static void CheckScopeStrictness(void) {

@@ -146,7 +146,7 @@ fi
 packaged_app="$build_root/HomePod Flow.app"
 /bin/rm -rf "$packaged_app"
 CODE_SIGN_IDENTITY="$identity" \
-    "$repo_root/apps/macos/scripts/package-embedded-hosts.sh" \
+    bash "$repo_root/apps/macos/scripts/package-embedded-hosts.sh" \
     "$built_app" \
     "$hosts_root/TapCaptureHost.app" \
     "$hosts_root/VirtualCaptureHost.app" \

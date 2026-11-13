@@ -6,6 +6,9 @@ import Observation
     private(set) var serviceReady = false
     private(set) var isBusy = false
     private(set) var isRunning = false
+    /// Confirmed default-output state, distinct from the user's pending intent.
+    private(set) var switchConfirmedOn = false
+    private(set) var routeSwitchInProgress = false
     private(set) var statusText = "系统音频服务未连接"
     private(set) var devices: [DiscoveredDevice] = []
     private(set) var lastDiscoverySucceeded = false
@@ -433,6 +436,8 @@ import Observation
     }
 
     private func stopSession() async {
+        routeSwitchInProgress = true
+        defer { routeSwitchInProgress = false }
         guard let service, let sid = session else {
             if let restored = restoreDefaultOutputOwned() {
                 statusText = "正在切回 Mac 默认输出…"
@@ -616,6 +621,7 @@ import Observation
         case "streaming":
             guard desiredEnabled, stoppingSession == nil else { break }
             isRunning = true
+            if !sessionUsesVirtualInput { switchConfirmedOn = true }
             pumpVolume()
             switch ActualMode(event.payload["actual_mode"]?.string) {
             case .channelDistribution:
@@ -674,6 +680,11 @@ import Observation
     /// Bounded wait until Core Audio really reports `uid` as the default
     /// output. Returns false if the system never published the change.
     private func confirmDefaultOutput(_ uid: String, timeout: Double) async -> Bool {
+        defer {
+            if defaultOutput.currentDefaultOutputUID() == uid {
+                switchConfirmedOn = uid == FlowVirtualDevice.uid
+            }
+        }
         if defaultOutput.currentDefaultOutputUID() == uid { return true }
         var waited = 0.0
         while waited < timeout {
@@ -692,6 +703,8 @@ import Observation
     /// the negotiated latency write).
     private func prepareDefaultOutputForPlayback(owner: String, intent: UUID) async -> Bool {
         guard sessionUsesVirtualInput else { return true }
+        routeSwitchInProgress = true
+        defer { routeSwitchInProgress = false }
         guard defaultOutputRoutedForSession == nil else { return true }
         let flow = FlowVirtualDevice.uid
         let previousUID = defaultOutput.currentDefaultOutputUID()
@@ -700,6 +713,7 @@ import Observation
             // Flow selection (or an inherited state) is left untouched.
             defaultOutputRoutedForSession = owner
             defaultOutputPreviousUID = nil
+            switchConfirmedOn = true
             return true
         }
         guard let previousUID else {
@@ -727,6 +741,7 @@ import Observation
                 return false
             }
             guard confirmed else { throw DefaultOutputRouteError.switchNotConfirmed(flow) }
+            switchConfirmedOn = true
             if sourceWasRunning {
                 audioMigrationPending = true
                 observeDefaultOutputEffect(previousUID: previousUID, owner: owner)
@@ -806,6 +821,12 @@ import Observation
     /// owned (or the user had already moved the output elsewhere).
     @discardableResult
     private func restoreDefaultOutputOwned() -> String? {
+        // A confirmed off state requires a successful read-back away from Flow.
+        defer {
+            if !sessionUsesVirtualInput || defaultOutput.currentDefaultOutputUID().map({ $0 != FlowVirtualDevice.uid }) == true {
+                switchConfirmedOn = false
+            }
+        }
         routeObservationTask?.cancel(); routeObservationTask = nil
         defaultOutputSettleWarning = nil
         audioMigrationPending = false
@@ -818,7 +839,14 @@ import Observation
         defaultOutputPreviousUID = nil
         guard defaultOutput.currentDefaultOutputUID() == FlowVirtualDevice.uid else { return nil }
         let restored = defaultOutput.restoreDefaultOutput(uid: previous)
-        UserDefaults.standard.removeObject(forKey: Self.routedFromKey)
+        if restored {
+            defaultOutputFailure = nil
+            UserDefaults.standard.removeObject(forKey: Self.routedFromKey)
+        } else {
+            // Retain restoration ownership for a subsequent explicit retry.
+            defaultOutputRoutedForSession = "restore-pending"
+            defaultOutputPreviousUID = previous
+        }
         if !restored, defaultOutput.currentDefaultOutputUID() == FlowVirtualDevice.uid {
             defaultOutputFailure = "默认输出恢复失败：无法切回 \(previous)"
         }

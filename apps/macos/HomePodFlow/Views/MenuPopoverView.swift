@@ -78,15 +78,15 @@ struct MenuPopoverView: View {
                 .toggleStyle(TheaterToggleStyle())
                 .frame(width: Theater.P(138), height: Theater.P(68))
                 .offset(x: Theater.P(887), y: Theater.P(114))
-                .disabled(!state.visualDemo && !state.systemAudio.desiredEnabled &&
+                .disabled(!state.visualDemo && (state.systemAudio.routeSwitchInProgress || (!state.systemAudio.desiredEnabled &&
                           (state.systemAudio.isBusy || state.layout.devices.isEmpty ||
-                           !state.audioComponent.allowsStart))
+                           !state.audioComponent.allowsStart))))
                 .accessibilityLabel(state.visualDemo
                     ? (state.isRunning ? "系统声音演示运行中" : "系统声音演示已停止")
                     : "系统声音")
                 .accessibilityValue(state.visualDemo
                     ? (state.isRunning ? "开" : "关")
-                    : (state.systemAudio.desiredEnabled ? "开" : "关"))
+                    : (state.systemAudio.switchConfirmedOn ? "开" : "关"))
                 .help(toggleHelp)
         }
     }
@@ -124,7 +124,7 @@ struct MenuPopoverView: View {
     }
 
     private var systemAudioBinding: Binding<Bool> {
-        Binding(get: { state.systemAudio.desiredEnabled }, set: { enabled in
+        Binding(get: { state.systemAudio.switchConfirmedOn }, set: { enabled in
             if enabled { Task { await state.startSystemAudio() } }
             else { state.systemAudio.requestStop() }
         })

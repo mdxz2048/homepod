@@ -327,7 +327,7 @@ if [ "$make_dmg" -eq 1 ]; then
     /bin/cat >"$dmg_stage/README.txt" <<EOF
 HomePod Flow $version
 
-1. 双击 “$FLOW_INSTALLER_PKG_NAME”。
+1. 双击 “${FLOW_INSTALLER_PKG_NAME}”。
 2. 安装程序会安装 HomePod Flow.app 和 HomePod Flow Audio 声卡，
    并重新加载系统音频服务。
 3. 打开 HomePod Flow，在“设置 → 空间布局”顶部确认“音频组件已就绪”。
@@ -335,7 +335,7 @@ HomePod Flow $version
 卸载：双击 “Uninstall HomePod Flow.command”。
 
 安装程序不会把 HomePod Flow Audio 设为默认输出。
-这个包未包含 Python 运行环境和本机 runtime.json；正式签名/公证另行处理。
+正式发布包内置 Python 运行环境，无需外部 runtime.json；正式签名/公证另行处理。
 EOF
     /usr/bin/hdiutil create \
         -volname "HomePod Flow $version" \

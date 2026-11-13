@@ -153,14 +153,16 @@ class ApplyClassificationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result.status, "pending")
         self.assertEqual(len(runner.calls), 1)
 
-    async def test_running_device_defers_without_write(self):
-        runner = ScriptedRunner(status_ok(frames=0, revision=7, running=True))
+    async def test_running_device_requests_host_transaction(self):
+        runner = ScriptedRunner(
+            status_ok(frames=0, revision=7, running=True),
+            write_ok(after_frames=88200, revision=8, applied=True),
+            status_ok(frames=88200, revision=8, running=True))
         result = await apply_scripted_with("/hflctl", 66150, 44100, runner)
-        self.assertEqual(result.status, "pending")
-        self.assertFalse(result.write_attempted)
+        self.assertEqual(result.status, "applied")
+        self.assertTrue(result.write_attempted)
         self.assertEqual(result.old_ms, 0.0)
-        self.assertEqual(result.pending_reason, "device is running for another client")
-        self.assertEqual(len(runner.calls), 1)
+        self.assertEqual(len(runner.calls), 3)
 
     async def test_busy_write_rejection_defers_without_claiming_applied(self):
         runner = ScriptedRunner(

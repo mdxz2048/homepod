@@ -11,6 +11,7 @@ import CoreAudio
         await assertStopDuringPreStartRoutingRestoresOutput()
         await assertStartRequiresPublishedSwitch()
         await assertStopWaitsForPublishedRestore()
+        await assertDelayedRestoreKeepsSwitchOn()
         await assertLegacyCaptureNeverSwitches()
         await assertManualUserSelectionIsPreserved()
         await assertPreviousAlreadyFlowIsNotDisturbed()
@@ -80,6 +81,7 @@ import CoreAudio
         let run = Task { await store.start(mode: .synchronized, volume: 15) }
         await until { log.values.contains("start") }
         precondition(worker.starts == 1)
+        precondition(store.switchConfirmedOn, "on requires the confirmed Flow route")
         precondition(log.values == ["set:\(FlowVirtualDevice.uid)", "start"])
         let sid = worker.startSession!
 
@@ -96,6 +98,7 @@ import CoreAudio
         precondition(Array(log.values.suffix(2)) == ["restore:built-in", "stop"],
                       "the Mac output must be restored before the worker stop command")
         precondition(!store.hasActiveSession && !store.isRunning)
+        precondition(!store.switchConfirmedOn, "off requires confirmed restoration")
         await store.prepareForTermination()
         precondition(worker.shutdowns == 1)
     }
@@ -129,6 +132,7 @@ import CoreAudio
         await store.connectLocalWorker(); await store.scanDevices(); store.selectedDeviceIDs = ["receiver"]
         let run = Task { await store.start(mode: .synchronized, volume: 15) }
         await until { ctl.setCalls == [FlowVirtualDevice.uid] }
+        precondition(!store.switchConfirmedOn, "pending route must not appear on")
         store.requestStop()
         gate.open()
         await run.value
@@ -172,7 +176,32 @@ import CoreAudio
         await store.stop(); await run.value
         precondition(ctl.restoreCalls == ["built-in"])
         precondition(worker.stops == 1)
+        precondition(store.switchConfirmedOn, "failed restoration must not appear off")
         precondition(store.statusText.contains("未在限定时间内切回"), store.statusText)
+        await store.prepareForTermination()
+    }
+
+    @MainActor private static func assertDelayedRestoreKeepsSwitchOn() async {
+        let gate = SettleGate()
+        let ctl = FakeDefaultOutputController(current: "built-in")
+        let worker = RoutingWorker(virtual: true)
+        let store = SystemAudioStore(serviceFactory: { worker }, routeSettleSleep: { _ in
+            if gate.holdRestore { await gate.wait() } else { await Task.yield() }
+        }, observesEnvironment: false, defaultOutput: ctl)
+        await store.connectLocalWorker(); await store.scanDevices()
+        store.selectedDeviceIDs = ["receiver"]
+        let run = Task { await store.start(mode: .synchronized, volume: 15) }
+        await until { worker.starts == 1 }
+        precondition(store.switchConfirmedOn)
+        gate.holdRestore = true
+        ctl.publishDelayReads = 6
+        let stop = Task { await store.stop() }
+        await until { !ctl.restoreCalls.isEmpty }
+        precondition(store.switchConfirmedOn, "restore still pending: retain on state")
+        precondition(store.routeSwitchInProgress)
+        gate.open()
+        await stop.value; await run.value
+        precondition(!store.switchConfirmedOn && !store.routeSwitchInProgress)
         await store.prepareForTermination()
     }
 
@@ -251,6 +280,7 @@ import CoreAudio
 }
 
 @MainActor private final class SettleGate {
+    var holdRestore = false
     private var continuation: CheckedContinuation<Void, Never>?
     private var isOpen = false
     func wait() async {

@@ -37,7 +37,7 @@ custom `hfla` (CFPropertyList/CFNumber) and `hflr`, and
 
 Write behavior (`set-ms`, `rollback`):
 
-1. require exact UID, alive, single output stream, idle IO,
+1. require exact UID, alive, single output stream, host-coordinated IO quiescence,
 2. optional `--expect-revision` guard against concurrent writes,
 3. convert `0...3000` ms to frames at the current rate,
 4. write `hfla` as CFPropertyList/CFNumber exactly like

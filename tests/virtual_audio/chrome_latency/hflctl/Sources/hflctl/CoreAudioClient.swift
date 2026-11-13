@@ -361,7 +361,7 @@ final class CoreAudioClient {
         }
     }
 
-    /// Guarded, explicit write. Requires idle IO and (when provided) the exact
+    /// Guarded, explicit write. Requests host-coordinated IO quiescence and (when provided) the exact
     /// expected `hflr` revision. The commit is deferred to the host device
     /// configuration transaction, so the caller waits a bounded interval for
     /// the confirmed committed value and revision. It never rolls back merely
@@ -374,7 +374,6 @@ final class CoreAudioClient {
         if let expected = expectRevision, before.hflr != expected {
             throw HFLControlError.revisionMismatch(expected: expected, actual: before.hflr)
         }
-        guard !before.running else { throw HFLControlError.deviceBusy }
 
         let plan = try LatencyMath.frames(milliseconds: milliseconds, rate: before.nominalRate)
         if plan.frames == before.hflaFrames {

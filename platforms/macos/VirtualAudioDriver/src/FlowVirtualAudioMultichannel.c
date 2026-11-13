@@ -147,6 +147,9 @@ static OSStatus Initialize(AudioServerPlugInDriverRef, AudioServerPlugInHostRef)
 static OSStatus CreateDevice(AudioServerPlugInDriverRef, CFDictionaryRef,
                              const AudioServerPlugInClientInfo *, AudioObjectID *);
 static OSStatus DestroyDevice(AudioServerPlugInDriverRef, AudioObjectID);
+static OSStatus RemoveClient(AudioServerPlugInDriverRef, AudioObjectID,
+                              const AudioServerPlugInClientInfo *);
+
 static OSStatus Client(AudioServerPlugInDriverRef, AudioObjectID,
                        const AudioServerPlugInClientInfo *);
 static OSStatus PerformChange(AudioServerPlugInDriverRef, AudioObjectID, UInt64, void *);
@@ -176,7 +179,7 @@ static OSStatus DoIO(AudioServerPlugInDriverRef, AudioObjectID, AudioObjectID, U
 
 static AudioServerPlugInDriverInterface gInterface = {
     NULL, QueryInterface, AddRef, Release, Initialize, CreateDevice, DestroyDevice,
-    Client, Client, PerformChange, AbortChange, HasProperty, IsSettable, DataSize,
+    Client, RemoveClient, PerformChange, AbortChange, HasProperty, IsSettable, DataSize,
     GetData, SetData, StartIO, StopIO, ZeroTime, WillIO, BeginIO, DoIO, BeginIO};
 static AudioServerPlugInDriverInterface *gInterfacePointer = &gInterface;
 
@@ -515,6 +518,35 @@ static OSStatus Client(AudioServerPlugInDriverRef driver, AudioObjectID object,
                : kAudioHardwareBadObjectError;
 }
 
+/* A departing/crashed HAL client may not have delivered StopIO. Remove only
+ * its own slot; never erase another live client's ownership. */
+static OSStatus RemoveClient(AudioServerPlugInDriverRef driver, AudioObjectID object,
+                              const AudioServerPlugInClientInfo *client) {
+    OSStatus status = Client(driver, object, client);
+    if (status) return status;
+    MCDeviceState *state = &gState[DeviceIndex(object)];
+    Boolean changed = false;
+    pthread_mutex_lock(&gControl);
+    for (int i = 0; i < 64; ++i) {
+        if (state->clientSlotUsed[i] && state->runningClients[i] == client->mClientID) {
+            state->clientSlotUsed[i] = false;
+            state->runningClients[i] = 0;
+            atomic_fetch_sub(&state->running, 1);
+            changed = true;
+            break;
+        }
+    }
+    pthread_mutex_unlock(&gControl);
+    if (changed) {
+        AudioObjectPropertyAddress addresses[] = {
+            Global(kAudioDevicePropertyDeviceIsRunning),
+            Global(kAudioDevicePropertyDeviceIsRunningSomewhere),
+            Global(kMCLatencyStatus)};
+        Notify(object, 3, addresses);
+    }
+    return noErr;
+}
+
 static UInt32 PendingStatus(int index) {
     MCDeviceState *state = &gState[index];
     pthread_mutex_lock(&gControl);
@@ -606,7 +638,12 @@ static OSStatus RequestConfigurationChange(AudioObjectID deviceObject, int index
                                            UInt32 latency) {
     MCDeviceState *state = &gState[index];
     pthread_mutex_lock(&gControl);
-    if (atomic_load(&state->running) || state->pendingKind != MCPendingNone) {
+    /* Presentation latency must be requested through the host even while
+     * clients hold IO. The host quiesces IO before PerformChange; rejecting
+     * here prevents recovery whenever a browser already has its stream open.
+     * Format changes retain the stricter idle-only policy. */
+    if ((kind == MCPendingRate && atomic_load(&state->running)) ||
+        state->pendingKind != MCPendingNone) {
         pthread_mutex_unlock(&gControl);
         return kAudioHardwareIllegalOperationError;
     }

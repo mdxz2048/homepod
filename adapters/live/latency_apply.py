@@ -12,7 +12,7 @@ Outcome classification (no false success):
 
 * ``unchanged``: a verified status read already matches the target; no write.
 * ``applied``: the guarded write is followed by a fresh verified status read.
-* ``pending``: the device is running for another client, or the guarded write
+* ``pending``: another configuration is pending, or the guarded write
   reports ``device_busy`` / ``revision_mismatch`` / ``write_rejected``.  The
   existing stream is preserved and the write is retried on the next explicit
   activation.
@@ -285,12 +285,8 @@ async def apply_planned_latency(helper: str, latency_samples: int,
                        latency_samples=latency_samples, sample_rate=sample_rate,
                        write_attempted=False,
                        detail="verified status already matches the negotiated target")
-    if before.running:
-        return _result("pending", before, None, target_ms=target_ms,
-                       latency_samples=latency_samples, sample_rate=sample_rate,
-                       write_attempted=False,
-                       pending_reason="device is running for another client")
-
+    # HAL coordinates stopping/restarting existing clients for presentation
+    # latency changes. Do not veto that transaction just because IO is active.
     expected = _expected_revision(before.revision, before.frames, target_frames)
     code, stdout, stderr = await _run(
         helper, ("set-ms", str(target_ms), "--expect-revision", str(before.revision)),
