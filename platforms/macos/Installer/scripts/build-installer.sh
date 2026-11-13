@@ -268,8 +268,27 @@ packages="$work/packages"
     --ownership recommended \
     "$packages/Driver.pkg"
 
+# Pin the App to /Applications; LaunchServices may know a staged build with
+# the same bundle ID and PackageKit otherwise silently relocates this payload.
+app_components="$work/app-components.plist"
+/usr/bin/pkgbuild --analyze --root "$app_root" --component-plist "$app_components"
+/usr/bin/python3 - "$app_components" <<'PYCOMPONENTS'
+import plistlib, sys
+path = sys.argv[1]
+with open(path, "rb") as f:
+    components = plistlib.load(f)
+def pin(items):
+    for item in items:
+        item["BundleIsRelocatable"] = False
+        pin(item.get("ChildBundles", []))
+pin(components)
+with open(path, "wb") as f:
+    plistlib.dump(components, f)
+PYCOMPONENTS
+
 /usr/bin/pkgbuild \
     --root "$app_root" \
+    --component-plist "$app_components" \
     --identifier "$FLOW_APP_BUNDLE_ID" \
     --version "$version" \
     --install-location "/" \

@@ -31,3 +31,9 @@
 ## 尚需真机验证
 
 sudo -n 检查显示需要密码，尚未替换系统 App/驱动或重启 coreaudiod。安装候选后须验证 occupied→host stop→commit→restart、浏览器设备重新打开、默认输出失败处理及声画同步。源码测试不能替代这些验收。不要保证所有浏览器会热更新已打开的旧音频流。
+
+## 首次安装发现（22:18）
+
+用户已执行清理安装。旧App/驱动已卸载，新driver磁盘SHA256正确。PackageKit日志证实把App重定位至开发构建目录，导致 /Applications 缺失；已修改component plist，递归关闭BundleIsRelocatable。launchctl kickstart被本机SIP拒绝，内存旧驱动尚未重载。
+
+补装脚本会在driver hash一致时跳过重复卸载，将验证过的staged App精确复制到 /Applications，然后请求coreaudiod正常终止/由launchd重新启动并核对PID变化。无需改动SIP。等待用户再次sudo执行；此期间不删除唯一安装制品。
