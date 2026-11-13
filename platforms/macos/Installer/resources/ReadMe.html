@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><style>
+body { font: 13px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; color: #222; margin: 18px 20px; }
+h1 { font-size: 17px; margin: 0 0 10px; }
+h2 { font-size: 14px; margin: 16px 0 6px; }
+p, li { line-height: 1.55; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+.note { color: #666; }
+</style></head>
+<body>
+<h1>HomePod Flow 安装说明</h1>
+
+<h2>安装内容</h2>
+<ul>
+  <li><code>/Applications/HomePod Flow.app</code></li>
+  <li><code>/Library/Audio/Plug-Ins/HAL/HomePodFlowAudioFamily.driver</code>（显示名：HomePod Flow Audio）</li>
+  <li><code>/Library/Application Support/HomePodFlow</code>：安装清单、备份和只读探针</li>
+</ul>
+
+<h2>安装后</h2>
+<ol>
+  <li>打开 HomePod Flow。</li>
+  <li>在“设置 → 空间布局”顶部确认“音频组件已就绪”。</li>
+  <li>在播放器或“系统设置 → 声音”中选择 <b>HomePod Flow Audio</b>。</li>
+</ol>
+<p class="note">如果组件显示“等待加载”，先点“重新检查”；仍不出现时重启 Mac。安装程序会尝试自动重载系统音频服务，但 macOS 26 的 SIP 可能拒绝重启 coreaudiod（Operation not permitted），此时必须重启 Mac。</p>
+
+<h2>没有包含的内容</h2>
+<p>这个安装包已经包含 App、虚拟声卡、冻结的 Python worker、runtime 项目、core dylib 和 hflctl，不需要 Homebrew Python 或本机 <code>runtime.json</code>。正式 Developer ID 签名/公证和自动更新仍按项目发布流程单独提供；当前构建不能据此宣称已公证。</p>
+
+<h2>卸载</h2>
+<p>打开安装镜像，双击“Uninstall HomePod Flow.command”。它只删除上面的 HomePod Flow 文件，不会删除其他厂商的 HAL 组件。</p>
+</body>
+</html>

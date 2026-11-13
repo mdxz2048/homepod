@@ -39,13 +39,28 @@ struct RoomCanvas: View {
     }
 
     private func speaker(_ device: RoomDevice, size: CGSize) -> some View {
-        let diameter: CGFloat = (compact ? 30 : 43) * (device.kind == .homePod ? 1.45 : 1)
-        let selected = selectedDeviceID == device.id
+        /* Official product photography, drawn at a consistent physical scale:
+         * HomePod is 168 mm tall, mini is 84 mm, so mini renders at ~0.68 of
+         * the HomePod height (true ratio 0.5 would be too small to read here). */
+        let photoHeight: CGFloat = compact ? 38 : 58
+        let glyphSize: CGSize = device.kind.form == .homePod
+            ? CGSize(width: photoHeight * 0.74, height: photoHeight)
+            : CGSize(width: photoHeight * 0.62 * 1.058, height: photoHeight * 0.62)
+        /* The halo is an editing affordance only: it shows which speaker the
+         * inspector edits, so the read-only status-bar canvas never draws it. */
+        let selected = editable && selectedDeviceID == device.id
+        let haloRadius = min(glyphSize.width, glyphSize.height) * 0.5
         return VStack(spacing: compact ? 4 : 7) {
-            SpeakerGlyph(isMini: device.kind == .mini)
-                .frame(width: diameter, height: diameter)
-                .padding(5)
-                .overlay(Circle().stroke(selected ? Color.accentColor : .clear, lineWidth: 2))
+            SpeakerGlyph(kind: device.kind)
+                .frame(width: glyphSize.width, height: glyphSize.height)
+                .padding(4)
+                .overlay(
+                    RoundedRectangle(cornerRadius: haloRadius, style: .continuous)
+                        .fill(selected ? Color.accentColor.opacity(0.12) : .clear)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: haloRadius, style: .continuous)
+                                .stroke(selected ? Color.accentColor : .clear,
+                                        lineWidth: 1.5)))
             Text(device.name)
                 .font(.system(size: compact ? 10 : 12, weight: .semibold))
                 .lineLimit(1)
@@ -74,20 +89,47 @@ func roleLabel(_ role: SpeakerRole) -> String {
     }
 }
 
+/// Official Apple product photography (transparent PNG), normalised so every
+/// finish is framed identically. Sizes come from `speaker(_:size:)`, which
+/// scales HomePod and mini to a consistent physical ratio.
 struct SpeakerGlyph: View {
-    var isMini: Bool
+    var kind: SpeakerKind
+
     var body: some View {
-        ZStack {
-            Circle().fill(LinearGradient(colors: isMini
-                ? [Color.white, Color.gray.opacity(0.45)]
-                : [Color(white: 0.38), Color(white: 0.12)], startPoint: .topLeading, endPoint: .bottomTrailing))
-            Circle().fill(.black.opacity(0.08)).padding(4)
-            Ellipse().fill(LinearGradient(colors: [.blue.opacity(0.3), .white.opacity(0.45)],
-                                         startPoint: .top, endPoint: .bottom))
-                .frame(width: isMini ? 18 : 24, height: isMini ? 7 : 10)
-                .offset(y: isMini ? -9 : -13)
+        GeometryReader { proxy in
+            let size = proxy.size
+            ZStack {
+                Ellipse()
+                    .fill(Color.black.opacity(0.16))
+                    .frame(width: size.width * 0.72, height: max(3, size.height * 0.06))
+                    .blur(radius: max(1, size.width * 0.03))
+                    .position(x: size.width * 0.5, y: size.height * 0.97)
+                Image(kind.assetName)
+                    .resizable()
+                    .interpolation(.high)
+                    .antialiased(true)
+                    .scaledToFit()
+                    .frame(width: size.width, height: size.height)
+            }
         }
-        .shadow(color: .black.opacity(0.2), radius: 4, y: 4)
+        .accessibilityHidden(true)
+    }
+}
+
+extension SpeakerKind {
+    /// Asset-catalog image for each finish, cut from Apple's store photography.
+    var assetName: String {
+        switch self {
+        case .homePod: "speaker-homepod-white"
+        case .homePodMidnight: "speaker-homepod-midnight"
+        case .mini: "speaker-mini-white"
+        case .miniMidnight: "speaker-mini-midnight"
+        case .miniYellow: "speaker-mini-yellow"
+        case .miniOrange: "speaker-mini-orange"
+        case .miniBlue: "speaker-mini-blue"
+        case .miniGreen: "speaker-mini-green"
+        case .miniPink: "speaker-mini-pink"
+        }
     }
 }
 

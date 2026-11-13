@@ -79,7 +79,8 @@ struct MenuPopoverView: View {
                 .frame(width: Theater.P(138), height: Theater.P(68))
                 .offset(x: Theater.P(887), y: Theater.P(114))
                 .disabled(!state.visualDemo && !state.systemAudio.desiredEnabled &&
-                          (state.systemAudio.isBusy || state.layout.devices.isEmpty))
+                          (state.systemAudio.isBusy || state.layout.devices.isEmpty ||
+                           !state.audioComponent.allowsStart))
                 .accessibilityLabel(state.visualDemo
                     ? (state.isRunning ? "系统声音演示运行中" : "系统声音演示已停止")
                     : "系统声音")
@@ -92,6 +93,13 @@ struct MenuPopoverView: View {
 
     private var subtitleText: String {
         if state.visualDemo { return "界面演示 · 3 台示例设备" }
+        switch state.audioComponent.snapshot.state {
+        case .notInstalled: return "需要安装音频组件"
+        case .installedNeedsReload: return "音频组件等待加载"
+        case .conflict: return "音频组件有冲突"
+        case .invalid: return "音频组件需要修复"
+        case .checking, .ready: break
+        }
         let status = state.systemAudio.statusText.trimmingCharacters(in: .whitespacesAndNewlines)
         if !status.isEmpty { return status }
         return state.statusText
@@ -100,6 +108,9 @@ struct MenuPopoverView: View {
     private var toggleHelp: String {
         if state.visualDemo {
             return "演示开关只改变界面状态，不会接管真实音频。"
+        }
+        if !state.audioComponent.allowsStart {
+            return "系统声音 · \(state.audioComponent.snapshot.message)"
         }
         let status = state.systemAudio.statusText.trimmingCharacters(in: .whitespacesAndNewlines)
         return "系统声音 · \(state.deviceCount) 台设备" + (status.isEmpty ? "" : " · \(status)")

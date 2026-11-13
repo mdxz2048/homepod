@@ -15,6 +15,8 @@ static UInt32 gLatencyOutput[MC_DEVICE_COUNT];
 static UInt32 gRevisionNotifications[MC_DEVICE_COUNT];
 static UInt32 gRunningNotifications[MC_DEVICE_COUNT];
 static UInt32 gFormatNotifications[MC_DEVICE_COUNT];
+static UInt32 gVolumeNotifications[MC_DEVICE_COUNT];
+static UInt32 gMuteNotifications[MC_DEVICE_COUNT];
 static OSStatus gRequestResult;
 static AudioObjectID gRequestedDevice;
 static UInt64 gRequestedAction;
@@ -46,6 +48,12 @@ static OSStatus MockPropertiesChanged(AudioServerPlugInHostRef host, AudioObject
                 break;
             case kAudioDevicePropertyDeviceIsRunning:
                 ++gRunningNotifications[index];
+                break;
+            case kAudioDevicePropertyVolumeScalar:
+                ++gVolumeNotifications[index];
+                break;
+            case kAudioDevicePropertyMute:
+                ++gMuteNotifications[index];
                 break;
             case kAudioStreamPropertyVirtualFormat:
             case kAudioStreamPropertyPhysicalFormat:
@@ -92,6 +100,17 @@ static Float64 ReadFloat64(AudioObjectID object, AudioObjectPropertySelector sel
                            AudioObjectPropertyScope scope) {
     AudioObjectPropertyAddress address = {selector, scope, kAudioObjectPropertyElementMain};
     Float64 value = 0;
+    UInt32 written = 0;
+    assert(GetData(Driver(), object, 0, &address, 0, NULL, sizeof(value), &written,
+                   &value) == noErr);
+    assert(written == sizeof(value));
+    return value;
+}
+
+static Float32 ReadFloat32(AudioObjectID object, AudioObjectPropertySelector selector,
+                           AudioObjectPropertyScope scope) {
+    AudioObjectPropertyAddress address = {selector, scope, kAudioObjectPropertyElementMain};
+    Float32 value = 0;
     UInt32 written = 0;
     assert(GetData(Driver(), object, 0, &address, 0, NULL, sizeof(value), &written,
                    &value) == noErr);
@@ -1077,6 +1096,200 @@ static void CheckRunningRateRejected(void) {
     assert(StopIO(Driver(), info->deviceID, 4000) == noErr);
 }
 
+static void CheckVolumeControl(void) {
+    AudioObjectPropertyAddress volumeAddress = {
+        kAudioDevicePropertyVolumeScalar, kAudioObjectPropertyScopeOutput,
+        kAudioObjectPropertyElementMain};
+    AudioObjectPropertyAddress muteAddress = {
+        kAudioDevicePropertyMute, kAudioObjectPropertyScopeOutput,
+        kAudioObjectPropertyElementMain};
+    for (UInt32 i = 0; i < MC_DEVICE_COUNT; ++i) {
+        AudioObjectID device = gDevices[i].deviceID;
+        UInt32 size = 0;
+        Boolean settable = false;
+        assert(DataSize(Driver(), device, 0, &volumeAddress, 0, NULL, &size) == noErr);
+        assert(size == sizeof(Float32));
+        assert(IsSettable(Driver(), device, 0, &volumeAddress, &settable) == noErr);
+        assert(settable);
+        assert(ReadFloat32(device, kAudioDevicePropertyVolumeScalar,
+                           kAudioObjectPropertyScopeOutput) == 1.0f);
+
+        Float32 volume = 0.25f;
+        UInt32 before = gVolumeNotifications[i];
+        assert(SetData(Driver(), device, 0, &volumeAddress, 0, NULL, sizeof(volume),
+                       &volume) == noErr);
+        assert(ReadFloat32(device, kAudioDevicePropertyVolumeScalar,
+                           kAudioObjectPropertyScopeOutput) == volume);
+        assert(gVolumeNotifications[i] == before + 1);
+        volume = -0.01f;
+        assert(SetData(Driver(), device, 0, &volumeAddress, 0, NULL, sizeof(volume),
+                       &volume) == kAudioHardwareIllegalOperationError);
+        volume = 1.01f;
+        assert(SetData(Driver(), device, 0, &volumeAddress, 0, NULL, sizeof(volume),
+                       &volume) == kAudioHardwareIllegalOperationError);
+
+        assert(DataSize(Driver(), device, 0, &muteAddress, 0, NULL, &size) == noErr);
+        assert(size == sizeof(UInt32));
+        assert(IsSettable(Driver(), device, 0, &muteAddress, &settable) == noErr);
+        assert(settable);
+        assert(Read32(device, kAudioDevicePropertyMute,
+                      kAudioObjectPropertyScopeOutput) == 0);
+        UInt32 mute = 1;
+        before = gMuteNotifications[i];
+        assert(SetData(Driver(), device, 0, &muteAddress, 0, NULL, sizeof(mute),
+                       &mute) == noErr);
+        assert(Read32(device, kAudioDevicePropertyMute,
+                      kAudioObjectPropertyScopeOutput) == 1);
+        assert(gMuteNotifications[i] == before + 1);
+        mute = 2;
+        assert(SetData(Driver(), device, 0, &muteAddress, 0, NULL, sizeof(mute),
+                       &mute) == kAudioHardwareIllegalOperationError);
+        mute = 0;
+        assert(SetData(Driver(), device, 0, &muteAddress, 0, NULL, sizeof(mute),
+                       &mute) == noErr);
+
+        volume = 1.0f;
+        assert(SetData(Driver(), device, 0, &volumeAddress, 0, NULL, sizeof(volume),
+                       &volume) == noErr);
+    }
+}
+
+/* macOS only exposes volume keys for a device whose control list carries a
+ * level control, so the master controls are verified as real Core Audio
+ * control objects rather than device-level properties. */
+static void CheckControlObjects(void) {
+    for (UInt32 i = 0; i < MC_DEVICE_COUNT; ++i) {
+        AudioObjectID device = gDevices[i].deviceID;
+        AudioObjectID controls[2] = {0, 0};
+        UInt32 count = ReadIDs(device, kAudioObjectPropertyControlList,
+                               kAudioObjectPropertyScopeGlobal, controls, 2);
+        assert(count == 2);
+        AudioObjectID volumeControl = controls[0];
+        AudioObjectID muteControl = controls[1];
+        assert(volumeControl != muteControl);
+        assert(volumeControl != kAudioObjectUnknown && muteControl != kAudioObjectUnknown);
+
+        assert(Read32(volumeControl, kAudioObjectPropertyBaseClass,
+                      kAudioObjectPropertyScopeGlobal) ==
+               (UInt32)kAudioLevelControlClassID);
+        assert(Read32(volumeControl, kAudioObjectPropertyClass,
+                      kAudioObjectPropertyScopeGlobal) ==
+               (UInt32)kAudioVolumeControlClassID);
+        assert(Read32(muteControl, kAudioObjectPropertyBaseClass,
+                      kAudioObjectPropertyScopeGlobal) ==
+               (UInt32)kAudioBooleanControlClassID);
+        assert(Read32(muteControl, kAudioObjectPropertyClass,
+                      kAudioObjectPropertyScopeGlobal) ==
+               (UInt32)kAudioMuteControlClassID);
+        for (int c = 0; c < 2; ++c) {
+            AudioObjectID control = controls[c];
+            assert(Read32(control, kAudioObjectPropertyOwner,
+                          kAudioObjectPropertyScopeGlobal) == device);
+            assert(Read32(control, kAudioControlPropertyScope,
+                          kAudioObjectPropertyScopeGlobal) == kAudioObjectPropertyScopeOutput);
+            assert(Read32(control, kAudioControlPropertyElement,
+                          kAudioObjectPropertyScopeGlobal) ==
+                   kAudioObjectPropertyElementMain);
+            assert(Read32(control, kAudioControlPropertyVariant,
+                          kAudioObjectPropertyScopeGlobal) == 0);
+        }
+        CheckString(volumeControl, kAudioObjectPropertyName,
+                    kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMain,
+                    "Volume");
+        CheckString(muteControl, kAudioObjectPropertyName,
+                    kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMain,
+                    "Mute");
+
+        AudioObjectPropertyAddress scalarAddress = {
+            kAudioLevelControlPropertyScalarValue, kAudioObjectPropertyScopeGlobal,
+            kAudioObjectPropertyElementMain};
+        Boolean settable = false;
+        assert(IsSettable(Driver(), volumeControl, 0, &scalarAddress, &settable) == noErr);
+        assert(settable);
+        assert(ReadFloat32(volumeControl, kAudioLevelControlPropertyScalarValue,
+                           kAudioObjectPropertyScopeGlobal) == 1.0f);
+
+        Float32 scalar = 0.25f;
+        assert(SetData(Driver(), volumeControl, 0, &scalarAddress, 0, NULL, sizeof(scalar),
+                       &scalar) == noErr);
+        assert(ReadFloat32(volumeControl, kAudioLevelControlPropertyScalarValue,
+                           kAudioObjectPropertyScopeGlobal) == scalar);
+        assert(ReadFloat32(device, kAudioDevicePropertyVolumeScalar,
+                           kAudioObjectPropertyScopeOutput) == scalar);
+        /* The device-level property stays a mirror of the control. */
+        Float32 mirrored = 0.75f;
+        AudioObjectPropertyAddress deviceAddress = {
+            kAudioDevicePropertyVolumeScalar, kAudioObjectPropertyScopeOutput,
+            kAudioObjectPropertyElementMain};
+        assert(SetData(Driver(), device, 0, &deviceAddress, 0, NULL, sizeof(mirrored),
+                       &mirrored) == noErr);
+        assert(ReadFloat32(volumeControl, kAudioLevelControlPropertyScalarValue,
+                           kAudioObjectPropertyScopeGlobal) == mirrored);
+
+        AudioObjectPropertyAddress decibelAddress = {
+            kAudioLevelControlPropertyDecibelValue, kAudioObjectPropertyScopeGlobal,
+            kAudioObjectPropertyElementMain};
+        AudioValueRange range;
+        UInt32 size = sizeof(range);
+        UInt32 written = 0;
+        AudioObjectPropertyAddress rangeAddress = {
+            kAudioLevelControlPropertyDecibelRange, kAudioObjectPropertyScopeGlobal,
+            kAudioObjectPropertyElementMain};
+        assert(GetData(Driver(), volumeControl, 0, &rangeAddress, 0, NULL, size, &written,
+                       &range) == noErr);
+        assert(written == sizeof(range));
+        assert(range.mMaximum == 0.0f && range.mMinimum < -60.0f);
+
+        Float32 decibels = -6.0206f; /* ~0.5 */
+        assert(SetData(Driver(), volumeControl, 0, &decibelAddress, 0, NULL,
+                       sizeof(decibels), &decibels) == noErr);
+        Float32 fromDecibels = ReadFloat32(volumeControl,
+                                           kAudioLevelControlPropertyScalarValue,
+                                           kAudioObjectPropertyScopeGlobal);
+        assert(fabsf(fromDecibels - 0.5f) < 0.001f);
+        /* -96 dB is the floor and must clamp to silence, not negative. */
+        decibels = -96.0f;
+        assert(SetData(Driver(), volumeControl, 0, &decibelAddress, 0, NULL,
+                       sizeof(decibels), &decibels) == noErr);
+        assert(ReadFloat32(volumeControl, kAudioLevelControlPropertyScalarValue,
+                           kAudioObjectPropertyScopeGlobal) == 0.0f);
+        decibels = 1.0f;
+        assert(SetData(Driver(), volumeControl, 0, &decibelAddress, 0, NULL,
+                       sizeof(decibels), &decibels) == kAudioHardwareIllegalOperationError);
+
+        scalar = 1.0f;
+        assert(SetData(Driver(), volumeControl, 0, &scalarAddress, 0, NULL, sizeof(scalar),
+                       &scalar) == noErr);
+        scalar = 1.5f;
+        assert(SetData(Driver(), volumeControl, 0, &scalarAddress, 0, NULL, sizeof(scalar),
+                       &scalar) == kAudioHardwareIllegalOperationError);
+
+        AudioObjectPropertyAddress muteAddress = {
+            kAudioBooleanControlPropertyValue, kAudioObjectPropertyScopeGlobal,
+            kAudioObjectPropertyElementMain};
+        assert(IsSettable(Driver(), muteControl, 0, &muteAddress, &settable) == noErr);
+        assert(settable);
+        UInt32 mute = 1;
+        assert(SetData(Driver(), muteControl, 0, &muteAddress, 0, NULL, sizeof(mute),
+                       &mute) == noErr);
+        assert(Read32(muteControl, kAudioBooleanControlPropertyValue,
+                      kAudioObjectPropertyScopeGlobal) == 1);
+        assert(Read32(device, kAudioDevicePropertyMute,
+                      kAudioObjectPropertyScopeOutput) == 1);
+        mute = 0;
+        assert(SetData(Driver(), muteControl, 0, &muteAddress, 0, NULL, sizeof(mute),
+                       &mute) == noErr);
+        assert(Read32(device, kAudioDevicePropertyMute,
+                      kAudioObjectPropertyScopeOutput) == 0);
+        mute = 2;
+        assert(SetData(Driver(), muteControl, 0, &muteAddress, 0, NULL, sizeof(mute),
+                       &mute) == kAudioHardwareIllegalOperationError);
+
+        /* Controls are not enumerable as owned objects of the device. */
+        assert(HasProperty(Driver(), volumeControl, 0, &scalarAddress));
+    }
+}
+
 int main(void) {
     gHostRequestSubmitter = MockHostRequestSubmit;
     assert(FlowVirtualAudioMultichannelFactory(NULL, kAudioServerPlugInTypeUUID) == Driver());
@@ -1091,6 +1304,8 @@ int main(void) {
     CheckClockAndIO();
     CheckScopeStrictness();
     CheckRunningRateRejected();
+    CheckVolumeControl();
+    CheckControlObjects();
     puts("PASS multichannel driver family: property matrix, per-layout ASBD/layout/slots, "
          "per-device latency/revision, per-device clock, 2ch format rejection");
     return 0;

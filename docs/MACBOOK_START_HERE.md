@@ -35,4 +35,13 @@ GitHub：`https://github.com/mdxz2048/homepod.git`。
 
 App 构建入口见 `apps/macos/README.md`；Homebrew 工具可位于 `/opt/homebrew/bin`，非交互 shell 需设置 PATH。
 
+安装镜像入口见 `platforms/macos/Installer/README.md`。它把 App 与 HAL 声卡放进
+同一个 pkg/dmg，preinstall 备份旧 Flow 驱动，postinstall 重载 coreaudiod 并
+检查固定设备 UID。先在 Mac 运行
+`bash platforms/macos/Installer/scripts/check-installer.sh`，再构建
+`build-release.sh`；安装/卸载会改系统音频目录，必须由用户明确批准后执行。
+发布包会在 App 的 `Contents/Resources/Runtime` 内包含 PyInstaller 冻结的
+Python worker、runtime 项目、core dylib 和 hflctl，不再依赖 Homebrew Python 或
+外部 runtime.json；仍需在 Mac 上实际安装、签名/公证和声学验收。
+
 双机开发前先核对分支与工作区，通过 Git 提交和拉取交换更改；未提交文件不会随 Git 自动同步。本次迁移只是一次完整快照，并未启用持续同步。

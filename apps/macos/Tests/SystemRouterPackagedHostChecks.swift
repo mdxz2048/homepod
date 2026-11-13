@@ -11,6 +11,7 @@ import Foundation
             try verifyLegacyFallbackWhenNoHelpers()
             try verifyPartialBundleFails()
             try verifyMalformedBundleFails()
+            try verifyBundledRuntimeManifest()
             print("SystemRouterPackagedHostChecks: bundled / legacy / partial path resolution passed")
         } catch {
             preconditionFailure("SystemRouterPackagedHostChecks failed: \(error)")
@@ -134,5 +135,50 @@ import Foundation
         } catch {
             precondition((error.localizedDescription).contains("可执行文件名不匹配"))
         }
+    }
+
+    private static func verifyBundledRuntimeManifest() throws {
+        let resources = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent("SystemRouterBundledRuntime-\(UUID().uuidString)")
+        let runtime = resources.appendingPathComponent("Runtime")
+        try FileManager.default.createDirectory(at: runtime.appendingPathComponent("project"),
+                                                withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: runtime.appendingPathComponent("lib"),
+                                                withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: runtime.appendingPathComponent("bin"),
+                                                withIntermediateDirectories: true)
+        let worker = runtime.appendingPathComponent("system-worker/system-worker")
+        try FileManager.default.createDirectory(at: worker.deletingLastPathComponent(),
+                                                withIntermediateDirectories: true)
+        try Data("#!/bin/sh\nexit 0\n".utf8).write(to: worker)
+        try FileManager.default.setAttributes([.posixPermissions: 0o755],
+                                              ofItemAtPath: worker.path)
+        try Data().write(to: runtime.appendingPathComponent("lib/libflow_bridge.dylib"))
+        let helper = runtime.appendingPathComponent("bin/hflctl")
+        try Data("#!/bin/sh\nexit 0\n".utf8).write(to: helper)
+        try FileManager.default.setAttributes([.posixPermissions: 0o755],
+                                              ofItemAtPath: helper.path)
+        let manifest: [String: Any] = [
+            "schemaVersion": 1,
+            "workerExecutable": "system-worker/system-worker",
+            "project": "project",
+            "library": "lib/libflow_bridge.dylib",
+            "latencyControl": "bin/hflctl",
+        ]
+        let json = try JSONSerialization.data(withJSONObject: manifest)
+        try json.write(to: runtime.appendingPathComponent("manifest.json"))
+
+        let decoded = try SystemRouterService.bundledRuntime(in: resources)
+        precondition(decoded?.worker_executable != nil)
+        precondition(decoded?.worker_executable == worker.path)
+        precondition(decoded?.python == worker.path)
+        precondition(decoded?.project == runtime.appendingPathComponent("project").path)
+        precondition(decoded?.library == runtime.appendingPathComponent("lib/libflow_bridge.dylib").path)
+        precondition(decoded?.latency_control == helper.path)
+
+        let missing = try SystemRouterService.bundledRuntime(
+            in: URL(fileURLWithPath: NSTemporaryDirectory())
+                .appendingPathComponent("SystemRouterNoRuntime-\(UUID().uuidString)"))
+        precondition(missing?.worker_executable == nil)
     }
 }

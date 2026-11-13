@@ -15,6 +15,7 @@
 #include <CoreAudio/AudioHardware.h>
 #include <dispatch/dispatch.h>
 #include <mach/mach_time.h>
+#include <math.h>
 #include <os/log.h>
 #include <pthread.h>
 #include <stdlib.h>
@@ -111,6 +112,8 @@ typedef struct {
     _Atomic UInt32 running;
     _Atomic UInt32 rate;
     _Atomic UInt32 latency;
+    _Atomic float volume;
+    _Atomic UInt32 mute;
     _Atomic UInt64 revision;
     _Atomic UInt64 clockSequence;
     _Atomic UInt64 anchor;
@@ -194,9 +197,40 @@ static int StreamIndex(AudioObjectID object) {
     return -1;
 }
 
+static int ControlIndex(AudioObjectID object, Boolean *isVolume) {
+    for (UInt32 i = 0; i < MC_DEVICE_COUNT; ++i) {
+        if (object == (AudioObjectID)(kMCObjectControlVolumeBase + 2 * i)) {
+            if (isVolume) *isVolume = true;
+            return (int)i;
+        }
+        if (object == (AudioObjectID)(kMCObjectControlMuteBase + 2 * i)) {
+            if (isVolume) *isVolume = false;
+            return (int)i;
+        }
+    }
+    return -1;
+}
+
+/* The master controls expose a linear scalar in 0...1 backed by a -96...0 dB
+ * curve. The driver deliberately performs no DSP: the app forwards the value
+ * to the AirPlay group, so macOS volume keys have exactly one authority. */
+static const Float32 kMCVolumeMinDecibels = -96.0f;
+
+static Float32 MCVolumeToDecibels(Float32 scalar) {
+    if (!(scalar > 0.000001f)) return kMCVolumeMinDecibels;
+    Float32 decibels = 20.0f * log10f(scalar);
+    return decibels < kMCVolumeMinDecibels ? kMCVolumeMinDecibels : decibels;
+}
+
+static Float32 MCDecibelsToVolume(Float32 decibels) {
+    if (!(decibels > kMCVolumeMinDecibels)) return 0.0f;
+    Float32 scalar = powf(10.0f, decibels / 20.0f);
+    return scalar > 1.0f ? 1.0f : scalar;
+}
+
 static Boolean ValidObject(AudioObjectID object) {
     return object == kAudioObjectPlugInObject || DeviceIndex(object) >= 0 ||
-           StreamIndex(object) >= 0;
+           StreamIndex(object) >= 0 || ControlIndex(object, NULL) >= 0;
 }
 
 static UInt32 DeviceChannels(const MCDeviceInfo *info) {
@@ -383,6 +417,8 @@ static void InitializeState(void) {
         atomic_store(&state->running, 0);
         atomic_store(&state->rate, 48000);
         atomic_store(&state->latency, 0);
+        atomic_store(&state->volume, 1.0f);
+        atomic_store(&state->mute, 0);
         atomic_store(&state->revision, 1);
         atomic_store(&state->clockSequence, 0);
         atomic_store(&state->anchor, 0);
@@ -724,9 +760,58 @@ static OSStatus PropertyDataSize(AudioObjectID object,
     if (!address || !size || !ValidObject(object)) return kAudioHardwareBadObjectError;
     int deviceIndex = DeviceIndex(object);
     int streamIndex = StreamIndex(object);
+    Boolean controlIsVolume = false;
+    int controlIndex = ControlIndex(object, &controlIsVolume);
     Boolean global = address->mScope == kAudioObjectPropertyScopeGlobal;
     Boolean output = address->mScope == kAudioObjectPropertyScopeOutput;
     Boolean input = address->mScope == kAudioObjectPropertyScopeInput;
+
+    if (controlIndex >= 0) {
+        if (!global || address->mElement != kAudioObjectPropertyElementMain) {
+            return kAudioHardwareUnknownPropertyError;
+        }
+        switch (address->mSelector) {
+            case kAudioObjectPropertyBaseClass:
+            case kAudioObjectPropertyClass:
+            case kAudioObjectPropertyOwner:
+            case kAudioControlPropertyScope:
+            case kAudioControlPropertyElement:
+            case kAudioControlPropertyVariant:
+                *size = sizeof(UInt32);
+                return noErr;
+            case kAudioObjectPropertyName:
+                *size = sizeof(CFStringRef);
+                return noErr;
+            case kAudioLevelControlPropertyScalarValue:
+            case kAudioLevelControlPropertyDecibelValue:
+            case kAudioLevelControlPropertyConvertScalarToDecibels:
+            case kAudioLevelControlPropertyConvertDecibelsToScalar:
+                if (controlIsVolume) {
+                    *size = sizeof(Float32);
+                    return noErr;
+                }
+                break;
+            case kAudioLevelControlPropertyDecibelRange:
+                if (controlIsVolume) {
+                    *size = sizeof(AudioValueRange);
+                    return noErr;
+                }
+                break;
+            case kAudioBooleanControlPropertyValue:
+                if (!controlIsVolume) {
+                    *size = sizeof(UInt32);
+                    return noErr;
+                }
+                break;
+            case kAudioObjectPropertyControlList:
+            case kAudioObjectPropertyOwnedObjects:
+                *size = 0;
+                return noErr;
+            default:
+                break;
+        }
+        return kAudioHardwareUnknownPropertyError;
+    }
 
     if (deviceIndex >= 0 && address->mSelector == kAudioObjectPropertyElementName) {
         UInt32 channels = DeviceChannels(&gDevices[deviceIndex]);
@@ -827,9 +912,21 @@ static OSStatus PropertyDataSize(AudioObjectID object,
                     return noErr;
                 }
                 break;
+            case kAudioDevicePropertyVolumeScalar:
+                if (output) {
+                    *size = sizeof(Float32);
+                    return noErr;
+                }
+                break;
+            case kAudioDevicePropertyMute:
+                if (output) {
+                    *size = sizeof(UInt32);
+                    return noErr;
+                }
+                break;
             case kAudioObjectPropertyControlList:
                 if (global) {
-                    *size = 0;
+                    *size = 2 * sizeof(AudioObjectID);
                     return noErr;
                 }
                 break;
@@ -955,8 +1052,21 @@ static OSStatus IsSettable(AudioServerPlugInDriverRef driver, AudioObjectID obje
     OSStatus status = PropertyDataSize(object, address, &size);
     if (status) return status;
     *settable = false;
-    if (DeviceIndex(object) >= 0) {
+    Boolean controlIsVolume = false;
+    int controlIndex = ControlIndex(object, &controlIsVolume);
+    if (controlIndex >= 0) {
+        if (controlIsVolume) {
+            *settable = address->mSelector == kAudioLevelControlPropertyScalarValue ||
+                        address->mSelector == kAudioLevelControlPropertyDecibelValue;
+        } else {
+            *settable = address->mSelector == kAudioBooleanControlPropertyValue;
+        }
+    } else if (DeviceIndex(object) >= 0) {
         switch (address->mSelector) {
+            case kAudioDevicePropertyVolumeScalar:
+            case kAudioDevicePropertyMute:
+                *settable = address->mScope == kAudioObjectPropertyScopeOutput;
+                break;
             case kAudioDevicePropertyNominalSampleRate:
             case kAudioDevicePropertyBufferFrameSize:
             case kMCLatencyFrames:
@@ -1004,6 +1114,8 @@ static OSStatus GetData(AudioServerPlugInDriverRef driver, AudioObjectID object,
 
     int deviceIndex = DeviceIndex(object);
     int streamIndex = StreamIndex(object);
+    Boolean controlIsVolume = false;
+    int controlIndex = ControlIndex(object, &controlIsVolume);
     UInt32 value = 0;
     CFStringRef string = NULL;
 
@@ -1013,6 +1125,80 @@ static OSStatus GetData(AudioServerPlugInDriverRef driver, AudioObjectID object,
      * remains zero. */
     if (address->mSelector == kAudioStreamPropertyLatency) {
         value = streamIndex >= 0 ? atomic_load(&gState[streamIndex].latency) : 0;
+        memcpy(data, &value, size);
+        *written = size;
+        return noErr;
+    }
+
+    if (controlIndex >= 0) {
+        MCDeviceState *controlState = &gState[controlIndex];
+        Float32 scalar = atomic_load(&controlState->volume);
+        switch (address->mSelector) {
+            case kAudioObjectPropertyBaseClass:
+                value = controlIsVolume ? kAudioLevelControlClassID
+                                        : kAudioBooleanControlClassID;
+                break;
+            case kAudioObjectPropertyClass:
+                value = controlIsVolume ? kAudioVolumeControlClassID
+                                        : kAudioMuteControlClassID;
+                break;
+            case kAudioObjectPropertyOwner:
+                value = gDevices[controlIndex].deviceID;
+                break;
+            case kAudioObjectPropertyName: {
+                CFStringRef name = controlIsVolume ? CFSTR("Volume") : CFSTR("Mute");
+                CFRetain(name);
+                memcpy(data, &name, sizeof(name));
+                *written = sizeof(name);
+                return noErr;
+            }
+            case kAudioControlPropertyScope:
+                value = kAudioObjectPropertyScopeOutput;
+                break;
+            case kAudioControlPropertyElement:
+                value = kAudioObjectPropertyElementMain;
+                break;
+            case kAudioControlPropertyVariant:
+                value = 0;
+                break;
+            case kAudioLevelControlPropertyScalarValue:
+                memcpy(data, &scalar, sizeof(scalar));
+                *written = sizeof(scalar);
+                return noErr;
+            case kAudioLevelControlPropertyDecibelValue: {
+                Float32 decibels = MCVolumeToDecibels(scalar);
+                memcpy(data, &decibels, sizeof(decibels));
+                *written = sizeof(decibels);
+                return noErr;
+            }
+            case kAudioLevelControlPropertyDecibelRange: {
+                AudioValueRange range = {kMCVolumeMinDecibels, 0.0f};
+                memcpy(data, &range, sizeof(range));
+                *written = sizeof(range);
+                return noErr;
+            }
+            case kAudioLevelControlPropertyConvertScalarToDecibels: {
+                Float32 input = 0;
+                memcpy(&input, data, sizeof(input));
+                Float32 decibels = MCVolumeToDecibels(input);
+                memcpy(data, &decibels, sizeof(decibels));
+                *written = sizeof(decibels);
+                return noErr;
+            }
+            case kAudioLevelControlPropertyConvertDecibelsToScalar: {
+                Float32 input = 0;
+                memcpy(&input, data, sizeof(input));
+                Float32 result = MCDecibelsToVolume(input);
+                memcpy(data, &result, sizeof(result));
+                *written = sizeof(result);
+                return noErr;
+            }
+            case kAudioBooleanControlPropertyValue:
+                value = atomic_load(&controlState->mute);
+                break;
+            default:
+                return kAudioHardwareUnknownPropertyError;
+        }
         memcpy(data, &value, size);
         *written = size;
         return noErr;
@@ -1144,6 +1330,23 @@ static OSStatus GetData(AudioServerPlugInDriverRef driver, AudioObjectID object,
         case kAudioDevicePropertyDeviceIsRunning:
         case kAudioDevicePropertyDeviceIsRunningSomewhere:
             value = atomic_load(&gState[deviceIndex].running) > 0;
+            break;
+        case kAudioObjectPropertyControlList: {
+            AudioObjectID controls[2] = {
+                (AudioObjectID)(kMCObjectControlVolumeBase + 2 * deviceIndex),
+                (AudioObjectID)(kMCObjectControlMuteBase + 2 * deviceIndex)};
+            memcpy(data, controls, sizeof(controls));
+            *written = sizeof(controls);
+            return noErr;
+        }
+        case kAudioDevicePropertyVolumeScalar: {
+            Float32 volume = atomic_load(&gState[deviceIndex].volume);
+            memcpy(data, &volume, sizeof(volume));
+            *written = sizeof(volume);
+            return noErr;
+        }
+        case kAudioDevicePropertyMute:
+            value = atomic_load(&gState[deviceIndex].mute);
             break;
         case kAudioDevicePropertyZeroTimeStampPeriod:
             value = kMCZeroTimeStampPeriod;
@@ -1283,6 +1486,62 @@ static OSStatus SetData(AudioServerPlugInDriverRef driver, AudioObjectID object,
 
     int deviceIndex = DeviceIndex(object);
     int streamIndex = StreamIndex(object);
+    Boolean controlIsVolume = false;
+    int controlIndex = ControlIndex(object, &controlIsVolume);
+
+    if (controlIndex >= 0) {
+        MCDeviceState *state = &gState[controlIndex];
+        AudioObjectPropertyAddress deviceChange;
+        if (controlIsVolume) {
+            if (size != sizeof(Float32)) return kAudioHardwareBadPropertySizeError;
+            Float32 volume = 0;
+            memcpy(&volume, data, sizeof(volume));
+            if (address->mSelector == kAudioLevelControlPropertyDecibelValue) {
+                if (!(volume >= kMCVolumeMinDecibels && volume <= 0.0f)) {
+                    return kAudioHardwareIllegalOperationError;
+                }
+                volume = MCDecibelsToVolume(volume);
+            } else if (address->mSelector != kAudioLevelControlPropertyScalarValue) {
+                return kAudioHardwareUnknownPropertyError;
+            }
+            if (!(volume >= 0.0f && volume <= 1.0f)) {
+                return kAudioHardwareIllegalOperationError;
+            }
+            /* Idempotent writes must not notify: the app mirrors the control
+             * value back into the driver, and a notification per echo would
+             * spin the listener loop. */
+            if (fabsf(atomic_load(&state->volume) - volume) < 0.000001f) return noErr;
+            atomic_store(&state->volume, volume);
+            AudioObjectPropertyAddress changes[2] = {
+                {kAudioLevelControlPropertyScalarValue, kAudioObjectPropertyScopeGlobal,
+                 kAudioObjectPropertyElementMain},
+                {kAudioLevelControlPropertyDecibelValue, kAudioObjectPropertyScopeGlobal,
+                 kAudioObjectPropertyElementMain}};
+            Notify(object, 2, changes);
+            deviceChange = (AudioObjectPropertyAddress){
+                kAudioDevicePropertyVolumeScalar, kAudioObjectPropertyScopeOutput,
+                kAudioObjectPropertyElementMain};
+        } else {
+            if (address->mSelector != kAudioBooleanControlPropertyValue) {
+                return kAudioHardwareUnknownPropertyError;
+            }
+            if (size != sizeof(UInt32)) return kAudioHardwareBadPropertySizeError;
+            UInt32 mute = 0;
+            memcpy(&mute, data, sizeof(mute));
+            if (mute > 1) return kAudioHardwareIllegalOperationError;
+            if (atomic_load(&state->mute) == mute) return noErr;
+            atomic_store(&state->mute, mute);
+            AudioObjectPropertyAddress change = {
+                kAudioBooleanControlPropertyValue, kAudioObjectPropertyScopeGlobal,
+                kAudioObjectPropertyElementMain};
+            Notify(object, 1, &change);
+            deviceChange = (AudioObjectPropertyAddress){
+                kAudioDevicePropertyMute, kAudioObjectPropertyScopeOutput,
+                kAudioObjectPropertyElementMain};
+        }
+        Notify(gDevices[controlIndex].deviceID, 1, &deviceChange);
+        return noErr;
+    }
 
     if (address->mSelector == kAudioDevicePropertyBufferFrameSize) {
         if (size != sizeof(UInt32)) return kAudioHardwareBadPropertySizeError;
@@ -1290,6 +1549,56 @@ static OSStatus SetData(AudioServerPlugInDriverRef driver, AudioObjectID object,
         memcpy(&frames, data, sizeof(frames));
         return (frames >= 15 && frames <= 4096) ? noErr
                                                 : kAudioHardwareIllegalOperationError;
+    }
+
+    if (address->mSelector == kAudioDevicePropertyVolumeScalar) {
+        if (size != sizeof(Float32) || deviceIndex < 0) {
+            return kAudioHardwareBadPropertySizeError;
+        }
+        Float32 volume = 0;
+        memcpy(&volume, data, sizeof(volume));
+        if (!(volume >= 0.0f && volume <= 1.0f)) {
+            return kAudioHardwareIllegalOperationError;
+        }
+        if (fabsf(atomic_load(&gState[deviceIndex].volume) - volume) < 0.000001f) {
+            return noErr;
+        }
+        atomic_store(&gState[deviceIndex].volume, volume);
+        AudioObjectPropertyAddress changed = {
+            kAudioDevicePropertyVolumeScalar, kAudioObjectPropertyScopeOutput,
+            kAudioObjectPropertyElementMain};
+        Notify(object, 1, &changed);
+        AudioObjectID volumeControl =
+            (AudioObjectID)(kMCObjectControlVolumeBase + 2 * deviceIndex);
+        AudioObjectPropertyAddress controlChanges[2] = {
+            {kAudioLevelControlPropertyScalarValue, kAudioObjectPropertyScopeGlobal,
+             kAudioObjectPropertyElementMain},
+            {kAudioLevelControlPropertyDecibelValue, kAudioObjectPropertyScopeGlobal,
+             kAudioObjectPropertyElementMain}};
+        Notify(volumeControl, 2, controlChanges);
+        return noErr;
+    }
+
+    if (address->mSelector == kAudioDevicePropertyMute) {
+        if (size != sizeof(UInt32) || deviceIndex < 0) {
+            return kAudioHardwareBadPropertySizeError;
+        }
+        UInt32 mute = 0;
+        memcpy(&mute, data, sizeof(mute));
+        if (mute > 1) return kAudioHardwareIllegalOperationError;
+        if (atomic_load(&gState[deviceIndex].mute) == mute) return noErr;
+        atomic_store(&gState[deviceIndex].mute, mute);
+        AudioObjectPropertyAddress changed = {
+            kAudioDevicePropertyMute, kAudioObjectPropertyScopeOutput,
+            kAudioObjectPropertyElementMain};
+        Notify(object, 1, &changed);
+        AudioObjectID muteControl =
+            (AudioObjectID)(kMCObjectControlMuteBase + 2 * deviceIndex);
+        AudioObjectPropertyAddress controlChange = {
+            kAudioBooleanControlPropertyValue, kAudioObjectPropertyScopeGlobal,
+            kAudioObjectPropertyElementMain};
+        Notify(muteControl, 1, &controlChange);
+        return noErr;
     }
 
     if (address->mSelector == kMCLatencyFrames) {

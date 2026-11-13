@@ -20,6 +20,8 @@ targets:
       properties:
         LSUIElement: true
         CFBundleDisplayName: HomePod Flow
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSAudioCaptureUsageDescription: 将 Mac 播放的声音发送到你选择的音箱。
         NSLocalNetworkUsageDescription: 查找并连接同一网络中的 HomePod 音箱。
     settings:
@@ -28,7 +30,7 @@ targets:
         PRODUCT_NAME: HomePod Flow
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: NO
-        CURRENT_PROJECT_VERSION: 1
-        MARKETING_VERSION: 0.3.0
+        CURRENT_PROJECT_VERSION: 2
+        MARKETING_VERSION: 0.3.1
     scheme:
       testTargets: []

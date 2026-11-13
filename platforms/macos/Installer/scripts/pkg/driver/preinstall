@@ -1,0 +1,75 @@
+#!/bin/bash
+# HomePod Flow audio-component preinstall.
+#
+# This is the only place that removes an existing Flow HAL bundle. It refuses
+# symlinks and unrelated bundle identifiers, and always leaves a ditto backup
+# before moving anything aside.
+set -euo pipefail
+
+scripts_dir="$(cd "$(dirname "$0")" && pwd)"
+if [ -f "$scripts_dir/lib.sh" ]; then
+    # pkgbuild stages this directory with lib.sh copied next to the scripts.
+    # shellcheck source=lib.sh
+    source "$scripts_dir/lib.sh"
+else
+    # shellcheck source=../../lib.sh
+    source "$scripts_dir/../../lib.sh"
+fi
+
+flow_require_root
+
+target_volume="${3:-/}"
+case "$target_volume" in
+    /|/.) ;;
+    *) flow_fail "Only the startup volume is supported (target: $target_volume)." ;;
+esac
+
+/bin/mkdir -p "$(/usr/bin/dirname "$FLOW_INSTALL_LOG")"
+/usr/bin/touch "$FLOW_INSTALL_LOG"
+/bin/chmod 644 "$FLOW_INSTALL_LOG"
+flow_log "=== preinstall $(/bin/date -u +%Y-%m-%dT%H:%M:%SZ) ==="
+
+flow_quit_app
+
+[ -d "$FLOW_HAL_DIR" ] || /usr/bin/install -d -o root -g wheel -m 755 "$FLOW_HAL_DIR"
+
+stamp=$(/bin/date -u +%Y%m%d-%H%M%S)
+backup_dir="$FLOW_BACKUP_DIR/$stamp"
+
+backup_and_remove() {
+    local path="$1" name identifier
+    [ -e "$path" ] || return 0
+    [ ! -L "$path" ] || flow_fail "Refusing symlink in HAL directory: $path"
+    name=$(/usr/bin/basename "$path")
+    identifier=$(flow_bundle_id "$path" || true)
+    case "$identifier" in
+        "$FLOW_DRIVER_BUNDLE_ID"|"$FLOW_DRIVER_DEV_BUNDLE_ID") ;;
+        *) flow_fail "Refusing to replace unrelated HAL bundle: $path ($identifier)" ;;
+    esac
+    /bin/mkdir -p "$backup_dir"
+    # Zip the old bundle so Spotlight/PackageKit cannot treat it as a second
+    # installed App/driver and skip the new component by version comparison.
+    flow_log "Backing up $path to $backup_dir/$name.zip"
+    /usr/bin/ditto -c -k --sequesterRsrc --keepParent "$path" "$backup_dir/$name.zip"
+    /bin/rm -rf "$path"
+    flow_log "Removed old Flow audio component: $path"
+}
+
+for name in "HomePodFlowAudio.driver" "$FLOW_DRIVER_BUNDLE_NAME"; do
+    backup_and_remove "$FLOW_HAL_DIR/$name"
+done
+
+# Catch renamed or older Flow bundles without touching any other vendor.
+for path in "$FLOW_HAL_DIR"/*.driver; do
+    [ -e "$path" ] || continue
+    case "$(/usr/bin/basename "$path")" in
+        "HomePodFlowAudio.driver"|"$FLOW_DRIVER_BUNDLE_NAME") continue ;;
+    esac
+    identifier=$(flow_bundle_id "$path" || true)
+    case "$identifier" in
+        "$FLOW_DRIVER_BUNDLE_ID"|"$FLOW_DRIVER_DEV_BUNDLE_ID") backup_and_remove "$path" ;;
+    esac
+done
+
+flow_log "Preinstall complete; old Flow components are in $backup_dir when present."
+exit 0

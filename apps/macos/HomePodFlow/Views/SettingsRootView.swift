@@ -4,19 +4,26 @@ struct SettingsRootView: View {
     @Bindable var state: AppState
     @State private var showingDevices = false
     private var editable: Bool { state.layoutEditable }
+    private var removeEditable: Bool { state.canRemoveDevice }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("空间布局").font(.title2.bold())
-                    Text(state.mode == .cinema ? "添加实际音箱，拖动到房间中的位置。" : "同步播放不使用空间位置，布局只读。")
+                    Text(state.mode == .cinema
+                         ? "添加实际音箱，拖动到房间中的位置。"
+                         : "同步播放不使用空间位置；仍可移除已保存的音箱。")
                         .foregroundStyle(.secondary).font(.callout)
                 }
                 Spacer()
                 Button { showingDevices = true } label: {
                     Label("添加音箱", systemImage: "plus")
                 }.controlSize(.large).disabled(!editable)
+            }
+            if !state.visualDemo {
+                AudioComponentSection(service: state.audioComponent,
+                                      canInstall: !state.sessionControlsLocked)
             }
             Divider()
             HStack(alignment: .top, spacing: 20) {
@@ -35,9 +42,9 @@ struct SettingsRootView: View {
             HStack {
                 Button("重置位置", action: state.resetLayout).disabled(!editable || state.draftLayout.devices.isEmpty)
                 Spacer()
-                Button("取消修改", action: state.cancelLayout).disabled(!editable || !state.hasUnsavedLayout)
+                Button("取消修改", action: state.cancelLayout).disabled(!removeEditable || !state.hasUnsavedLayout)
                 Button("保存布局", action: state.applyLayout).buttonStyle(.borderedProminent)
-                    .disabled(!editable || !state.hasUnsavedLayout || !state.unconfirmedSpeakerHosts.isEmpty)
+                    .disabled(!removeEditable || !state.hasUnsavedLayout || !state.unconfirmedSpeakerHosts.isEmpty)
             }.controlSize(.large)
             Text(state.notice).font(.caption).foregroundStyle(.secondary).lineLimit(2)
         }
@@ -51,35 +58,64 @@ struct SettingsRootView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text("音箱（\(state.draftLayout.devices.count)）").font(.headline)
                 ForEach(state.draftLayout.devices) { device in
-                    Button { state.selectedDeviceID = device.id } label: {
-                        HStack(spacing: 10) {
-                            SpeakerGlyph(isMini: device.kind == .mini).frame(width: 30, height: 30)
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(device.name).font(.callout.weight(.medium))
-                                Text(state.unconfirmedSpeakerHosts.contains(device.host ?? "") ? "请选择型号" :
-                                     (device.kind == .mini ? "HomePod mini" : "HomePod"))
-                                    .font(.caption).foregroundStyle(.secondary)
-                            }
-                            Spacer(minLength: 0)
-                        }.padding(10).contentShape(Rectangle())
-                            .background(state.selectedDeviceID == device.id ? Color.accentColor.opacity(0.12) : Color.clear,
-                                        in: RoundedRectangle(cornerRadius: 10))
-                    }.buttonStyle(.plain)
+                    HStack(spacing: 4) {
+                        Button { state.selectedDeviceID = device.id } label: {
+                            HStack(spacing: 10) {
+                                SpeakerGlyph(kind: device.kind)
+                                    .frame(width: device.kind.form == .homePod ? 26 : 30,
+                                           height: device.kind.form == .homePod ? 36 : 30)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(device.name).font(.callout.weight(.medium))
+                                    Text(state.unconfirmedSpeakerHosts.contains(device.host ?? "")
+                                         ? "请选择型号" : device.kind.displayName)
+                                        .font(.caption).foregroundStyle(.secondary)
+                                }
+                                Spacer(minLength: 0)
+                            }.padding(10).contentShape(Rectangle())
+                        }.buttonStyle(.plain)
+                        Button(role: .destructive) {
+                            state.removeDevice(device.id)
+                        } label: {
+                            Image(systemName: "trash")
+                                .frame(width: 24, height: 24)
+                        }
+                        .buttonStyle(.borderless)
+                        .disabled(!removeEditable)
+                        .help("从布局移除")
+                        .accessibilityLabel("移除 \(device.name)")
+                    }
+                    .background(state.selectedDeviceID == device.id ? Color.accentColor.opacity(0.12) : Color.clear,
+                                in: RoundedRectangle(cornerRadius: 10))
                 }
                 if let index = state.draftLayout.devices.firstIndex(where: { $0.id == state.selectedDeviceID }) {
                     Divider()
                     VStack(alignment: .leading, spacing: 12) {
-                        Picker("音箱型号", selection: speakerKind(index)) {
-                            Text("选择型号").tag(Optional<SpeakerKind>.none)
-                            Text("HomePod").tag(Optional(SpeakerKind.homePod))
-                            Text("HomePod mini").tag(Optional(SpeakerKind.mini))
-                        }.pickerStyle(.menu)
-                        coordinate("左右", value: deviceCoordinate(index, horizontal: true))
-                        coordinate("前后", value: deviceCoordinate(index, horizontal: false))
+                        VStack(alignment: .leading, spacing: 12) {
+                            Picker("音箱型号", selection: speakerKind(index)) {
+                                Text("选择型号").tag(Optional<SpeakerKind>.none)
+                                Section("HomePod") {
+                                    ForEach(SpeakerKind.homePodChoices) { kind in
+                                        Text(kind.displayName).tag(Optional(kind))
+                                    }
+                                }
+                                Section("HomePod mini") {
+                                    ForEach(SpeakerKind.miniChoices) { kind in
+                                        Text(kind.displayName).tag(Optional(kind))
+                                    }
+                                }
+                            }.pickerStyle(.menu)
+                            Text("型号决定轮廓，颜色只影响画布外观。")
+                                .font(.caption).foregroundStyle(.secondary)
+                            coordinate("左右", value: deviceCoordinate(index, horizontal: true))
+                            coordinate("前后", value: deviceCoordinate(index, horizontal: false))
+                        }.disabled(!editable)
                         Button("从布局移除", role: .destructive) {
                             state.removeDevice(state.draftLayout.devices[index].id)
                         }
-                    }.disabled(!editable)
+                        .disabled(!removeEditable)
+                        Text("断电或不再使用的音箱可直接移除。")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
                 }
                 Divider()
                 Label("听音位置", systemImage: "person.fill").font(.headline)
@@ -126,6 +162,108 @@ struct SettingsRootView: View {
     }
 }
 
+private struct AudioComponentSection: View {
+    @Bindable var service: AudioComponentService
+    var canInstall: Bool
+    @State private var actionNote = ""
+
+    private var snapshot: AudioComponentSnapshot { service.snapshot }
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: icon)
+                .font(.title3)
+                .foregroundStyle(tint)
+                .frame(width: 24)
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 8) {
+                    Text(title).font(.callout.weight(.semibold))
+                    Text("App \(AudioComponentService.appVersion)")
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                    if let version = snapshot.driverVersion {
+                        Text("驱动 \(version)")
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                Text(snapshot.message)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                if !actionNote.isEmpty {
+                    Text(actionNote).font(.caption).foregroundStyle(.orange)
+                }
+                if !canInstall {
+                    Text("请先停止系统声音，再安装或更新音频组件。")
+                        .font(.caption).foregroundStyle(.orange)
+                }
+            }
+            Spacer(minLength: 12)
+            HStack(spacing: 8) {
+                if snapshot.state == .checking {
+                    ProgressView().controlSize(.small)
+                } else if snapshot.state == .ready {
+                    Button("升级/重装…") {
+                        if !service.install() { actionNote = service.lastActionMessage }
+                    }
+                    .disabled(!canInstall)
+                    .help(service.installerName.map { "打开 \($0)" } ?? "未找到安装包")
+                    Button("重新检查") { service.refresh() }
+                } else {
+                    Button("安装/升级音频组件…") {
+                        if !service.install() { actionNote = service.lastActionMessage }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(!canInstall)
+                    .help(service.installerName.map { "打开 \($0)" } ?? "未找到安装包")
+                    Button("重新检查") { service.refresh() }
+                    if snapshot.state == .installedNeedsReload {
+                        Button("声音设置") { service.openSoundSettings() }
+                    }
+                    Button("日志") { service.openInstallLog() }
+                }
+            }
+            .controlSize(.small)
+        }
+        .padding(12)
+        .background(tint.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(tint.opacity(0.25), lineWidth: 1))
+    }
+
+    private var title: String {
+        switch snapshot.state {
+        case .checking: "音频组件"
+        case .notInstalled: "音频组件未安装"
+        case .installedNeedsReload: "音频组件等待加载"
+        case .ready: "音频组件已就绪"
+        case .conflict: "音频组件有冲突"
+        case .invalid: "音频组件无效"
+        }
+    }
+
+    private var icon: String {
+        switch snapshot.state {
+        case .checking: "waveform"
+        case .notInstalled: "exclamationmark.triangle.fill"
+        case .installedNeedsReload: "clock.arrow.circlepath"
+        case .ready: "checkmark.circle.fill"
+        case .conflict: "exclamationmark.triangle.fill"
+        case .invalid: "xmark.octagon.fill"
+        }
+    }
+
+    private var tint: Color {
+        switch snapshot.state {
+        case .checking: Color.gray
+        case .notInstalled: Color.orange
+        case .installedNeedsReload: Color.orange
+        case .ready: Color.green
+        case .conflict, .invalid: Color.red
+        }
+    }
+}
+
 private struct DeviceDiscoverySheet: View {
     @Bindable var state: AppState
     @Environment(\.dismiss) private var dismiss
@@ -145,6 +283,31 @@ private struct DeviceDiscoverySheet: View {
                     }
                 }.frame(maxWidth: .infinity, alignment: .leading)
             }.frame(minHeight: 110, maxHeight: 240)
+            if !state.draftLayout.devices.isEmpty {
+                Divider()
+                Text("已保存的音箱").font(.headline)
+                Text("断电、搬走或不再使用的音箱可直接移除。")
+                    .font(.caption).foregroundStyle(.secondary)
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(state.draftLayout.devices) { device in
+                            HStack {
+                                Text(device.name).font(.callout)
+                                Spacer()
+                                Button(role: .destructive) {
+                                    state.removeDevice(device.id)
+                                } label: {
+                                    Image(systemName: "trash")
+                                }
+                                .buttonStyle(.borderless)
+                                .disabled(!state.canRemoveDevice)
+                                .help("从布局移除")
+                                .accessibilityLabel("移除 \(device.name)")
+                            }
+                        }
+                    }.frame(maxWidth: .infinity, alignment: .leading)
+                }.frame(maxHeight: 120)
+            }
             HStack {
                 Button("重新查找") { Task { await discover() } }.disabled(state.systemAudio.isBusy)
                 Spacer()

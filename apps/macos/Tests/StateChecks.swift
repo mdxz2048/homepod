@@ -126,6 +126,13 @@ import Foundation
         let legacyDevice = RoomDevice(name: "Old saved", position: .init(x: 0.5, y: 0.5), kind: .mini, role: .front, host: "192.0.2.99")
         let legacyDecoded = try! JSONDecoder().decode(RoomDevice.self, from: JSONEncoder().encode(legacyDevice))
         precondition(legacyDecoded.stableIdentifier == nil)
+        // New finishes must persist without breaking the two legacy raw values.
+        precondition(SpeakerKind(rawValue: "mini") == .mini && SpeakerKind(rawValue: "homePod") == .homePod)
+        let colored = RoomDevice(name: "Yellow mini", position: .init(x: 0.5, y: 0.5),
+                                 kind: .miniYellow, role: .rearLeft, host: "192.0.2.77")
+        let coloredDecoded = try! JSONDecoder().decode(RoomDevice.self, from: JSONEncoder().encode(colored))
+        precondition(coloredDecoded.kind == .miniYellow && coloredDecoded.kind.form == .mini)
+        precondition(SpeakerKind.homePodMidnight.form == .homePod)
 
         // Preparation/backoff intent locks every editing entry even without an active session.
         let preparation = configured.systemAudio.beginPlaybackPreparation()!
@@ -180,6 +187,19 @@ import Foundation
         configured.applyLayout()
         precondition(configured.previewLayout.devices.isEmpty && configured.systemAudio.selectedDeviceIDs.isEmpty)
         precondition(!configured.systemAudio.hasActiveSession && !configured.systemAudio.serviceReady)
+
+        // Removing a powered-off speaker must work without switching to cinema mode.
+        let removalSuite = "homepod-flow-sync-removal-\(UUID().uuidString)"
+        let removalDefaults = UserDefaults(suiteName: removalSuite)!
+        defer { removalDefaults.removePersistentDomain(forName: removalSuite) }
+        let removalState = AppState(defaults: removalDefaults, visualDemo: true)
+        removalState.mode = .synchronized
+        let removalID = removalState.draftLayout.devices[0].id
+        let removalCount = removalState.draftLayout.devices.count
+        removalState.removeDevice(removalID)
+        precondition(removalState.draftLayout.devices.count == removalCount - 1)
+        removalState.applyLayout()
+        precondition(removalState.layout.devices.count == removalCount - 1)
         print("PASS: preferences, saved-menu layout, draft/cancel/apply selection isolation, reliable model mapping, explicit unknown correction, persisted coordinates/kind, empty-start safety")
     }
 }
