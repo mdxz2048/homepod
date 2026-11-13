@@ -1,5 +1,14 @@
 # HomePod Flow 会话接续入口
 
+## 2026-11-13 最新：0.3.3 更新链已发布并完成bootstrap
+
+当前安装 /Applications/HomePod Flow.app 0.3.3/build4。网站homepodflow.mddxz.top已通过树莓派局域网192.168.0.100的/opt/sites/homepodflow发布最新pkg/dmg、release.json及Ed25519签名updates/latest.json。App有启动检查、设置一键更新，完整pkg校验后经系统授权替换旧App/驱动并清理，最后提示重启；用户布局保留。以后完成发布任务按根目录AGENTS.md和APP_UPDATES.md走构建并上传流程。
+
+用户已在安装器确认许可/管理员授权，bootstrap安装成功、签名/版本/旧备份清理通过。当前boot-session需要重启，生产组件检查正确阻止使用旧内存driver；已安装App配置的在线检查显示当前最新。先由用户重启一次Mac，之后复验音频；下次完整应用内授权升级尚未宣称端到端通过。
+
+网站/SSH凭据及Ed25519私钥不进Git。Mac调查时临时启用的Tailscale已恢复停止，上传使用局域网；公网下载包校验不依赖本机Tailscale。详情见reports/App-updates-deployment-2026-11-13.md。
+
+
 ## 2026-11-13 安装修复接续（优先于历史）
 
 已拉取远端ae6c844并合并，修复提交eedb939/f6b0a93。当前安装路径 /Applications/HomePod Flow.app，版本0.3.2/build3，自包含运行时。用户执行清理安装并补装，签名和二进制比对通过，coreaudiod重新加载（原kickstart被SIP拒绝，正常TERM后由launchd重启成功）。真实HAL已通过空闲延迟更新及静音IO占用中2000→1500ms host事务；客户端退出后idle；现保留2000ms/revision6。App开关改用默认输出回读确认状态，离线延迟/失败恢复检查通过，真实菜单/浏览器声学效果仍待复验。

@@ -1,5 +1,10 @@
 # MacBook 开发接续入口
 
+## 2026-11-13 最新发布
+
+当前正式安装0.3.3/build4，首次安装已完成，等待用户重启Mac加载driver。已接入树莓派网站的签名更新源，后续在App设置中检查/一键更新。根目录AGENTS.md和docs/collaboration/APP_UPDATES.md记录每次构建并发布的约定；下文0.3.2及迁移环境为历史记录。
+
+
 ## 2026-11-13 当前安装
 
 当前已安装 /Applications/HomePod Flow.app 0.3.2/build3，自包含运行时；下文11-07的用户Applications/外部Python路径为历史迁移环境。新驱动已重载，真实HAL占用中延迟更新通过，当前保留2000ms；浏览器声学效果仍待复验。读PROGRESS.md和交接顶部最新记录。

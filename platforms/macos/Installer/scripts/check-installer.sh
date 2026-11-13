@@ -55,10 +55,10 @@ fi
 
 check "preinstall backs up and refuses unrelated HAL bundles" sh -c \
     "grep -q 'Refusing to replace unrelated HAL bundle' '$installer_root/scripts/pkg/driver/preinstall'"
-check "postinstall probes the exact Flow UID" sh -c \
-    "grep -q 'flow_probe_device' '$installer_root/scripts/pkg/support/postinstall' && grep -q 'surround71.v1' '$installer_root/scripts/lib.sh'"
-check "postinstall reloads coreaudiod" sh -c \
-    "grep -q 'launchctl kickstart -k system/com.apple.audio.coreaudiod' '$installer_root/scripts/lib.sh'"
+check "postinstall verifies installed App and driver" sh -c \
+    "grep -q 'Installed App signature failed' '$installer_root/scripts/pkg/support/postinstall' && grep -q 'Installed audio component signature verification failed' '$installer_root/scripts/pkg/support/postinstall'"
+check "postinstall requires reboot and records boot session" sh -c \
+    "grep -q 'upgrade-requires-reboot' '$installer_root/scripts/pkg/support/postinstall' && grep -q 'kern.bootsessionuuid' '$installer_root/scripts/pkg/support/postinstall'"
 check "installer only restores Flow-as-default via helper" sh -c \
     "! grep -R -n -E 'kAudioHardwarePropertyDefaultOutputDevice|defaults write|SwitchAudioSource' --exclude='check-installer.sh' '$installer_root/scripts' '$installer_root/resources' >/dev/null 2>&1"
 check "default-output helper is in the support payload" sh -c \
@@ -80,7 +80,7 @@ check "manifest validation uses JSON parser" sh -c \
 check "old App/driver backups are zipped" sh -c \
     "grep -q 'ditto -c -k' '$installer_root/scripts/pkg/driver/preinstall' && grep -q 'ditto -c -k' '$installer_root/scripts/uninstall-homepodflow.sh'"
 check "installer prompts restart after install" sh -c \
-    "grep -q 'onConclusion=\"Restart\"' '$installer_root/Distribution.xml.in'"
+    "grep -q 'onConclusion=\"RequireRestart\"' '$installer_root/Distribution.xml.in'"
 
 if [ "$failures" -ne 0 ]; then
     /usr/bin/printf '%d installer check(s) failed\n' "$failures" >&2

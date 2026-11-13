@@ -30,6 +30,9 @@ esac
 flow_log "=== preinstall $(/bin/date -u +%Y-%m-%dT%H:%M:%SZ) ==="
 
 flow_quit_app
+if [ -x "$FLOW_SUPPORT_DIR/bin/flow-default-output" ]; then
+    flow_restore_default_output || flow_fail "Cannot verify safe default output before upgrade"
+fi
 
 [ -d "$FLOW_HAL_DIR" ] || /usr/bin/install -d -o root -g wheel -m 755 "$FLOW_HAL_DIR"
 
@@ -72,4 +75,17 @@ for path in "$FLOW_HAL_DIR"/*.driver; do
 done
 
 flow_log "Preinstall complete; old Flow components are in $backup_dir when present."
+# Clean App replacement, including a former per-user installation. Temporary
+# rollback material is kept only until the final postinstall verifies success.
+console_user=$(/usr/bin/stat -f '%Su' /dev/console)
+console_home=$(/usr/bin/dscl . -read "/Users/$console_user" NFSHomeDirectory 2>/dev/null | /usr/bin/awk '{print $2}' || true)
+for app in "/Applications/$FLOW_APP_NAME" "${console_home:-/nonexistent}/Applications/$FLOW_APP_NAME"; do
+    [ -e "$app" ] || continue
+    [ ! -L "$app" ] || flow_fail "Refusing symlink App: $app"
+    [ "$(flow_bundle_id "$app")" = "$FLOW_APP_BUNDLE_ID" ] || flow_fail "Refusing unrelated App: $app"
+    /bin/mkdir -p "$backup_dir"
+    /usr/bin/ditto -c -k --sequesterRsrc --keepParent "$app" "$backup_dir/$(/usr/bin/basename "$(/usr/bin/dirname "$app")")-App.zip"
+    /bin/rm -rf "$app"
+done
+
 exit 0

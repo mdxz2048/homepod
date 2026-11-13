@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<installer-gui-script minSpecVersion="2" onConclusion="Restart">
+<installer-gui-script minSpecVersion="2">
     <title>HomePod Flow</title>
     <organization>com.homepodflow</organization>
     <domains enable_localSystem="true" enable_currentUserHome="false" enable_anywhere="false"/>
@@ -29,7 +29,7 @@
     </choice>
     <pkg-ref id="com.homepodflow.audio.driver.pkg" version="@VERSION@">Driver.pkg</pkg-ref>
     <pkg-ref id="com.homepodflow.mac" version="@VERSION@">App.pkg</pkg-ref>
-    <pkg-ref id="com.homepodflow.support.pkg" version="@VERSION@">Support.pkg</pkg-ref>
+    <pkg-ref id="com.homepodflow.support.pkg" version="@VERSION@" onConclusion="RequireRestart">Support.pkg</pkg-ref>
     <welcome file="Welcome.html" mime-type="text/html"/>
     <readme file="ReadMe.html" mime-type="text/html"/>
     <license file="License.html" mime-type="text/html"/>

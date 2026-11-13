@@ -1,5 +1,10 @@
 # HomePod Flow 统一安装镜像
 
+## 0.3.3 更新流程
+
+最新自动升级设计见 [APP_UPDATES.md](../../../docs/collaboration/APP_UPDATES.md)。0.3.3起，下载并验证完整pkg后再停止播放，经系统授权完成App/声卡整体替换。临时旧组件备份在最终签名验证成功后清理；安装结束记录boot-session并要求重启，不再依赖coreaudiod热重载。以下旧版热重载/长期备份条目仅为历史实现说明。
+
+
 这个目录把 **HomePod Flow.app** 和 **HomePod Flow Audio 虚拟声卡** 放进同一个
 macOS 安装流程：一个 `.pkg` 安装在 `.dmg` 里，用户只需要双击一次安装程序。
 

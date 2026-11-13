@@ -10,6 +10,7 @@ struct HomePodFlowApp: App {
         _state = State(initialValue: initialState)
         appDelegate.worker = initialState.worker
         appDelegate.systemAudio = initialState.systemAudio
+        Task { await initialState.updates.checkIfNeeded() }
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--show-settings") {
             DispatchQueue.main.async {

@@ -41,24 +41,19 @@ sha=$(/usr/bin/shasum -a 256 "$bundle/Contents/MacOS/$FLOW_DRIVER_EXECUTABLE" | 
 flow_write_manifest "$bundle" "${version:-unknown}" "$sha"
 flow_log "Installed $bundle version=${version:-unknown} sha256=$sha"
 
-# The installer must never select the silent virtual device as system output.
-# Reloading coreaudiod only makes the HAL bundle available.
-flow_clear_needs_restart
-if flow_reload_coreaudiod; then
-    if flow_probe_device; then
-        flow_log "HAL device enumerated after reload: $FLOW_DEVICE_UID"
-    else
-        flow_write_needs_restart "device-not-enumerated"
-    fi
-else
-    flow_write_needs_restart "coreaudiod-reload-failed"
-fi
+# Verify the complete replacement before deleting temporary old components.
+app="/Applications/$FLOW_APP_NAME"
+[ "$(flow_bundle_id "$app")" = "$FLOW_APP_BUNDLE_ID" ] || flow_fail "Installed App is missing or relocated"
+/usr/bin/codesign --verify --deep --strict "$app" || flow_fail "Installed App signature failed"
+flow_restore_default_output || flow_fail "Default output safety check failed"
 
-if flow_restore_default_output; then
-    flow_log "Default output safety check completed"
-else
-    flow_log "Default output safety check skipped or failed"
-fi
-
-flow_log "Postinstall complete. Flow-as-default was restored to built-in; other outputs untouched."
+# A disk replacement does not prove the in-memory HAL plug-in is current.
+# Finish cleanly and request reboot instead of trying to restart protected audio
+# services or presenting a false ready state on the old driver.
+flow_write_needs_restart "upgrade-requires-reboot"
+/usr/sbin/sysctl -n kern.bootsessionuuid > "$FLOW_SUPPORT_DIR/Installer/boot-session"
+/usr/sbin/chown root:wheel "$FLOW_SUPPORT_DIR/Installer/boot-session"
+/bin/chmod 644 "$FLOW_SUPPORT_DIR/Installer/boot-session"
+/bin/rm -rf "$FLOW_BACKUP_DIR"
+flow_log "App and driver verified; old components cleaned; restart required."
 exit 0

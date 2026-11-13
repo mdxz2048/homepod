@@ -271,7 +271,7 @@ packages="$work/packages"
 # Pin the App to /Applications; LaunchServices may know a staged build with
 # the same bundle ID and PackageKit otherwise silently relocates this payload.
 app_components="$work/app-components.plist"
-/usr/bin/pkgbuild --analyze --root "$app_root" --component-plist "$app_components"
+/usr/bin/pkgbuild --analyze --root "$app_root" "$app_components"
 /usr/bin/python3 - "$app_components" <<'PYCOMPONENTS'
 import plistlib, sys
 path = sys.argv[1]

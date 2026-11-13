@@ -78,7 +78,7 @@ struct MenuPopoverView: View {
                 .toggleStyle(TheaterToggleStyle())
                 .frame(width: Theater.P(138), height: Theater.P(68))
                 .offset(x: Theater.P(887), y: Theater.P(114))
-                .disabled(!state.visualDemo && (state.systemAudio.routeSwitchInProgress || (!state.systemAudio.desiredEnabled &&
+                .disabled(!state.visualDemo && (state.updates.isInstalling || state.systemAudio.routeSwitchInProgress || (!state.systemAudio.desiredEnabled &&
                           (state.systemAudio.isBusy || state.layout.devices.isEmpty ||
                            !state.audioComponent.allowsStart))))
                 .accessibilityLabel(state.visualDemo
@@ -328,7 +328,7 @@ struct MenuPopoverView: View {
                     .foregroundStyle(Theater.settingsInk)
                     .frame(width: Theater.P(70), alignment: .leading)
                     .padding(.leading, Theater.P(42))
-                Text("设置…")
+                Text(state.updates.release == nil ? "设置…" : "设置 · 有新版本…")
                     .font(.system(size: 12.5, weight: .medium))
                     .foregroundStyle(Theater.settingsInk)
                 Spacer()

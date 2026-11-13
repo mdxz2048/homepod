@@ -1,5 +1,6 @@
 import Foundation
 import CoreAudio
+import Darwin
 import Observation
 #if canImport(AppKit)
 import AppKit
@@ -15,10 +16,26 @@ struct LiveAudioComponentInspector: AudioComponentInspecting {
     func inspect(installerAvailable: Bool) -> AudioComponentSnapshot {
         let bundles = Self.flowBundles()
         let present = Self.devicePresent(uid: FlowVirtualDevice.uid)
-        return AudioComponentEvaluator.evaluate(bundles: bundles,
+        var result = AudioComponentEvaluator.evaluate(bundles: bundles,
                                                 devicePresent: present,
                                                 deviceUID: FlowVirtualDevice.uid,
                                                 installerAvailable: installerAvailable)
+        let marker = URL(fileURLWithPath: "/Library/Application Support/HomePodFlow/Installer/boot-session")
+        if let installedBoot = try? String(contentsOf: marker, encoding: .utf8).trimmingCharacters(in: .whitespacesAndNewlines),
+           let currentBoot = Self.bootSession(), installedBoot == currentBoot,
+           result.state == .ready {
+            result.state = .installedNeedsReload
+            result.message = "更新已安装。请重新启动 Mac，加载新版声卡驱动。"
+        }
+        return result
+    }
+
+    private static func bootSession() -> String? {
+        var size = 0
+        guard sysctlbyname("kern.bootsessionuuid", nil, &size, nil, 0) == 0, size > 0 else { return nil }
+        var buffer = [CChar](repeating: 0, count: size)
+        guard sysctlbyname("kern.bootsessionuuid", &buffer, &size, nil, 0) == 0 else { return nil }
+        return String(cString: buffer)
     }
 
     private static func flowBundles() -> [AudioComponentBundle] {

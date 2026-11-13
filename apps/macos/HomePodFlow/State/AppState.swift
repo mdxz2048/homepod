@@ -13,6 +13,7 @@ private struct StoredPreferences: Codable {
     let worker = WorkerStore()
     let systemAudio: SystemAudioStore
     let audioComponent: AudioComponentService
+    let updates = AppUpdateService()
     private var storedMode: PlaybackMode
     var mode: PlaybackMode {
         get { storedMode }
@@ -45,7 +46,7 @@ private struct StoredPreferences: Codable {
     var selectedPage: SettingsPage = .layout
     private(set) var statusText = "演示 · 未连接真实设备"
     var notice = "尚未配置音箱 · 添加发现的设备并应用布局后即可开启系统音频。"
-    var sessionControlsLocked: Bool { systemAudio.desiredEnabled || systemAudio.hasActiveSession || systemAudio.isBusy }
+    var sessionControlsLocked: Bool { updates.isInstalling || systemAudio.desiredEnabled || systemAudio.hasActiveSession || systemAudio.isBusy }
     var layoutEditable: Bool { mode == .cinema && !sessionControlsLocked }
     /// Removing a saved speaker is allowed in either playback mode. A powered-
     /// off speaker must not force the user to switch to cinema mode first.
@@ -240,7 +241,18 @@ private struct StoredPreferences: Codable {
         if selectedDeviceID == id { selectedDeviceID = nil }
     }
 
+    func installUpdate() async {
+        await updates.install {
+            await self.systemAudio.stop()
+            guard !self.systemAudio.hasActiveSession, !self.systemAudio.desiredEnabled,
+                  !self.systemAudio.switchConfirmedOn else {
+                throw AppUpdateError.invalid("默认输出恢复尚未确认，请先停止系统声音")
+            }
+        }
+    }
+
     func startSystemAudio() async {
+        guard !updates.isInstalling else { notice = "正在安装更新，请稍候"; return }
         guard audioComponent.allowsStart else {
             notice = audioComponent.snapshot.message
             return

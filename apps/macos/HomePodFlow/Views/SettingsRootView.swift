@@ -24,6 +24,7 @@ struct SettingsRootView: View {
             if !state.visualDemo {
                 AudioComponentSection(service: state.audioComponent,
                                       canInstall: !state.sessionControlsLocked)
+                AppUpdateSection(state: state)
             }
             Divider()
             HStack(alignment: .top, spacing: 20) {
@@ -326,5 +327,29 @@ private struct DeviceDiscoverySheet: View {
     private func discover() async {
         if !state.systemAudio.serviceReady { await state.systemAudio.connectLocalWorker() }
         await state.systemAudio.scanDevices()
+    }
+}
+
+
+private struct AppUpdateSection: View {
+    @Bindable var state: AppState
+    var body: some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text("HomePod Flow \(state.updates.currentVersion)").font(.callout.bold())
+                Text(state.updates.status).font(.caption).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer()
+            if state.updates.checking || state.updates.isInstalling {
+                ProgressView().controlSize(.small)
+            } else {
+                Button("检查更新") { Task { await state.updates.check() } }
+                if let release = state.updates.release {
+                    Button("一键更新至 \(release.version)") { Task { await state.installUpdate() } }
+                        .buttonStyle(.borderedProminent)
+                }
+            }
+        }
     }
 }
