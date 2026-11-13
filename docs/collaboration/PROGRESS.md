@@ -7,7 +7,9 @@
 
 修复候选：RemoveDeviceClient 清理其遗留的 IO slot；允许呈现延迟在已有 IO 时申请 HAL 配置事务，仍只在 host 停稳 IO 后提交；worker/helper 不再提前因 running 拒绝请求。App 开关显示默认输出回读确认状态，恢复失败保留恢复归属和错误，不提前显示关闭。
 
-驱动 dev/production 检查、27 项 Python 延迟测试、8 项 Swift helper 测试、默认输出/虚拟输入/会话检查及 App Release 构建通过。自包含 0.3.2 pkg/dmg 已生成，运行时约105MB，worker hello 自检及内嵌宿主签名验证通过；清理安装脚本 build/clean-install-20261113.sh 已准备好。系统驱动替换需要管理员授权，目前等待用户在终端执行。安装后须验证真实 0→协商值回读、占用中 host 事务、浏览器重新开流与声学同步；当前不能宣称真机问题已解决。
+驱动 dev/production/single-device 检查、27 项 Python 延迟测试、8 项 Swift helper 测试、默认输出/虚拟输入/会话检查及 App Release 构建通过。用户已授权并执行清理安装，当前 /Applications/HomePod Flow.app 为自包含0.3.2/build3，签名及App/driver二进制核对通过，coreaudiod已重新加载。
+
+真实HAL验证：空闲0→2000ms通过；静音IO占用时2000→1500ms提交与两scope回读通过，revision4→5；退出/终止客户端后idle，无遗留busy。现已恢复2000ms，revision6。该值为驱动验证后保留值，后续Flow激活仍按AirPlay协商更新；不冒充本轮已测声学同步。浏览器实际对口型与App真实菜单交互仍待用户复验。安装包/大部分旧构建已删除，5个管理员所有的旧备份/临时目录待最后清理命令完成。
 
 
 更新：2026-11-07（Asia/Shanghai）。当前源码基线 `b343216`，分支 `codex/virtual-audio-mvp`。

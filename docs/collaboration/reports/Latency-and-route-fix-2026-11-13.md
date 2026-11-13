@@ -37,3 +37,12 @@ sudo -n 检查显示需要密码，尚未替换系统 App/驱动或重启 coreau
 用户已执行清理安装。旧App/驱动已卸载，新driver磁盘SHA256正确。PackageKit日志证实把App重定位至开发构建目录，导致 /Applications 缺失；已修改component plist，递归关闭BundleIsRelocatable。launchctl kickstart被本机SIP拒绝，内存旧驱动尚未重载。
 
 补装脚本会在driver hash一致时跳过重复卸载，将验证过的staged App精确复制到 /Applications，然后请求coreaudiod正常终止/由launchd重新启动并核对PID变化。无需改动SIP。等待用户再次sudo执行；此期间不删除唯一安装制品。
+
+## 真机安装与HAL验证结果（22:21后，覆盖上文待安装状态）
+
+- 用户执行补装成功：/Applications/HomePod Flow.app 0.3.2/build3，App/driver签名及二进制比对通过。coreaudiod PID417→22848，已加载新驱动。
+- 空闲hfla=0/hflr=1/hfls=idle，写2000ms后96000帧、revision2，两个stream latency scope一致。
+- 建立静音AudioDevice IO客户端，before running=true/hfls=busy/2000ms/revision4；真实host事务写1500ms成功，after仍running=true/1500ms/revision5，两scope72000帧且verified全部true。未向HomePod播放声音。
+- 恢复2000ms/revision6；另一个静音客户端被终止后running=false/hfls=idle，没有遗留busy。
+- 已启动安装路径App（PID22997），未自动采集/播放。本轮未验证真实菜单开关或最终浏览器声学同步。
+- 删除Downloads旧pkg、Desktop旧dmg、本次pkg/dmg、生成运行时/driver/host/Xcode构建及历史旧bundle共21项；剩5个root旧目录通过finish-cleanup脚本等待用户完成。不删除源码和个人布局配置。
