@@ -49,6 +49,8 @@ public final class DeviceTapCapture: @unchecked Sendable {
     private var ring: OpaquePointer?
     private var target: DeviceTapDescriptor?
     private var started = false
+    private var keepAliveProcess: Process?
+    private var keepAliveInput: FileHandle?
     private let control = NSLock()
 
     public init() {}
@@ -61,6 +63,7 @@ public final class DeviceTapCapture: @unchecked Sendable {
         }
 
         let device = try deviceID(forUID: deviceUID)
+        startSilenceKeepAlive(deviceUID: deviceUID)
         let stream = try firstOutputStream(device)
         let format = try readFormat(stream, kAudioStreamPropertyVirtualFormat)
         try Self.validate(format)
@@ -140,6 +143,51 @@ public final class DeviceTapCapture: @unchecked Sendable {
         return descriptor
     }
 
+    // MARK: - Idle keep-alive
+    //
+    // A HAL output device produces no IO callbacks until some client starts IO,
+    // and this device tap only reports blocks while the device is running. With
+    // no application playing, the tap therefore stays silent and the session
+    // used to fail as "capture_unverified". A sibling helper process renders
+    // silence into the same device so its clock runs. It is a separate process
+    // on purpose: creating the output AudioUnit inside this capture host
+    // corrupts the CoreAudio client list for this 8-channel virtual device.
+    private func startSilenceKeepAlive(deviceUID: String) {
+        guard keepAliveProcess == nil else { return }
+        guard let executable = Bundle.main.executableURL?
+            .deletingLastPathComponent()
+            .appendingPathComponent("silence-keepalive"),
+            FileManager.default.isExecutableFile(atPath: executable.path) else { return }
+        let output = Pipe()
+        let process = Process()
+        process.executableURL = executable
+        process.arguments = [deviceUID]
+        process.standardInput = output
+        process.standardOutput = FileHandle.nullDevice
+        process.standardError = FileHandle.nullDevice
+        do {
+            try process.run()
+        } catch {
+            return
+        }
+        keepAliveInput = output.fileHandleForWriting
+        keepAliveProcess = process
+    }
+
+    private func stopSilenceKeepAlive() {
+        if let keepAliveInput {
+            try? keepAliveInput.close()
+            self.keepAliveInput = nil
+        }
+        guard let keepAliveProcess else { return }
+        let deadline = Date().addingTimeInterval(1.5)
+        while keepAliveProcess.isRunning, Date() < deadline {
+            usleep(20_000)
+        }
+        if keepAliveProcess.isRunning { keepAliveProcess.terminate() }
+        self.keepAliveProcess = nil
+    }
+
     /// Returns nil when no complete block is queued. The caller owns the copied
     /// samples; malformed layouts, ring faults and overflow are fail-closed.
     public func readBlock() throws -> CapturedPCMBlock? {
@@ -207,6 +255,7 @@ public final class DeviceTapCapture: @unchecked Sendable {
             capture_ring_destroy(ring)
             self.ring = nil
         }
+        stopSilenceKeepAlive()
         target = nil
         if let firstError { throw firstError }
     }
@@ -234,6 +283,7 @@ public final class DeviceTapCapture: @unchecked Sendable {
             capture_ring_destroy(ring)
             self.ring = nil
         }
+        stopSilenceKeepAlive()
         target = nil
     }
 

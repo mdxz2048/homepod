@@ -8,7 +8,8 @@ let package = Package(
         .library(name: "VirtualAudioInput", targets: ["VirtualAudioInput"]),
         .executable(name: "virtual-audio-input", targets: ["VirtualAudioInputCLI"]),
         .library(name: "VirtualCaptureHostSupport", targets: ["VirtualCaptureHostSupport"]),
-        .executable(name: "virtual-audio-host", targets: ["VirtualCaptureHost"])
+        .executable(name: "virtual-audio-host", targets: ["VirtualCaptureHost"]),
+        .executable(name: "silence-keepalive", targets: ["SilenceKeepAlive"])
     ],
     dependencies: [
         .package(path: "../ProcessTapCapture")
@@ -20,6 +21,8 @@ let package = Package(
             .product(name: "CaptureRing", package: "ProcessTapCapture")
         ], linkerSettings: [.linkedFramework("CoreAudio")]),
         .executableTarget(name: "VirtualAudioInputCLI", dependencies: ["VirtualAudioInput"]),
+        .executableTarget(name: "SilenceKeepAlive", linkerSettings: [
+            .linkedFramework("CoreAudio"), .linkedFramework("AudioToolbox")]),
         .target(name: "VirtualCaptureHostSupport", dependencies: ["VirtualAudioInput",
             .product(name: "TapCaptureHostSupport", package: "ProcessTapCapture")]),
         .executableTarget(name: "VirtualCaptureHost", dependencies: ["VirtualCaptureHostSupport",

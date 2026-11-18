@@ -31,6 +31,8 @@ extension CaptureSource: HostCaptureProvider {
     private var lastSession: String?
     private var lastClean = true
     private var seenIDs = Set<String>()
+    private var keepAliveProcess: Process?
+    private var keepAliveInput: FileHandle?
     public private(set) var shouldExit = false
     public private(set) var exitCode: Int32 = 0
     public init(writer: BoundedPipeWriter,
@@ -84,6 +86,49 @@ extension CaptureSource: HostCaptureProvider {
         exitCode = 3
         await endInput()
     }
+    // MARK: - Idle keep-alive
+    //
+    // A process tap only reports blocks while something actually renders audio,
+    // so starting music mode with nothing playing used to starve the AirPlay
+    // stream and fail as a protocol error. A sibling helper process renders
+    // silence into the current default output, which keeps both the device and
+    // the tap producing blocks without depending on the user pressing play.
+    private func startSilenceKeepAlive() {
+        guard keepAliveProcess == nil else { return }
+        guard let executable = Bundle.main.executableURL?
+            .deletingLastPathComponent()
+            .appendingPathComponent("silence-keepalive"),
+            FileManager.default.isExecutableFile(atPath: executable.path) else { return }
+        let pipe = Pipe()
+        let process = Process()
+        process.executableURL = executable
+        process.arguments = []
+        process.standardInput = pipe
+        process.standardOutput = FileHandle.nullDevice
+        process.standardError = FileHandle.nullDevice
+        do {
+            try process.run()
+        } catch {
+            return
+        }
+        keepAliveInput = pipe.fileHandleForWriting
+        keepAliveProcess = process
+    }
+
+    private func stopSilenceKeepAlive() {
+        if let keepAliveInput {
+            try? keepAliveInput.close()
+            self.keepAliveInput = nil
+        }
+        guard let keepAliveProcess else { return }
+        let deadline = Date().addingTimeInterval(1.5)
+        while keepAliveProcess.isRunning, Date() < deadline {
+            usleep(20_000)
+        }
+        if keepAliveProcess.isRunning { keepAliveProcess.terminate() }
+        self.keepAliveProcess = nil
+    }
+
     private func capture(id: String, session: String, exclusions: [Int32]) async {
         let provider = factory()
         var failure: String?
@@ -92,6 +137,7 @@ extension CaptureSource: HostCaptureProvider {
         var previousSourceSequence: UInt64?
         do {
             try Task.checkCancellation()
+            startSilenceKeepAlive()
             try provider.start(configuration: .init(excludedProcessIDs: exclusions))
             guard let format = provider.format, format.channels == 2 else { throw HostFailure.invalid("Host requires actual stereo source") }
             let converter = try FloatResampler(sourceRate: format.sampleRate, channels: format.channels)
@@ -132,6 +178,7 @@ extension CaptureSource: HostCaptureProvider {
         } catch is CancellationError { }
         catch { failure = error.localizedDescription }
         do { try provider.stop() } catch { failure = [failure, error.localizedDescription].compactMap { $0 }.joined(separator: "; ") }
+        stopSilenceKeepAlive()
         lastClean = provider.cleanupComplete
         lastSession = session
         if let failure {

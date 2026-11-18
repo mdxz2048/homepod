@@ -5,12 +5,14 @@ set -eu
 
 cd "$(dirname "$0")/.."
 swift build -c release --product virtual-audio-host
+swift build -c release --product silence-keepalive
 bin_dir=$(swift build -c release --show-bin-path)
 bundle="${1:-$PWD/dist/VirtualCaptureHost.app}"
 identity="${CODE_SIGN_IDENTITY:--}"
 
 mkdir -p "$bundle/Contents/MacOS"
 cp "$bin_dir/virtual-audio-host" "$bundle/Contents/MacOS/virtual-audio-host"
+cp "$bin_dir/silence-keepalive" "$bundle/Contents/MacOS/silence-keepalive"
 cp scripts/Host-Info.plist "$bundle/Contents/Info.plist"
 codesign --force --sign "$identity" "$bundle"
 codesign --verify --deep --strict "$bundle"
