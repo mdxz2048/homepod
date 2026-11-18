@@ -7,6 +7,7 @@ import CoreAudio
 @main struct DefaultOutputRouteChecks {
     @MainActor static func main() async throws {
         try assertServiceUIDLookupReadbackAndRestore()
+        assertStartupRecoveryUsesRecordedOrFallbackOutput()
         await assertSwitchBeforeStartAndRestoreBeforeStop()
         await assertStopDuringPreStartRoutingRestoresOutput()
         await assertStartRequiresPublishedSwitch()
@@ -14,7 +15,7 @@ import CoreAudio
         await assertDelayedRestoreKeepsSwitchOn()
         await assertLegacyCaptureNeverSwitches()
         await assertManualUserSelectionIsPreserved()
-        await assertPreviousAlreadyFlowIsNotDisturbed()
+        await assertStaleFlowDefaultIsRecoveredBeforeStart()
         await assertSwitchFailureStopsOwnedSession()
         await assertStartupErrorRestoresBeforeRecoveryDecision()
         print("DefaultOutputRouteChecks: UID lookup/set/read-back/restore, route-before-start, restore-before-stop, legacy exclusion, manual selection preservation and fail-safe stop passed")
@@ -70,6 +71,27 @@ import CoreAudio
     }
 
     // MARK: Store lifecycle (fake controller + fake worker)
+
+    @MainActor private static func assertStartupRecoveryUsesRecordedOrFallbackOutput() {
+        let key = "homepod-flow.route.routedFromUID"
+        UserDefaults.standard.removeObject(forKey: key)
+        let ctl = FakeDefaultOutputController(current: FlowVirtualDevice.uid)
+        let store = SystemAudioStore(serviceFactory: { RoutingWorker(virtual: true) },
+                                     observesEnvironment: false, defaultOutput: ctl)
+        precondition(!store.desiredEnabled && !store.switchConfirmedOn,
+                     "a launch always starts off, regardless of the stale route")
+        store.recoverStaleRouteIfNeeded()
+        precondition(ctl.restoreCalls == ["built-in"] && ctl.current == "built-in")
+        precondition(!store.switchConfirmedOn)
+
+        // A recorded previous UID wins over the generic fallback.
+        ctl.current = FlowVirtualDevice.uid
+        ctl.restoreCalls.removeAll()
+        UserDefaults.standard.set("hdmi", forKey: key)
+        store.recoverStaleRouteIfNeeded()
+        precondition(ctl.restoreCalls == ["hdmi"] && ctl.current == "hdmi")
+        UserDefaults.standard.removeObject(forKey: key)
+    }
 
     @MainActor private static func assertSwitchBeforeStartAndRestoreBeforeStop() async {
         let log = OrderLog()
@@ -220,7 +242,7 @@ import CoreAudio
         await store.prepareForTermination()
     }
 
-    @MainActor private static func assertPreviousAlreadyFlowIsNotDisturbed() async {
+    @MainActor private static func assertStaleFlowDefaultIsRecoveredBeforeStart() async {
         let ctl = FakeDefaultOutputController(current: FlowVirtualDevice.uid)
         let worker = RoutingWorker(virtual: true)
         let store = SystemAudioStore(serviceFactory: { worker }, observesEnvironment: false, defaultOutput: ctl)
@@ -228,9 +250,13 @@ import CoreAudio
         let run = Task { await store.start(mode: .synchronized, volume: 15) }
         await until { worker.starts == 1 }
         worker.emit("capturing", session: worker.startSession!)
-        precondition(ctl.setCalls.isEmpty && ctl.current == FlowVirtualDevice.uid)
+        precondition(ctl.restoreCalls == ["built-in"],
+                     "Flow must first be handed back to a real output")
+        precondition(ctl.setCalls == [FlowVirtualDevice.uid],
+                     "then cinema can take a clean lease on Flow")
+        precondition(ctl.current == FlowVirtualDevice.uid)
         await store.stop(); await run.value
-        precondition(ctl.restoreCalls.isEmpty && ctl.current == FlowVirtualDevice.uid)
+        precondition(ctl.restoreCalls == ["built-in", "built-in"] && ctl.current == "built-in")
         await store.prepareForTermination()
     }
 
@@ -327,6 +353,8 @@ import CoreAudio
     }
 
     func isDeviceRunning(uid: String) -> Bool? { running.contains(uid) }
+
+    func fallbackOutputUID() -> String? { "built-in" }
 
     func setDefaultOutput(uid: String) throws -> Bool {
         setCalls.append(uid)

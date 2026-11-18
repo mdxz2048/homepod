@@ -6,6 +6,7 @@
 - 音乐模式走 `tap-capture-host` 的 Process Tap 2ch，固定 `.mutedWhenTapped`：读取期间静音当前默认输出（内置/HDMI/蓝牙），停止/崩溃自动恢复；不写默认输出、无 latency 注入、不要求 HAL 驱动，音量走 HomePod。
 - 影院模式走 `virtual-audio-host` 的 Device Tap 8ch：保存并切默认输出到 Flow，worker 写入协商 latency，停止恢复 previous UID。
 - 模式切换只在完全关闭时允许；ON/STARTING/STOPPING 时模式选择器禁用。
+- App 启动始终为 OFF（启用意图不持久化）。启动自愈：默认输出仍是 Flow 时，优先恢复记录的 previous UID，否则回退内置/首个非 Flow 输出；无法恢复则提示手动选择。影院开启时若 Flow 已是默认，先恢复真实输出再重新租用，避免把 Flow 记成 previous。
 - 影院开启前检查 Flow 占用：枚举 Core Audio process objects，按 output devices + `IsRunningOutput` 找出真正占用者；弹窗列出应用，用户确认后正常退出，轮询设备 idle ≤10s 后继续。取消/超时保持 OFF、默认输出不变。
 - 音频组件区块只在影院模式显示；音乐模式可添加/移除/保存音箱，位置拖拽只在影院生效。
 - 验证：Debug/Release 构建；StateChecks、DefaultOutputRouteChecks、SystemVirtualInputChecks、SystemVolumeChecks、SystemSessionChecks、LatencyControlChecks；ProcessTapCapture 27 tests；`tap-capture-host` release 构建通过。真实 TCC、音乐出声、占用弹窗/退出、影院声学仍未验收。

@@ -11,6 +11,7 @@
 - **音乐模式**：走 `tap-capture-host` 的 Process Tap 2ch；固定 `.mutedWhenTapped`，读取期间静音当前默认输出（内置/HDMI/蓝牙均适用），停止或崩溃自动恢复；不写默认输出、无 latency 注入；音量走 HomePod `set_volume`。音乐模式不要求安装 HAL 驱动。
 - **影院模式**：走 `virtual-audio-host` 的 Device Tap 8ch；保存并切换默认输出到 Flow，由 worker 写入协商 latency；停止时恢复 previous UID。
 - **切换约束**：只有完全关闭（`desiredEnabled=false`、无 session、非 busy、非 routeSwitchInProgress、cleanup 已确认）才允许切换模式；ON/STARTING/STOPPING 时模式选择器禁用。
+- **启动始终 OFF**：启用意图不持久化；App 启动后开关一定为关。若默认输出仍停在 Flow（上次崩溃/异常），启动自愈优先恢复记录的 previous UID，没有记录则回退到内置扬声器（否则第一个非 Flow 输出）；无法恢复时明确提示用户手动选择输出。影院开启时若发现 Flow 已是默认，也先恢复真实输出再重新租用，绝不把 Flow 记成自己的 previous。
 - **影院占用门禁**：开启前用 `kAudioHardwarePropertyProcessObjectList`、`kAudioProcessPropertyDevices`（output scope）、`kAudioProcessPropertyIsRunningOutput` 找出真正占用 Flow 的进程；NSAlert 列出应用，用户确认后正常退出（`NSRunningApplication.terminate()` / SIGTERM），轮询设备 idle 最多 10 秒后继续。取消或超时保持 OFF，默认输出不变；只列真正使用 Flow 输出的进程，正常播放内置/电视输出的应用不会被要求退出；设备仍在 running 但识别不到可退出应用时提示重启 App/Mac。
 - **UI 调整**：音频组件区块只在影院模式显示；音乐模式可以添加/移除/保存音箱，位置拖拽只在影院模式生效。
 - **验证**：Debug/Release 构建通过；StateChecks、DefaultOutputRouteChecks、SystemVirtualInputChecks、SystemVolumeChecks、SystemSessionChecks、LatencyControlChecks 通过；ProcessTapCapture 27 项测试通过；`tap-capture-host` release 构建通过。真实 TCC、音乐模式出声、影院占用弹窗与声学同步仍需真机验收；内嵌采集宿主需重新打包安装后才生效。

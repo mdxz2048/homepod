@@ -24,6 +24,13 @@ enum FlowVirtualDevice {
     /// Restores the default output by UID. Returns false when the UID is no
     /// longer present (hotplug) or the write was not confirmed.
     func restoreDefaultOutput(uid: String) -> Bool
+    /// A safe non-Flow output used only when Flow is still the default after a
+    /// crash and no previous UID was recorded.
+    func fallbackOutputUID() -> String?
+}
+
+extension DefaultOutputControlling {
+    func fallbackOutputUID() -> String? { nil }
 }
 
 enum DefaultOutputRouteError: Error, LocalizedError, Equatable {
@@ -179,6 +186,19 @@ enum DefaultOutputRouteError: Error, LocalizedError, Equatable {
         guard let device = device(byUID: uid) else { return false }
         do { try hardware.setDefaultOutputDevice(device) } catch { return false }
         return hardware.defaultOutputDevice == device
+    }
+
+    func fallbackOutputUID() -> String? {
+        let map = hardware.deviceUIDMap()
+        if let builtIn = map.first(where: { $0.value == "BuiltInSpeakerDevice" })?.key,
+           flowUID != "BuiltInSpeakerDevice",
+           (hardware.outputStreamCount(builtIn) ?? 0) > 0 {
+            return "BuiltInSpeakerDevice"
+        }
+        return map
+            .filter { $0.value != flowUID && (hardware.outputStreamCount($0.key) ?? 0) > 0 }
+            .sorted { $0.key < $1.key }
+            .first?.value
     }
 
     private func device(byUID uid: String) -> AudioObjectID? {

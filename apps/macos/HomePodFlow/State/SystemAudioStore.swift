@@ -696,15 +696,31 @@ import Observation
     /// output, Core Audio would stay pointed at a device nobody feeds, which
     /// makes the Mac silent. Restore the device we borrowed it from.
     func recoverStaleRouteIfNeeded() {
-        let stored = UserDefaults.standard.string(forKey: Self.routedFromKey)
-        guard let previous = stored else { return }
         guard !desiredEnabled, !hasActiveSession, session == nil else { return }
-        defer { UserDefaults.standard.removeObject(forKey: Self.routedFromKey) }
-        guard defaultOutput.currentDefaultOutputUID() == FlowVirtualDevice.uid else { return }
-        _ = defaultOutput.restoreDefaultOutput(uid: previous)
+        let flow = FlowVirtualDevice.uid
+        let current = defaultOutput.currentDefaultOutputUID()
+        guard current == flow else {
+            // Any recorded route is stale once the system already points
+            // somewhere else. The UI always starts off; this only clears the
+            // crash-recovery bookkeeping.
+            UserDefaults.standard.removeObject(forKey: Self.routedFromKey)
+            switchConfirmedOn = false
+            return
+        }
+        let stored = UserDefaults.standard.string(forKey: Self.routedFromKey)
+        let fallback = stored ?? defaultOutput.fallbackOutputUID()
+        guard let fallback, fallback != flow,
+              defaultOutput.restoreDefaultOutput(uid: fallback),
+              defaultOutput.currentDefaultOutputUID() == fallback else {
+            switchConfirmedOn = false
+            statusText = "Flow 仍是默认输出且无法恢复原设备，请在系统设置选择其他输出"
+            return
+        }
+        UserDefaults.standard.removeObject(forKey: Self.routedFromKey)
         defaultOutputRoutedForSession = nil
         defaultOutputPreviousUID = nil
-        statusText = "已把 Mac 默认输出从上次未正常退出的 Flow 切回 \(previous)"
+        switchConfirmedOn = false
+        statusText = "已把 Mac 默认输出从上次未正常退出的 Flow 切回 \(fallback)"
     }
 
     /// Bounded wait until Core Audio really reports `uid` as the default
@@ -737,14 +753,24 @@ import Observation
         defer { routeSwitchInProgress = false }
         guard defaultOutputRoutedForSession == nil else { return true }
         let flow = FlowVirtualDevice.uid
-        let previousUID = defaultOutput.currentDefaultOutputUID()
+        var previousUID = defaultOutput.currentDefaultOutputUID()
         if previousUID == flow {
-            // Already routed; nothing to restore later, and the user's manual
-            // Flow selection (or an inherited state) is left untouched.
-            defaultOutputRoutedForSession = owner
-            defaultOutputPreviousUID = nil
-            switchConfirmedOn = true
-            return true
+            // Never record Flow as its own previous device. If a crash or a
+            // manual selection left Flow as default, restore a real output
+            // first, then start the cinema flow from a clean baseline.
+            let stored = UserDefaults.standard.string(forKey: Self.routedFromKey)
+            let fallback = stored ?? defaultOutput.fallbackOutputUID()
+            guard let fallback, fallback != flow,
+                  defaultOutput.restoreDefaultOutput(uid: fallback),
+                  defaultOutput.currentDefaultOutputUID() == fallback else {
+                let note = "Flow 已是默认输出且无法恢复原设备，请先在系统设置选择其他输出"
+                defaultOutputFailure = note
+                statusText = note
+                revokePlaybackIntent()
+                return false
+            }
+            UserDefaults.standard.removeObject(forKey: Self.routedFromKey)
+            previousUID = fallback
         }
         guard let previousUID else {
             let note = "默认输出切换失败：无法读取当前默认输出"
