@@ -15,6 +15,14 @@ import Darwin
         if ProcessInfo.processInfo.arguments.contains("--capture-directory") {
             let suite = "homepod-flow-ui-capture-\(UUID().uuidString)"
             captureSuite = suite
+            // Screenshot-only: show the demo room while keeping the real
+            // audio-component and update sections visible.
+            if ProcessInfo.processInfo.arguments.contains("--capture-demo-layout") {
+                let state = AppState(defaults: UserDefaults(suiteName: suite)!,
+                                     visualDemo: true, showsProductionSections: true)
+                state.volume = 55
+                return state
+            }
             let state = AppState(defaults: UserDefaults(suiteName: suite)!,
                 visualDemo: !ProcessInfo.processInfo.arguments.contains("--capture-empty-layout"))
             if state.visualDemo { state.volume = 55 }
@@ -147,13 +155,13 @@ import Darwin
     static func showInspectionWindow(state: AppState) {
         configure(state)
         let host = NSHostingView(rootView: SettingsRootView(state: state))
-        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 960, height: 650),
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 960, height: 760),
             styleMask: [.titled, .closable, .resizable, .miniaturizable],
             backing: .buffered, defer: false)
         window.title = "HomePod Flow · DEBUG inspection"
         window.isReleasedWhenClosed = false
         window.contentView = host
-        window.setContentSize(NSSize(width: 960, height: 650))
+        window.setContentSize(NSSize(width: 960, height: 760))
         window.center()
         inspectionWindow = window
         window.makeKeyAndOrderFront(nil)

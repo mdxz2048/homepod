@@ -36,6 +36,7 @@ private struct StoredPreferences: Codable {
     private(set) var isRunning = false
     let isDemo: Bool
     let visualDemo: Bool
+    let showsProductionSections: Bool
     private(set) var layout: RoomLayout
     private var storedDraftLayout: RoomLayout
     var draftLayout: RoomLayout {
@@ -61,11 +62,13 @@ private struct StoredPreferences: Codable {
     private static let storageKey = "homepod-flow.preferences.v1"
 
     init(defaults: UserDefaults = .standard, service: (any RouterService)? = nil, visualDemo: Bool = false,
+         showsProductionSections: Bool? = nil,
          systemAudio: SystemAudioStore? = nil, audioComponent: AudioComponentService? = nil) {
         self.defaults = defaults
         self.systemAudio = systemAudio ?? SystemAudioStore()
         self.audioComponent = audioComponent ?? AudioComponentService()
         self.visualDemo = visualDemo
+        self.showsProductionSections = showsProductionSections ?? !visualDemo
         let router = service ?? DemoRouterService()
         self.service = router
         isDemo = router.isDemo

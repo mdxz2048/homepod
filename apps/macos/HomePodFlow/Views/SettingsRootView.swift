@@ -21,7 +21,7 @@ struct SettingsRootView: View {
                     Label("添加音箱", systemImage: "plus")
                 }.controlSize(.large).disabled(!editable)
             }
-            if !state.visualDemo {
+            if state.showsProductionSections {
                 AudioComponentSection(service: state.audioComponent,
                                       canInstall: !state.sessionControlsLocked)
                 AppUpdateSection(state: state)

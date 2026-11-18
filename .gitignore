@@ -15,3 +15,5 @@ runtime.json
 .env.*
 *.p12
 *.pfx
+apps/macos/HomePodFlow.xcodeproj/
+apps/macos/HomePodFlow-Info.plist

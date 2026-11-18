@@ -1,5 +1,19 @@
 # 变更记录
 
+## 2026-11-18
+
+- 发布流程固化为 Codex skill `homepodflow-release`：覆盖版本递增、构建 pkg/dmg、Ed25519 签名更新源、官网文案/截图、发布验证与回滚；明确 `build-and-publish.sh` 不会修改 `index.html`，网页必须单独更新。
+- 官网从 0.3.1 文案更新到 0.3.3：补充应用内更新、延迟与占用修复、安装器不可重定位；修正“不修改系统输出设备”等与实现不符的描述。截图改为 0.3.3 Debug 构建实拍（音频组件、更新卡片、示例布局）。
+- DEBUG 截图新增 `--capture-demo-layout`：示例布局同时保留真实的音频组件与更新区块；`AppState.showsProductionSections` 默认值不变，仅影响 DEBUG 截图路径。
+- 官网发布验证：公网 DMG 51,543,948 B，SHA256 `ff0bfa7558e2903d85073c9a9be54386f1e76842d310c7973539261945bac64e` 与 `release.json` 一致；源站和公网静态资源均返回 200。浏览器声学同步仍未重新验收。
+
+## 2026-11-13
+
+- 0.3.2/build3：修复 HAL 在 IO running 时的呈现延迟配置事务，移除设备客户端时只清理该 client 的遗留 IO slot；开关改为回读默认输出后再显示状态。清理安装后驱动签名、二进制比对、空闲/占用延迟写入及两 scope 回读通过；浏览器实际对口型未复验。
+- 修复 PackageKit 把 App 重定位到开发构建目录的问题（递归关闭 `BundleIsRelocatable`），并保留自包含运行时。
+- 0.3.3/build4：接入树莓派签名更新源（Ed25519 清单 + SHA256/大小校验），App 启动检查、设置内一键更新、菜单新版本提示；安装后按 boot-session 提示重启，禁止把旧内存驱动显示为已就绪。首次仍需手动安装 0.3.3。
+- 发布 pkg/dmg 与 `updates/latest.json`；应用内完整授权升级、重启后驱动加载与音频仍待端到端验收。
+
 ## 2026-11-09
 
 - **音量键打通**：HAL 驱动改为发布标准 Core Audio **control 对象**（`kAudioLevelControlClassID` + `kAudioBooleanControlClassID`，标量 0…1 / -96…0 dB，每设备一对）。macOS 从此把 Flow 当成有硬件音量的设备，音量键、控制中心滑块、静音键都直接作用在它上面；驱动不做 DSP，App 监听 control 值再通过 `set_volume` 下发 AirPlay 组，避免双重衰减。重复写入同值不再发通知，消除"回写—通知"回环。
