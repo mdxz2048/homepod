@@ -83,6 +83,14 @@ Apple 文档：[Capturing system audio with Core Audio taps](https://developer.a
 - `stereoMixdownOfProcesses` / `stereoGlobalTapButExcludeProcesses`：主动混成 2 声道；
 - `init(processes:deviceUID:stream:)` / `init(excludingProcesses:deviceUID:stream:)` 且 `isMixdown = false`：跟随指定设备/流的真实声道数。
 
+**当前产品实际用的是第二种。** 证据：
+
+- `SystemAudioStore` 启动时传 `backend = virtual_device_v2`、`layout = 7_1`、`device_uid = FlowVirtualDevice.uid`；
+- `DeviceTapCapture` 调 `CATapDescription(excludingProcesses: [], andDeviceUID: deviceUID, withStream: 0)`，并设 `isMixdown = false`；
+- 真机 `hflctl status` / `system_profiler` 显示 `com.homepodflow.virtual-audio.surround71.v1`、8 输出声道、48kHz。
+
+所以当前虚拟声卡采集是 **8ch device/stream tap**，不是 stereo mixdown。但 8ch 只是容器：实际源多为 FL/FR 两声道，其余通道可能静音或填充；这不等同于“应用真的输出了 8 个独立声道”。轻量候选 `ProcessTapCapture` 才使用第一种 stereo mixdown（强制 2ch）。
+
 轻量模式如果采用“全局立体声 tap”，输出当然只有 2 声道；但即使换成 device/stream tap，**内置扬声器本身也只有 2 声道**，所以结果仍然是左右声道。限制来自“默认输出设备 + App 的下混策略”，不是 tap 只能 2ch。
 
 **在典型 Mac（内置扬声器或立体声输出）上：是。**
