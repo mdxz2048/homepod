@@ -59,6 +59,16 @@ Process Tap 把这些耦合拆开：设备不是系统可见的，默认输出�
 
 它仍然要做 private aggregate 和 IOProc，仍可能遇到默认输出设备变化、采样率变化、睡眠唤醒；但这些是“自己重建采集”，不是“系统设备被谁占着”。
 
+### 2.2 同一套 API，不等于同一个拓扑
+
+轻量模式和虚拟声卡模式都可以用同一套 **Core Audio Taps**：`CATapDescription` + `AudioHardwareCreateProcessTap` + private aggregate。差别不在 API 家族，而在三处：
+
+1. **`CATapDescription` 的目标**：轻量模式是“全局进程 stereo mixdown”；当前产品是“虚拟设备 stream 0，`isMixdown = false`”。
+2. **默认输出是否被替换**：轻量模式不动；虚拟声卡模式会把默认输出切到 8ch 设备，App 才会把音频送进来。
+3. **设备向 App 声明了什么**：虚拟声卡不只是“多几个声道”，它让 App 看到 8ch/7.1、发布 2000ms latency、提供音量 control；这些都会改变 App 的行为。
+
+所以“用不用声卡，API 不用变”只对了一半：**创建 tap 的 API 可以不变，但 `CATapDescription` 配置、aggregate 时钟、上层声道处理都要跟着变**。而且虚拟声卡给的是“8ch 容器/声明”，不保证里面真的有 8 路独立内容；当前实际源仍多为 FL/FR 两声道。
+
 ## 3. Process Tap 的关键语义
 
 Apple 文档：[Capturing system audio with Core Audio taps](https://developer.apple.com/documentation/coreaudio/capturing-system-audio-with-core-audio-taps)、[CATapDescription](https://developer.apple.com/documentation/coreaudio/catapdescription)、[CATapMuteBehavior](https://developer.apple.com/documentation/coreaudio/catapmutebehavior)。
