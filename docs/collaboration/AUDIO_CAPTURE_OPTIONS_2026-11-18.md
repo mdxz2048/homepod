@@ -78,6 +78,13 @@ Apple 文档：[Capturing system audio with Core Audio taps](https://developer.a
 
 ## 4. 是不是只能拿到左右声道？
 
+先澄清：**2 声道不是 Process Tap API 的硬上限。** API 有两类用法：
+
+- `stereoMixdownOfProcesses` / `stereoGlobalTapButExcludeProcesses`：主动混成 2 声道；
+- `init(processes:deviceUID:stream:)` / `init(excludingProcesses:deviceUID:stream:)` 且 `isMixdown = false`：跟随指定设备/流的真实声道数。
+
+轻量模式如果采用“全局立体声 tap”，输出当然只有 2 声道；但即使换成 device/stream tap，**内置扬声器本身也只有 2 声道**，所以结果仍然是左右声道。限制来自“默认输出设备 + App 的下混策略”，不是 tap 只能 2ch。
+
 **在典型 Mac（内置扬声器或立体声输出）上：是。**
 
 - 进程 tap 抓的是进程输出到当前设备的混音；设备是立体声，混音就是 2 声道。
