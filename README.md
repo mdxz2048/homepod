@@ -6,6 +6,7 @@
 - 官网从 0.3.1 文案更新到 0.3.3：补充应用内更新、延迟与占用修复、安装器不可重定位；修正“不修改系统输出设备”等与实现不符的描述。截图改为 0.3.3 Debug 构建实拍（音频组件、更新卡片、示例布局）。
 - DEBUG 截图新增 `--capture-demo-layout`：示例布局同时保留真实的音频组件与更新区块；`AppState.showsProductionSections` 默认值不变，仅影响 DEBUG 截图路径。
 - 官网发布验证：公网 DMG 51,543,948 B，SHA256 `ff0bfa7558e2903d85073c9a9be54386f1e76842d310c7973539261945bac64e` 与 `release.json` 一致；源站和公网静态资源均返回 200。浏览器声学同步仍未重新验收。
+- 新增采集架构评估 `docs/collaboration/AUDIO_CAPTURE_OPTIONS_2026-11-18.md`：日常立体声可改走 Core Audio Process Tap（无驱动、2 声道、启停更轻）；影院多声道与浏览器音画同步仍需 HAL 虚拟设备注入输出延迟。现有 `ProcessTapCapture` 可作为接线基础。
 
 ## 2026-11-13
 

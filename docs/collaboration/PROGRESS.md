@@ -1,5 +1,12 @@
 # HomePod Flow 当前进度
 
+## 2026-11-18 官网更新与采集架构评估
+
+- 官网从 0.3.1 文案/截图更新到 0.3.3：补充应用内更新、延迟与占用修复、安装器不可重定位；修正“不修改系统输出设备”等与实现不符的描述。新截图由 0.3.3 Debug 构建生成（设置页、菜单、局部细节），已部署树莓派并通过源站/公网/制品哈希校验。
+- 发布流程固化到 Codex skill `homepodflow-release`。`tools/updates/build-and-publish.sh` 只构建并切换 `release.json`/`updates/latest.json`，不会改 `index.html`；网页文案与截图必须单独发布。
+- 采集架构评估见 `AUDIO_CAPTURE_OPTIONS_2026-11-18.md`：日常立体声建议 Core Audio Process Tap（无驱动、2 声道、启停更轻）；影院多声道与浏览器音画同步保留 HAL 8ch + latency 注入。系统级视频延后无法脱离可控输出设备用公开 API 实现。
+- 下一步：把 `platforms/macos/ProcessTapCapture` 接进 `adapters/live`，加 TCC/静音提示、`.mutedWhenTapped` + watchdog；完成 30 次开关、30 分钟播放、睡眠唤醒、默认输出变化、权限拒绝/撤销和崩溃恢复验收。上述均为待做，不是已完成能力。
+
 ## 2026-11-13 树莓派发布与应用内更新
 
 0.3.3/build4已构建并通过局域网发布到 https://homepodflow.mddxz.top。网页release.json、版本化pkg/dmg、签名updates/latest.json均已上线。公网下载完整pkg后，Swift客户端同源/架构/版本、Ed25519签名及SHA256/大小校验通过。
