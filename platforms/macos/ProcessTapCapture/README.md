@@ -8,7 +8,7 @@
 
 - 默认 stereo mixdown，输出真实查询得到的 ASBD；仅接受 packed Float32 PCM（交错或非交错），不伪造 44.1kHz，不自动重采样，也不宣称获得原生 5.1。
 - 指定进程 PID，或全局捕获并排除本进程；`excludedProcessIDs` 还可显式排除发送 worker / App。选定目标与排除集合冲突直接失败。PID 不能解析成 Core Audio process object 时失败，不扩大范围兜底。
-- private tap + private aggregate，固定 `.unmuted`，不修改默认输出、系统音量或进程静音。设备或 tap 格式变化产生 fault；下一次非实时 `readBlock` 执行 fail-stop，必须显式处理错误，不自动重新捕获。
+- private tap + private aggregate，固定 `.mutedWhenTapped`：读取 tap 期间静音当前默认输出（内置/HDMI/蓝牙均适用），停止或崩溃后自动恢复；不修改默认输出设备。设备或 tap 格式变化产生 fault；下一次非实时 `readBlock` 执行 fail-stop，必须显式处理错误，不自动重新捕获。
 - `AudioDeviceIOProc` 仅调用 C ring；所有 slot/PCM 内存提前分配并触页。回调不创建 Swift 数组、不分配、不写文件、不锁、不 dispatch、不打印。初始化检查 C atomics 为 lock-free。
 - 单生产者、单消费者；队列满时丢弃最新块，`callbackSequence` 和 `droppedBlocksBefore` 标明具体断点。callback 帧超限或 buffer 布局改变会报 fault，绝不截断或假装连续。
 - 实际 ring 分配总预算最高 64 MiB；队列为 2...256 的二次幂，callback 帧上限 1...16384；超过预算明确失败。数据转换、有限 probe 落盘都在非实时消费端执行。

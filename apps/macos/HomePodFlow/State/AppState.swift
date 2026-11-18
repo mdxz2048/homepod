@@ -1,5 +1,8 @@
 import Foundation
 import Observation
+#if canImport(AppKit)
+import AppKit
+#endif
 
 private struct StoredPreferences: Codable {
     var version = 1
@@ -25,7 +28,7 @@ private struct StoredPreferences: Codable {
         set {
             storedVolume = Self.bounded(newValue, 0...100, fallback: 15)
             persist(); systemAudio.setVolume(storedVolume)
-            systemAudio.setSystemOutputVolume(storedVolume)
+            if mode.usesVirtualDevice { systemAudio.setSystemOutputVolume(storedVolume) }
         }
     }
     private var storedAVOffsetMS: Double
@@ -41,14 +44,17 @@ private struct StoredPreferences: Codable {
     private var storedDraftLayout: RoomLayout
     var draftLayout: RoomLayout {
         get { storedDraftLayout }
-        set { guard layoutEditable else { return }; storedDraftLayout = newValue }
+        set { guard canConfigureDevices else { return }; storedDraftLayout = newValue }
     }
     var selectedDeviceID: UUID?
     var selectedPage: SettingsPage = .layout
     private(set) var statusText = "演示 · 未连接真实设备"
     var notice = "尚未配置音箱 · 添加发现的设备并应用布局后即可开启系统音频。"
     var sessionControlsLocked: Bool { updates.isInstalling || systemAudio.desiredEnabled || systemAudio.hasActiveSession || systemAudio.isBusy }
+    /// Dragging positions only affects cinema routing. Music mode can still add,
+    /// remove and save the speaker list.
     var layoutEditable: Bool { mode == .cinema && !sessionControlsLocked }
+    var canConfigureDevices: Bool { !sessionControlsLocked }
     /// Removing a saved speaker is allowed in either playback mode. A powered-
     /// off speaker must not force the user to switch to cinema mode first.
     var canRemoveDevice: Bool { !sessionControlsLocked }
@@ -75,7 +81,9 @@ private struct StoredPreferences: Codable {
         let saved = defaults.data(forKey: Self.storageKey)
             .flatMap { try? JSONDecoder().decode(StoredPreferences.self, from: $0) }
         let valid = saved?.version == 1 ? saved : nil
-        storedMode = valid?.mode ?? .cinema
+        // Two user-facing modes only. The old "synchronized" value is decoded
+        // for preference compatibility and migrates to the new music default.
+        storedMode = (valid?.mode == .synchronized ? .music : (valid?.mode ?? .music))
         storedVolume = Self.bounded(valid?.volume ?? 15, 0...100, fallback: 15)
         storedAVOffsetMS = Self.bounded(valid?.avOffsetMS ?? 0, -3500...3500, fallback: 0)
         var restoredLayout = valid?.layout.normalized ?? (visualDemo ? .demo : .empty)
@@ -117,7 +125,7 @@ private struct StoredPreferences: Codable {
         statusText = result.message
     }
     func applyLayout() {
-        guard canRemoveDevice else { return }
+        guard canConfigureDevices else { return }
         guard !sessionControlsLocked else {
             notice = "请先停止系统音频或等待设备操作完成，再保存布局。"; return
         }
@@ -131,7 +139,7 @@ private struct StoredPreferences: Codable {
         notice = "布局已保存 · 尚未改变实际音箱声道。"
     }
     func cancelLayout() {
-        guard !sessionControlsLocked else { return }
+        guard canConfigureDevices else { return }
         storedDraftLayout = layout
         unconfirmedSpeakerHosts.removeAll()
         if !draftLayout.devices.contains(where: { $0.id == selectedDeviceID }) { selectedDeviceID = nil }
@@ -166,7 +174,7 @@ private struct StoredPreferences: Codable {
     }
 
     func stageSystemDevices(_ ids: Set<String>) {
-        guard layoutEditable else {
+        guard canConfigureDevices else {
             notice = "请先停止系统音频，再更新音箱布局。"; return
         }
         guard ids.count <= 8 else { notice = "最多选择8个独立音箱。"; return }
@@ -228,7 +236,7 @@ private struct StoredPreferences: Codable {
     }
 
     func confirmSpeakerKind(_ kind: SpeakerKind, for id: UUID) {
-        guard layoutEditable, let index = draftLayout.devices.firstIndex(where: { $0.id == id }),
+        guard canConfigureDevices, let index = draftLayout.devices.firstIndex(where: { $0.id == id }),
               let host = draftLayout.devices[index].host else { return }
         draftLayout.devices[index].kind = kind
         unconfirmedSpeakerHosts.remove(host)
@@ -256,7 +264,7 @@ private struct StoredPreferences: Codable {
 
     func startSystemAudio() async {
         guard !updates.isInstalling else { notice = "正在安装更新，请稍候"; return }
-        guard audioComponent.allowsStart else {
+        guard !mode.usesVirtualDevice || audioComponent.allowsStart else {
             notice = audioComponent.snapshot.message
             return
         }
@@ -264,6 +272,24 @@ private struct StoredPreferences: Codable {
         let hosts = Set(requestedLayout.devices.compactMap(\.host))
         guard !hosts.isEmpty, hosts.count == requestedLayout.devices.count, hosts.count <= 8 else {
             notice = "请先添加1至8个音箱并应用布局。"; return
+        }
+        if mode == .cinema {
+            let occupancy = AudioOccupancyService.shared.processesUsing(deviceUID: FlowVirtualDevice.uid)
+            if !occupancy.isEmpty {
+                guard await confirmQuitCinemaOccupancy(occupancy) else {
+                    notice = "影院模式需要先释放 HomePod Flow Audio。"
+                    return
+                }
+            } else if AudioOccupancyService.shared.isDeviceRunning(uid: FlowVirtualDevice.uid) == true {
+                let alert = NSAlert()
+                alert.messageText = "HomePod Flow Audio 仍被占用"
+                alert.informativeText = "没有识别到可退出的应用。请重新启动 HomePod Flow，或重启 Mac 后再试。"
+                alert.addButton(withTitle: "好")
+                NSApp.activate(ignoringOtherApps: true)
+                alert.runModal()
+                notice = "影院模式需要 Flow 音频设备空闲后再开启。"
+                return
+            }
         }
         guard !sessionControlsLocked,
               let preparation = systemAudio.beginPlaybackPreparation() else {
@@ -295,10 +321,37 @@ private struct StoredPreferences: Codable {
         persist()
         systemAudio.selectedDeviceIDs = Set(resolved.devices.compactMap(\.host))
         notice = "正在准备系统音频与保存的音箱…"
-        systemAudio.setSystemOutputVolume(volume)
+        if mode.usesVirtualDevice { systemAudio.setSystemOutputVolume(volume) }
         handedOff = true
         await systemAudio.start(mode: mode, volume: volume)
         notice = systemAudio.statusText
+    }
+
+    /// Cinema needs the virtual device to be idle before the worker writes its
+    /// presented latency. Only processes that are actually rendering to Flow
+    /// are listed; a normal app playing on the built-in/TV output is untouched.
+    private func confirmQuitCinemaOccupancy(_ usages: [AudioProcessUsage]) async -> Bool {
+        let names = usages.map(\.displayName).joined(separator: "、")
+        let alert = NSAlert()
+        alert.messageText = "需要先释放 HomePod Flow Audio"
+        alert.informativeText = "以下应用正在使用它，影院模式无法写入延迟：\n\(names)\n\n会退出整个应用（不只是暂停播放）。未保存的工作请先保存。"
+        alert.addButton(withTitle: "退出应用并继续")
+        alert.addButton(withTitle: "取消")
+        NSApp.activate(ignoringOtherApps: true)
+        guard alert.runModal() == .alertFirstButtonReturn else { return false }
+
+        _ = AudioOccupancyService.shared.terminate(usages)
+        let idle = await AudioOccupancyService.shared.waitUntilIdle(
+            deviceUID: FlowVirtualDevice.uid, timeout: 10)
+        guard !idle else { return true }
+
+        let failure = NSAlert()
+        failure.messageText = "仍有应用占用 HomePod Flow Audio"
+        failure.informativeText = "请手动关闭正在播放的应用后重试。"
+        failure.addButton(withTitle: "好")
+        NSApp.activate(ignoringOtherApps: true)
+        failure.runModal()
+        return false
     }
 
     /// Stable identities never fall back to an old address/name when missing.

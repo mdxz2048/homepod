@@ -34,13 +34,14 @@ import Foundation
         state.draftLayout.listener = .init(x: -12, y: 30)
         state.applyLayout()
         precondition(state.layout.listener == RoomPoint(x: 0, y: 1))
-        state.mode = .synchronized
+        state.mode = .music
         let before = state.layout
         let count = state.draftLayout.devices.count
         state.addDemoDevice()
         state.resetLayout()
         state.applyLayout()
         precondition(state.layout == before && state.draftLayout.devices.count == count)
+        state.mode = .cinema
         state.volume = 42
         state.avOffsetMS = -321
         state.setRunning(true)
@@ -50,7 +51,7 @@ import Foundation
         let migrated = AppState(defaults: defaults)
         precondition(migrated.layout.devices.isEmpty) // Old host:nil examples are not real outputs.
         let restored = AppState(defaults: defaults, visualDemo: true)
-        precondition(restored.mode == .synchronized && restored.volume == 42)
+        precondition(restored.mode == .cinema && restored.volume == 42)
         precondition(restored.avOffsetMS == -321 && restored.layout == before)
         precondition(!restored.isRunning)
         precondition(restored.notice.contains("未应用"))
@@ -64,7 +65,7 @@ import Foundation
         future["version"] = 999
         defaults.set(try! JSONSerialization.data(withJSONObject: future), forKey: "homepod-flow.preferences.v1")
         let unsupported = AppState(defaults: defaults)
-        precondition(unsupported.volume == 15 && unsupported.mode == .cinema)
+        precondition(unsupported.volume == 15 && unsupported.mode == .music)
         defaults.set(Data("corrupted".utf8), forKey: "homepod-flow.preferences.v1")
         let recovered = AppState(defaults: defaults)
         precondition(recovered.volume == 15 && !recovered.isRunning && recovered.layout.devices.isEmpty)
@@ -143,7 +144,7 @@ import Foundation
         configured.removeDevice(firstID); configured.stageSystemDevices([]); configured.resetLayout(); configured.applyLayout()
         precondition(configured.mode == lockedMode && configured.volume == 99 && configured.draftLayout == lockedLayout)
         await configured.systemAudio.stop()
-        precondition(!configured.systemAudio.isPlaybackIntentCurrent(preparation) && configured.layoutEditable)
+        precondition(!configured.systemAudio.isPlaybackIntentCurrent(preparation) && configured.canConfigureDevices)
         configured.volume = lockedVolume
         precondition(configured.draftLayout == savedLayoutSnapshot && configured.systemAudio.selectedDeviceIDs == knownHosts)
         try! configured.systemAudio.acceptDiscoveryPayload(["devices": .array([

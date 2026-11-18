@@ -51,7 +51,7 @@ import Observation
     @ObservationIgnored private var audioMigrationPending = false
     private var session: String?
     private var sessionUsesVirtualInput = false
-    private var activeMode: PlaybackMode = .synchronized
+    private var activeMode: PlaybackMode = .music
     private var activeVolume: Double = 15
     private var targetIdentifiers: [String] = []
     private var lastFailure: SystemSessionFailure?
@@ -110,6 +110,9 @@ import Observation
     }
 
     private func systemOutputVolumeDidChange() {
+        // The menu slider is the HomePod volume in music mode; observing the
+        // real output there would overwrite it with the Mac/TV volume.
+        guard sessionUsesVirtualInput else { return }
         guard let state = systemOutputVolume.readState() else { return }
         let target = state.muted ? 0 : Double(state.volume) * 100
         let clamped = min(100, max(0, target))
@@ -289,7 +292,16 @@ import Observation
             statusText = "请先选择1至8个当前可用的独立音箱"; return
         }
         guard volume.isFinite, (0...100).contains(volume) else { statusText = "启动音量无效"; return }
-        if let service, service.runtime.virtual_capture_host != nil, !service.supportsVirtualInput {
+        if mode == .cinema {
+            guard let service, service.runtime.virtual_capture_host != nil else {
+                statusText = "影院模式需要安装 Flow 虚拟声卡组件"; return
+            }
+            guard service.supportsVirtualInput else {
+                statusText = "本机服务尚不支持 Flow 虚拟声卡，请更新采集服务"; return
+            }
+        }
+        if mode.usesVirtualDevice, let service,
+           service.runtime.virtual_capture_host != nil, !service.supportsVirtualInput {
             statusText = "本机服务尚不支持 Flow 虚拟声卡，请更新采集服务"; return
         }
         cancelTimers()
@@ -308,7 +320,13 @@ import Observation
         restoreDefaultOutputOwned()
         defaultOutputFailure = nil
         defaultOutputSettleWarning = nil
-        sessionUsesVirtualInput = service.runtime.virtual_capture_host != nil
+        // Music is the default and never touches the virtual device or the
+        // default output. Cinema always requires the virtual host; the legacy
+        // synchronized value keeps its historical "use it when configured"
+        // behavior for old preferences and regression checks.
+        let wantsVirtualInput = activeMode.usesVirtualDevice
+        let hasVirtualHost = service.runtime.virtual_capture_host != nil
+        sessionUsesVirtualInput = wantsVirtualInput && hasVirtualHost
         let sid = UUID().uuidString
         let token = generation
         isBusy = true; isRunning = false; lastFailure = nil; lastCleanupConfirmed = false
@@ -337,7 +355,9 @@ import Observation
         invalidateVolumeUpdates(); outputCount = hosts.count
         statusText = sessionUsesVirtualInput
             ? "Mac 默认输出已切到 Flow · 正在准备系统音频（首次可能需要授权）…"
-            : "正在准备系统音频 · 首次启动可能需要系统授权"
+            : (activeMode == .music
+                ? "音乐模式 · 正在准备系统音频（首次可能需要授权）…"
+                : "正在准备系统音频 · 首次启动可能需要系统授权")
         let routes: [JSONValue] = hosts.enumerated().map { index, host in
             .object(["output_id": .integer(index), "channels": .array([.integer(0), .integer(1)]), "host": .string(host)])
         }
@@ -345,11 +365,15 @@ import Observation
         do {
             var params: [String: JSONValue] = [
                 "session": .string(sid), "library": .string(service.runtime.library),
-                "capture_host": .string(service.runtime.virtual_capture_host ?? service.runtime.capture_host), "routes": .array(routes),
-                "volume": .number(activeVolume), "mode": .string(activeMode.rawValue),
+                "capture_host": .string(sessionUsesVirtualInput
+                    ? (service.runtime.virtual_capture_host ?? service.runtime.capture_host)
+                    : service.runtime.capture_host),
+                "routes": .array(routes),
+                "volume": .number(activeVolume),
+                "mode": .string(sessionUsesVirtualInput ? activeMode.rawValue : "synchronized"),
                 "exclude_pids": .array([.integer(Int(ProcessInfo.processInfo.processIdentifier))])
             ]
-            if service.runtime.virtual_capture_host != nil {
+            if sessionUsesVirtualInput {
                 var input: [String: JSONValue] = [
                     "backend": .string("virtual_device_v2"),
                     "device_uid": .string(FlowVirtualDevice.uid),
@@ -629,13 +653,19 @@ import Observation
             case .stereoDownmix:
                 statusText = activeMode == .cinema
                     ? "8 声道输入 · 影院模式已下混为立体声发送"
-                    : "8 声道输入 · 已下混为立体声同步发送"
+                    : (activeMode == .music
+                        ? "音乐模式 · 立体声已下混发送"
+                        : "8 声道输入 · 已下混为立体声同步发送")
             case .sameStereo:
                 statusText = activeMode == .cinema
                     ? "系统立体声正在发送 · 影院模式当前同声退化"
-                    : "系统立体声正在同步发送 · 声学同步尚未测量"
+                    : (activeMode == .music
+                        ? "音乐模式 · 正在发送系统立体声"
+                        : "系统立体声正在同步发送 · 声学同步尚未测量")
             case .unknown:
-                statusText = activeMode == .cinema ? "影院模式当前同声退化" : "正在同步发送"
+                statusText = activeMode == .cinema
+                    ? "影院模式当前同声退化"
+                    : (activeMode == .music ? "音乐模式 · 正在发送" : "正在同步发送")
             }
             refreshRouteSuffix()
             if stableTask == nil {

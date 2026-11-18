@@ -1,5 +1,15 @@
 # HomePod Flow 当前进度
 
+## 2026-11-18 音乐/影院双模式
+
+- 产品 UI 只保留音乐/影院两个模式，默认音乐；用户切换后持久化，下次启动沿用上次模式。旧 `synchronized` 值只做兼容解码并迁移到音乐。
+- 音乐模式走 `tap-capture-host` 的 Process Tap 2ch，固定 `.mutedWhenTapped`：读取期间静音当前默认输出（内置/HDMI/蓝牙），停止/崩溃自动恢复；不写默认输出、无 latency 注入、不要求 HAL 驱动，音量走 HomePod。
+- 影院模式走 `virtual-audio-host` 的 Device Tap 8ch：保存并切默认输出到 Flow，worker 写入协商 latency，停止恢复 previous UID。
+- 模式切换只在完全关闭时允许；ON/STARTING/STOPPING 时模式选择器禁用。
+- 影院开启前检查 Flow 占用：枚举 Core Audio process objects，按 output devices + `IsRunningOutput` 找出真正占用者；弹窗列出应用，用户确认后正常退出，轮询设备 idle ≤10s 后继续。取消/超时保持 OFF、默认输出不变。
+- 音频组件区块只在影院模式显示；音乐模式可添加/移除/保存音箱，位置拖拽只在影院生效。
+- 验证：Debug/Release 构建；StateChecks、DefaultOutputRouteChecks、SystemVirtualInputChecks、SystemVolumeChecks、SystemSessionChecks、LatencyControlChecks；ProcessTapCapture 27 tests；`tap-capture-host` release 构建通过。真实 TCC、音乐出声、占用弹窗/退出、影院声学仍未验收。
+
 ## 2026-11-18 官网更新与采集架构评估
 
 - 官网从 0.3.1 文案/截图更新到 0.3.3：补充应用内更新、延迟与占用修复、安装器不可重定位；修正“不修改系统输出设备”等与实现不符的描述。新截图由 0.3.3 Debug 构建生成（设置页、菜单、局部细节），已部署树莓派并通过源站/公网/制品哈希校验。

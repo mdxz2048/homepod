@@ -3,7 +3,8 @@ import SwiftUI
 struct SettingsRootView: View {
     @Bindable var state: AppState
     @State private var showingDevices = false
-    private var editable: Bool { state.layoutEditable }
+    private var canConfigure: Bool { state.canConfigureDevices }
+    private var canPosition: Bool { state.layoutEditable }
     private var removeEditable: Bool { state.canRemoveDevice }
 
     var body: some View {
@@ -13,39 +14,41 @@ struct SettingsRootView: View {
                     Text("空间布局").font(.title2.bold())
                     Text(state.mode == .cinema
                          ? "添加实际音箱，拖动到房间中的位置。"
-                         : "同步播放不使用空间位置；仍可移除已保存的音箱。")
+                         : "音乐模式使用立体声；位置仅在影院模式生效，仍可添加或移除音箱。")
                         .foregroundStyle(.secondary).font(.callout)
                 }
                 Spacer()
                 Button { showingDevices = true } label: {
                     Label("添加音箱", systemImage: "plus")
-                }.controlSize(.large).disabled(!editable)
+                }.controlSize(.large).disabled(!canConfigure)
             }
             if state.showsProductionSections {
-                AudioComponentSection(service: state.audioComponent,
-                                      canInstall: !state.sessionControlsLocked)
+                if state.mode.usesVirtualDevice {
+                    AudioComponentSection(service: state.audioComponent,
+                                          canInstall: !state.sessionControlsLocked)
+                }
                 AppUpdateSection(state: state)
             }
             Divider()
             HStack(alignment: .top, spacing: 20) {
                 ZStack {
-                    RoomCanvas(layout: $state.draftLayout, selectedDeviceID: $state.selectedDeviceID, editable: editable)
+                    RoomCanvas(layout: $state.draftLayout, selectedDeviceID: $state.selectedDeviceID, editable: canPosition)
                     if state.draftLayout.devices.isEmpty {
                         VStack(spacing: 12) {
                             Image(systemName: "hifispeaker.and.homepodmini").font(.largeTitle).foregroundStyle(.secondary)
                             Text("还没有添加音箱").font(.headline)
-                            Button("查找音箱") { showingDevices = true }.disabled(!editable)
+                            Button("查找音箱") { showingDevices = true }.disabled(!canConfigure)
                         }.padding(24).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
                     }
                 }.frame(minWidth: 400, maxWidth: .infinity, maxHeight: .infinity)
                 inspector.frame(width: 240)
             }
             HStack {
-                Button("重置位置", action: state.resetLayout).disabled(!editable || state.draftLayout.devices.isEmpty)
+                Button("重置位置", action: state.resetLayout).disabled(!canPosition || state.draftLayout.devices.isEmpty)
                 Spacer()
-                Button("取消修改", action: state.cancelLayout).disabled(!removeEditable || !state.hasUnsavedLayout)
+                Button("取消修改", action: state.cancelLayout).disabled(!canConfigure || !state.hasUnsavedLayout)
                 Button("保存布局", action: state.applyLayout).buttonStyle(.borderedProminent)
-                    .disabled(!removeEditable || !state.hasUnsavedLayout || !state.unconfirmedSpeakerHosts.isEmpty)
+                    .disabled(!canConfigure || !state.hasUnsavedLayout || !state.unconfirmedSpeakerHosts.isEmpty)
             }.controlSize(.large)
             Text(state.notice).font(.caption).foregroundStyle(.secondary).lineLimit(2)
         }
@@ -108,8 +111,10 @@ struct SettingsRootView: View {
                             Text("型号决定轮廓，颜色只影响画布外观。")
                                 .font(.caption).foregroundStyle(.secondary)
                             coordinate("左右", value: deviceCoordinate(index, horizontal: true))
+                                .disabled(!canPosition)
                             coordinate("前后", value: deviceCoordinate(index, horizontal: false))
-                        }.disabled(!editable)
+                                .disabled(!canPosition)
+                        }
                         Button("从布局移除", role: .destructive) {
                             state.removeDevice(state.draftLayout.devices[index].id)
                         }
@@ -146,7 +151,7 @@ struct SettingsRootView: View {
             let device = state.draftLayout.devices[index]
             return state.unconfirmedSpeakerHosts.contains(device.host ?? "") ? nil : device.kind
         }, set: { kind in
-            guard editable, let kind, state.draftLayout.devices.indices.contains(index) else { return }
+            guard canConfigure, let kind, state.draftLayout.devices.indices.contains(index) else { return }
             state.confirmSpeakerKind(kind, for: state.draftLayout.devices[index].id)
         })
     }
@@ -156,7 +161,7 @@ struct SettingsRootView: View {
             let point = state.draftLayout.devices[index].position
             return horizontal ? point.x : point.y
         }, set: { value in
-            guard editable, state.draftLayout.devices.indices.contains(index) else { return }
+            guard canPosition, state.draftLayout.devices.indices.contains(index) else { return }
             if horizontal { state.draftLayout.devices[index].position.x = value }
             else { state.draftLayout.devices[index].position.y = value }
         })

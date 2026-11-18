@@ -7,6 +7,13 @@
 - DEBUG 截图新增 `--capture-demo-layout`：示例布局同时保留真实的音频组件与更新区块；`AppState.showsProductionSections` 默认值不变，仅影响 DEBUG 截图路径。
 - 官网发布验证：公网 DMG 51,543,948 B，SHA256 `ff0bfa7558e2903d85073c9a9be54386f1e76842d310c7973539261945bac64e` 与 `release.json` 一致；源站和公网静态资源均返回 200。浏览器声学同步仍未重新验收。
 - 新增采集架构评估 `docs/collaboration/AUDIO_CAPTURE_OPTIONS_2026-11-18.md`：日常立体声可改走 Core Audio Process Tap（无驱动、2 声道、启停更轻）；影院多声道与浏览器音画同步仍需 HAL 虚拟设备注入输出延迟。现有 `ProcessTapCapture` 可作为接线基础。
+- **双模式落地**：产品只有音乐/影院两个模式，默认音乐，并把用户上次选择的模式持久化；旧 `synchronized` 原始值只用于兼容解码，加载时迁移为音乐。
+- **音乐模式**：走 `tap-capture-host` 的 Process Tap 2ch；固定 `.mutedWhenTapped`，读取期间静音当前默认输出（内置/HDMI/蓝牙均适用），停止或崩溃自动恢复；不写默认输出、无 latency 注入；音量走 HomePod `set_volume`。音乐模式不要求安装 HAL 驱动。
+- **影院模式**：走 `virtual-audio-host` 的 Device Tap 8ch；保存并切换默认输出到 Flow，由 worker 写入协商 latency；停止时恢复 previous UID。
+- **切换约束**：只有完全关闭（`desiredEnabled=false`、无 session、非 busy、非 routeSwitchInProgress、cleanup 已确认）才允许切换模式；ON/STARTING/STOPPING 时模式选择器禁用。
+- **影院占用门禁**：开启前用 `kAudioHardwarePropertyProcessObjectList`、`kAudioProcessPropertyDevices`（output scope）、`kAudioProcessPropertyIsRunningOutput` 找出真正占用 Flow 的进程；NSAlert 列出应用，用户确认后正常退出（`NSRunningApplication.terminate()` / SIGTERM），轮询设备 idle 最多 10 秒后继续。取消或超时保持 OFF，默认输出不变；只列真正使用 Flow 输出的进程，正常播放内置/电视输出的应用不会被要求退出；设备仍在 running 但识别不到可退出应用时提示重启 App/Mac。
+- **UI 调整**：音频组件区块只在影院模式显示；音乐模式可以添加/移除/保存音箱，位置拖拽只在影院模式生效。
+- **验证**：Debug/Release 构建通过；StateChecks、DefaultOutputRouteChecks、SystemVirtualInputChecks、SystemVolumeChecks、SystemSessionChecks、LatencyControlChecks 通过；ProcessTapCapture 27 项测试通过；`tap-capture-host` release 构建通过。真实 TCC、音乐模式出声、影院占用弹窗与声学同步仍需真机验收；内嵌采集宿主需重新打包安装后才生效。
 
 ## 2026-11-13
 

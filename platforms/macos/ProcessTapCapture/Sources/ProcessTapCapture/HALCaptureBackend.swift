@@ -78,7 +78,10 @@ private final class RingToken: @unchecked Sendable {
         description.isMixdown = true
         description.isMono = false
         description.isExclusive = exclusive
-        description.muteBehavior = .unmuted
+        // Music mode deliberately silences the current default output while
+        // the tap is being read, regardless of whether it is built-in, HDMI or
+        // Bluetooth. Stopping/crashing the reader restores the original audio.
+        description.muteBehavior = .mutedWhenTapped
         var created: AudioObjectID = kAudioObjectUnknown
         let status = AudioHardwareCreateProcessTap(description, &created)
         if created != kAudioObjectUnknown { tap = created }

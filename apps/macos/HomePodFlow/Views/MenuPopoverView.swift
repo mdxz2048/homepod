@@ -80,7 +80,7 @@ struct MenuPopoverView: View {
                 .offset(x: Theater.P(887), y: Theater.P(114))
                 .disabled(!state.visualDemo && (state.updates.isInstalling || state.systemAudio.routeSwitchInProgress || (!state.systemAudio.desiredEnabled &&
                           (state.systemAudio.isBusy || state.layout.devices.isEmpty ||
-                           !state.audioComponent.allowsStart))))
+                           (state.mode.usesVirtualDevice && !state.audioComponent.allowsStart)))))
                 .accessibilityLabel(state.visualDemo
                     ? (state.isRunning ? "系统声音演示运行中" : "系统声音演示已停止")
                     : "系统声音")
@@ -93,12 +93,14 @@ struct MenuPopoverView: View {
 
     private var subtitleText: String {
         if state.visualDemo { return "界面演示 · 3 台示例设备" }
-        switch state.audioComponent.snapshot.state {
-        case .notInstalled: return "需要安装音频组件"
-        case .installedNeedsReload: return "音频组件等待加载"
-        case .conflict: return "音频组件有冲突"
-        case .invalid: return "音频组件需要修复"
-        case .checking, .ready: break
+        if state.mode.usesVirtualDevice {
+            switch state.audioComponent.snapshot.state {
+            case .notInstalled: return "影院模式需要安装音频组件"
+            case .installedNeedsReload: return "音频组件等待加载"
+            case .conflict: return "音频组件有冲突"
+            case .invalid: return "音频组件需要修复"
+            case .checking, .ready: break
+            }
         }
         let status = state.systemAudio.statusText.trimmingCharacters(in: .whitespacesAndNewlines)
         if !status.isEmpty { return status }
@@ -109,8 +111,11 @@ struct MenuPopoverView: View {
         if state.visualDemo {
             return "演示开关只改变界面状态，不会接管真实音频。"
         }
-        if !state.audioComponent.allowsStart {
+        if state.mode.usesVirtualDevice && !state.audioComponent.allowsStart {
             return "系统声音 · \(state.audioComponent.snapshot.message)"
+        }
+        if !state.mode.usesVirtualDevice {
+            return "音乐模式 · 不改默认输出，播放时静音本机输出"
         }
         let status = state.systemAudio.statusText.trimmingCharacters(in: .whitespacesAndNewlines)
         return "系统声音 · \(state.deviceCount) 台设备" + (status.isEmpty ? "" : " · \(status)")
@@ -134,7 +139,7 @@ struct MenuPopoverView: View {
     private var modePicker: some View {
         HStack(spacing: Theater.P(3)) {
             ModeSegmentButton(selected: state.mode == .cinema, title: "影院模式") { select(.cinema) }
-            ModeSegmentButton(selected: state.mode == .synchronized, title: "同步播放") { select(.synchronized) }
+            ModeSegmentButton(selected: state.mode != .cinema, title: "音乐模式") { select(.music) }
         }
         .padding(.horizontal, Theater.P(4))
         .padding(.vertical, Theater.P(6))

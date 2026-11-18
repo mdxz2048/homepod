@@ -40,6 +40,21 @@ import Foundation
             precondition(service.shutdowns == 1)
         }
 
+        // Music is the default and must never select the virtual host or send
+        // a virtual input descriptor, even when the runtime has one installed.
+        let musicService = VirtualInputService(configured: true, supported: true)
+        let musicStore = SystemAudioStore(serviceFactory: { musicService }, observesEnvironment: false)
+        await musicStore.connectLocalWorker(); await musicStore.scanDevices()
+        musicStore.selectedDeviceIDs = ["receiver"]
+        await musicStore.start(mode: .music, volume: 15)
+        let musicParams = musicService.startParameters!
+        precondition(musicParams["capture_host"]?.string == "/legacy")
+        precondition(musicParams["input"] == nil)
+        precondition(musicParams["mode"]?.string == "synchronized")
+        precondition(!musicStore.cleanupRequiresAttention)
+        await musicStore.prepareForTermination()
+        precondition(musicService.shutdowns == 1)
+
         // actual_mode state payload drives truthful, non-implementation status wording.
         try await assertStreamingStatus(actualMode: "stereo_downmix", configured: true, mode: .cinema) { text in
             precondition(text.contains("下混"))

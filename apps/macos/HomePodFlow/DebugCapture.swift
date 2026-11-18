@@ -172,7 +172,7 @@ import Darwin
     static func configure(_ state: AppState) {
         let arguments = ProcessInfo.processInfo.arguments
         if arguments.contains("--mode-cinema") { state.mode = .cinema }
-        if arguments.contains("--mode-sync") { state.mode = .synchronized }
+        if arguments.contains("--mode-sync") || arguments.contains("--mode-music") { state.mode = .music }
         for page in SettingsPage.allCases where arguments.contains("--page-\(page.rawValue)") {
             state.selectedPage = page
         }

@@ -1,9 +1,23 @@
 import Foundation
 
 enum PlaybackMode: String, Codable, CaseIterable, Identifiable {
-    case cinema, synchronized
+    case cinema
+    case music
+    /// Legacy value kept for old preferences and the existing virtual-input
+    /// regression checks. The product UI no longer offers this mode.
+    case synchronized
     var id: Self { self }
-    var title: String { self == .cinema ? "影院模式" : "同步播放" }
+    var title: String {
+        switch self {
+        case .cinema: "影院模式"
+        case .music: "音乐模式"
+        case .synchronized: "同步播放（旧版）"
+        }
+    }
+    /// Cinema needs the HAL virtual device. Music deliberately never touches
+    /// the default output. The legacy synchronized value keeps its old virtual
+    /// behaviour so old preferences and checks remain decodable.
+    var usesVirtualDevice: Bool { self != .music }
 }
 
 enum SpeakerForm: Equatable { case homePod, mini }
