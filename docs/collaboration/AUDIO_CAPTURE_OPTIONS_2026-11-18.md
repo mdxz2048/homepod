@@ -93,6 +93,18 @@ Apple 文档：[Capturing system audio with Core Audio taps](https://developer.a
 
 **例外：默认输出本身是多声道设备。** 如果 Mac 接了支持 5.1/7.1 的 HDMI/DisplayPort 接收器，并把它设为默认输出，可以用 `initWithProcesses:andDeviceUID:withStream:` / `initWithStreams:deviceUID:`、`isMixdown = false` 去 tap 该设备的流，保留更多声道。这不是“无驱动也能任意多声道”，而是“借真实多声道设备”。
 
+#### HDMI 直连电视，到底是 2ch 还是多声道？
+
+HDMI 的声道数由 **EDID 协商**决定：电视/功放/回音壁告诉 Mac 自己支持哪些 LPCM 格式，macOS 再把这个能力暴露成输出设备的声道布局。常见情况：
+
+| 连接 | Mac 通常看到的 HDMI 输出 | 实际出声 |
+|---|---|---|
+| Mac → 电视直连 | 多数电视只报 2ch LPCM；部分支持 5.1 LPCM | 电视内置扬声器通常仍是立体声，5.1 可能被下混 |
+| Mac → AVR/回音壁 → 电视 | 常见 6ch/8ch LPCM | 由 AVR/回音壁解码播放，电视只负责画面 |
+| Dolby/DTS/Atmos 位流 | 压缩位流，不是 6ch PCM | 需要接收端解码；普通 PCM tap 未必能直接拿到可用多声道 |
+
+所以“音频也到电视”不等于“电视在播 5.1”：链路可以是多声道，电视扬声器却只出立体声；也可能是电视只接受 2ch，App 直接下混。判断方法：在“音频 MIDI 设置”里选中 HDMI 输出，看格式/声道数；再用 5.1 测试音和 tap 实际格式（`ProcessTapCapture` 会报告 channels）确认。不要仅凭“接了 HDMI”或“片源是 5.1”推断。
+
 另需注意：仓库当前 README 写明“当前 tap 为立体声，影院模式按同声播放退化”。即使虚拟设备是 8ch 容器，也不等于原生逐声道环绕已经验收。
 
 ## 5. 音画同步：哪些接口能做什么
