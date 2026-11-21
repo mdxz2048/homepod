@@ -51,6 +51,7 @@ import Observation
     @ObservationIgnored private var audioMigrationPending = false
     private var session: String?
     private var sessionUsesVirtualInput = false
+    private var activeCalibration: [String: Double]?
     private var activeMode: PlaybackMode = .music
     private var activeVolume: Double = 15
     private var targetIdentifiers: [String] = []
@@ -284,7 +285,7 @@ import Observation
     }
     func isPlaybackIntentCurrent(_ intent: UUID) -> Bool { desiredEnabled && recovery.intent == intent }
 
-    func start(mode: PlaybackMode, volume: Double) async {
+    func start(mode: PlaybackMode, volume: Double, calibration: [String: Double]? = nil) async {
         guard serviceReady, !isBusy, session == nil, !disconnecting else { return }
         guard !cleanupRequiresAttention else { statusText = "上次清理未确认，请先检查音箱并重新启动应用"; return }
         let selected = devices.filter { selectedDeviceIDs.contains($0.id) }
@@ -308,6 +309,7 @@ import Observation
         if !desiredEnabled { recovery.enable() }
         guard !recovery.blocked else { return }
         activeMode = mode; activeVolume = volume
+        activeCalibration = calibration
         targetIdentifiers = selected.compactMap { stableIdentifiersByHost[$0.host] }
         if targetIdentifiers.count != selected.count { targetIdentifiers = [] }
         installEnvironmentControllerIfNeeded()
@@ -383,6 +385,16 @@ import Observation
                     input["latency_control"] = .string(helper)
                 }
                 params["input"] = .object(input)
+                if let calibration = activeCalibration {
+                    var residuals: [String: JSONValue] = [:]
+                    for (index, host) in hosts.enumerated() {
+                        guard let identity = stableIdentifiersByHost[host], let residual = calibration[identity] else {
+                            throw WorkerFailure.remote("音箱身份发生变化，请重新测试延迟。")
+                        }
+                        residuals[String(index)] = .number(residual)
+                    }
+                    params["calibration"] = .object(residuals)
+                }
             }
             let result = try await service.request("start", params: params, session: sid, timeout: nil)
             guard generation == token, session == sid else { return }
@@ -501,6 +513,8 @@ import Observation
                 ?? "系统音频已停止 · 清理已确认"
         } catch {
             guard generation == token else { return }
+            FlowDiagnosticsLog.append("session-events.log",
+                "stop failed: \(error.localizedDescription); latency=\(latencyStatusText)")
             lastCleanupConfirmed = false; cleanupRequiresAttention = true; recovery.block(); cancelTimers()
             statusText = error.localizedDescription
         }
@@ -622,6 +636,10 @@ import Observation
         }
         guard event.session == session, session != nil else { return }
         if event.event == "error" {
+            FlowDiagnosticsLog.append("session-events.log",
+                "worker error code=\(event.payload["code"]?.string ?? "?") "
+                + "session=\(event.session ?? "-") "
+                + "message=\(event.payload["message"]?.string ?? "?")")
             lastFailure = SystemSessionFailure(payload: event.payload)
             if event.payload["code"]?.string == "volume_failed" {
                 pendingVolume = nil; volumeUpdating = false

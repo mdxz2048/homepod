@@ -4,6 +4,8 @@
 
 ## 用户确定的更新流程
 
+- 用户要求电脑始终只保留 HomePod Flow 最新版本。每次本机安装成功并核验后，清理旧版 App、独立测试版副本、旧 pkg/dmg 与安装临时备份/缓存；保留源码、测试证据、音箱布局和偏好设置。
+
 完成应用发布任务时，不只保存源码：通过 tools/updates/build-and-publish.sh 构建完整 pkg/dmg 并发布到树莓派网站，更新网页 release.json 和带签名的 updates/latest.json。先完成相关检查、递增 apps/macos/project.yml 的版本/build，再发布；未完成的实验不得冒充正式可用更新。
 
 - 网站：https://homepodflow.mddxz.top；根目录 /opt/sites/homepodflow。

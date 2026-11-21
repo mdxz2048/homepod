@@ -148,6 +148,16 @@ extension SystemAudioRouting {
         set { client.onFailure = newValue }
     }
     static func installed() throws -> SystemRouterService {
+        #if DEBUG
+        if let project = ProcessInfo.processInfo.environment["HOMEPODFLOW_DEV_PROJECT"] ?? Bundle.main.object(forInfoDictionaryKey: "FlowCalibrationDevProject") as? String,
+           let python = ProcessInfo.processInfo.environment["HOMEPODFLOW_DEV_PYTHON"] ?? Bundle.main.object(forInfoDictionaryKey: "FlowCalibrationDevPython") as? String,
+           let bundled = try bundledRuntime(in: Bundle.main.resourceURL) {
+            var runtime = SystemAudioRuntime(python: python, project: project, library: bundled.library,
+                capture_host: "", virtual_capture_host: nil, latency_control: bundled.latency_control)
+            try runtime.preferEmbeddedCaptureHosts(in: Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers"))
+            return SystemRouterService(runtime: runtime)
+        }
+        #endif
         guard let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
             throw WorkerFailure.unavailable("无法定位本机运行环境")
         }

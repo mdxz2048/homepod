@@ -733,12 +733,26 @@ static OSStatus PerformChange(AudioServerPlugInDriverRef driver, AudioObjectID o
     if (!ValidDriver(driver) || index < 0) return kAudioHardwareBadObjectError;
     MCDeviceState *state = &gState[index];
     pthread_mutex_lock(&gControl);
-    if (state->pendingKind == MCPendingNone || action != state->pendingAction ||
-        atomic_load(&state->running)) {
+    if (state->pendingKind == MCPendingNone || action != state->pendingAction) {
         pthread_mutex_unlock(&gControl);
         return kAudioHardwareIllegalOperationError;
     }
     UInt32 kind = state->pendingKind;
+    /* The host callback is the authorization to commit presentation latency.
+     * Client ownership can remain registered during the host transaction;
+     * latency only updates atomic reporting and never alters PCM or clocks.
+     * Format changes still require idle ownership. */
+    if (kind == MCPendingRate && atomic_load(&state->running)) {
+        /* A failed Perform is terminal: the host need not call Abort or retry.
+         * Keep the committed timeline, but release our reservation so StartIO
+         * and the next guarded request are not blocked forever. */
+        state->pendingKind = MCPendingNone;
+        state->lastHostRejected = true;
+        pthread_mutex_unlock(&gControl);
+        LogConfigEvent(object, index, "perform-busy", kind, action,
+                       kAudioHardwareIllegalOperationError);
+        return kAudioHardwareIllegalOperationError;
+    }
     if (kind == MCPendingRate) {
         CommitRateChange(index);
     } else {

@@ -356,9 +356,13 @@ HomePod Flow $version
 安装程序不会把 HomePod Flow Audio 设为默认输出。
 正式发布包内置 Python 运行环境，无需外部 runtime.json；正式签名/公证另行处理。
 EOF
+    # HFS+ avoids the default APFS container overhead: with a ~68 MB payload
+    # hdiutil's tight auto-sized APFS image fills up while copying and fails
+    # with "No space left on device".
     /usr/bin/hdiutil create \
         -volname "HomePod Flow $version" \
         -srcfolder "$dmg_stage" \
+        -fs HFS+ \
         -ov -format UDZO \
         "$out_dmg"
     /usr/bin/hdiutil verify "$out_dmg"

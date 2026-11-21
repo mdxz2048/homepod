@@ -115,6 +115,7 @@ spec="$work/spec"
         --collect-all pyatv \
         --collect-all av \
         --collect-all zeroconf \
+        --add-data "$project/adapters/calibration/assets:adapters/calibration/assets" \
         --distpath "$dist" \
         --workpath "$build" \
         --specpath "$spec" \

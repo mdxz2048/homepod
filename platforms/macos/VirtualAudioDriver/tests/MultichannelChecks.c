@@ -998,13 +998,20 @@ static void CheckClockAndIO(void) {
     assert(ReadCustom64(first->deviceID, kMCLatencyRevision) == revisionBefore);
     assert(ReadStatus(first->deviceID) == MCLatencyStatusPending);
     UInt64 activeAction = gState[0].pendingAction;
-    /* Never mutate the live timeline: only the host can quiesce then commit. */
+    /* The host has granted the latency transaction, even if client ownership
+     * remains registered. It changes neither the PCM clock nor ownership. */
+    UInt64 seedBeforeCommit = atomic_load(&gState[0].seed);
+    UInt64 anchorBeforeCommit = atomic_load(&gState[0].anchor);
+    assert(PerformChange(Driver(), first->deviceID, activeAction, NULL) == noErr);
+    assert(gState[0].pendingKind == MCPendingNone);
+    assert(ReadCustom32(first->deviceID, kMCLatencyFrames) == latencyBefore + 1);
+    assert(ReadCustom64(first->deviceID, kMCLatencyRevision) == revisionBefore + 1);
+    assert(atomic_load(&gState[0].running) == 1);
+    assert(atomic_load(&gState[0].seed) == seedBeforeCommit);
+    assert(atomic_load(&gState[0].anchor) == anchorBeforeCommit);
     assert(PerformChange(Driver(), first->deviceID, activeAction, NULL) ==
            kAudioHardwareIllegalOperationError);
     assert(StopIO(Driver(), first->deviceID, 3000) == noErr);
-    assert(PerformChange(Driver(), first->deviceID, activeAction, NULL) == noErr);
-    assert(ReadCustom32(first->deviceID, kMCLatencyFrames) == latencyBefore + 1);
-    assert(ReadCustom64(first->deviceID, kMCLatencyRevision) == revisionBefore + 1);
     latencyBefore += 1;
     assert(StartIO(Driver(), first->deviceID, 3000) == noErr);
     if (MC_DEVICE_COUNT > 1) {

@@ -89,7 +89,8 @@ set_lsui_element "$helpers/VirtualCaptureHost.app/Contents/Info.plist"
 
 codesign --force --sign "$identity" "$helpers/TapCaptureHost.app"
 codesign --force --sign "$identity" "$helpers/VirtualCaptureHost.app"
-codesign --force --sign "$identity" "$staged_app"
+# Preserve the microphone entitlement and hardened-runtime flags from Xcode.
+codesign --force --preserve-metadata=entitlements,flags --sign "$identity" "$staged_app"
 
 codesign --verify --deep --strict "$staged_app"
 

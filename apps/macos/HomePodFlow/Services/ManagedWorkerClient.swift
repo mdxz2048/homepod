@@ -188,6 +188,13 @@ import Darwin
     }
     private func fail(_ error: any Error) { invalidate(error: error, force: true) }
     private func invalidate(error: (any Error)?, force: Bool) {
+        if let error {
+            var detail = "error: \(error.localizedDescription)"
+            if !stderrTail.isEmpty {
+                detail += "\nstderr:\n" + (String(data: stderrTail, encoding: .utf8) ?? "<binary>")
+            }
+            FlowDiagnosticsLog.append("worker-failure.log", detail)
+        }
         let owned = process
         generation = UUID()
         process = nil; activeSession = nil

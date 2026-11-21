@@ -24,13 +24,29 @@ from adapters.worker.server import Session, WorkerServer
 from adapters.live.volume import LiveVolumeControl, VolumeNotReady
 from adapters.live.latency_control import validate_latency_report
 
-COMMANDS = ("hello", "scan", "start", "stop", "shutdown", "set_volume")
+COMMANDS = ("hello", "scan", "start", "stop", "shutdown", "set_volume", "analyze_probe", "calibration_latency", "calibration_snapshot")
 
 
 async def scan_receivers(params):
     """Keep device identity separate from its mutable address and display name."""
     from adapters.airplay_pyatv.session import scan
-    devices = await scan(params.get("hosts"), params.get("timeout_seconds", 8))
+    expected = set(params.get("expected_identifiers", []))
+    devices = []
+    attempts = 4 if expected else 1
+    for attempt in range(attempts):
+        if attempt:
+            await asyncio.sleep(.4 * attempt)
+        try:
+            fresh = await scan(params.get("hosts") if attempt == 0 else None,
+                               params.get("timeout_seconds", 4 if expected else 8))
+        except (OSError, asyncio.TimeoutError):
+            if not expected or attempt == attempts - 1:
+                raise
+            continue
+        identities = {device.identifier for device in fresh if device.identifier}
+        devices = fresh + [device for device in devices if device.identifier not in identities]
+        if not expected or expected.issubset({device.identifier for device in devices}):
+            break
     result = []
     for device in devices[:64]:
         item = {"name": str(device.name)[:128], "address": str(device.address)[:128],
@@ -80,13 +96,51 @@ def parse_system_request(line):
         if command in ("hello", "shutdown"):
             keys(params)
         elif command == "scan":
-            keys(params, optional=("hosts", "timeout_seconds"))
+            keys(params, optional=("hosts", "timeout_seconds", "expected_identifiers"))
             hosts = params.get("hosts", [])
             if (not isinstance(hosts, list) or len(hosts) > 8
                     or any(not isinstance(h, str) or not 0 < len(h) <= 255 for h in hosts)
                     or len(set(hosts)) != len(hosts)):
                 raise ProtocolError("invalid_params", "scan requires up to eight unique addresses")
             number(params.get("timeout_seconds", 8), 1, 15, "timeout_seconds")
+            expected = params.get("expected_identifiers", [])
+            if (not isinstance(expected, list) or len(expected) > 8
+                    or any(not isinstance(item, str) or not 0 < len(item) <= 128 for item in expected)
+                    or len(set(expected)) != len(expected)):
+                raise ProtocolError("invalid_params", "scan requires unique expected device identities")
+        elif command == "calibration_snapshot":
+            keys(params, ('helper',))
+            absolute_path(params['helper'], 'helper')
+        elif command == "calibration_latency":
+            keys(params, ('helper', 'target_ms'))
+            absolute_path(params['helper'], 'helper')
+            if type(params['target_ms']) is not int:
+                raise ProtocolError('invalid_params', 'whole milliseconds required')
+            number(params['target_ms'], 0, 3000, 'target_ms')
+        elif command == "analyze_probe":
+            keys(params, ("recording", "sample_rate", "first_sample_ns", "presentation_ns", "nominal_ms"), ("injection_ns", "code", "expected_latency_ms", "clock", "signal_version", "diagnostics_path",
+                         "probe_kind", "probe_rate"))
+            if type(params.get('signal_version', 1)) is not int or params.get('signal_version', 1) not in (1, 3, 4):
+                raise ProtocolError('invalid_params', 'unsupported probe signal version')
+            absolute_path(params["recording"], "recording")
+            number(params["sample_rate"], 44100, 96000, "sample_rate")
+            for name in ("first_sample_ns", "presentation_ns"):
+                number(params[name], 1, 2**63 - 1, name)
+            number(params["nominal_ms"], 0, 3000, "nominal_ms")
+            if 'clock' in params:
+                absolute_path(params['clock'], 'clock')
+            if 'diagnostics_path' in params:
+                absolute_path(params['diagnostics_path'], 'diagnostics_path')
+            if 'probe_rate' in params and params['probe_rate'] not in (44100, 48000, 96000):
+                raise ProtocolError('invalid_params', 'unsupported probe sample rate')
+            if 'probe_kind' in params and params['probe_kind'] not in ('sweep', 'linear', 'pink', 'white'):
+                raise ProtocolError('invalid_params', 'unsupported probe kind')
+            if "injection_ns" in params:
+                number(params['injection_ns'], 1, 2**63 - 1, 'injection_ns')
+            if "code" in params and (type(params['code']) is not int or not 0 <= params['code'] <= 7):
+                raise ProtocolError('invalid_params', 'invalid probe code')
+            if 'expected_latency_ms' in params:
+                number(params['expected_latency_ms'], 0, 3000, 'expected_latency_ms')
         elif command == "stop":
             keys(params, ("session",))
             session_id(params["session"])
@@ -95,7 +149,7 @@ def parse_system_request(line):
             session_id(params["session"])
             number(params["volume"], 0, 100, "volume")
         else:
-            keys(params, ("session", "library", "capture_host", "routes"), ("volume", "exclude_pids", "mode", "input"))
+            keys(params, ("session", "library", "capture_host", "routes"), ("volume", "exclude_pids", "mode", "input", "probe", "calibration"))
             session_id(params["session"])
             absolute_path(params["library"], "library")
             absolute_path(params["capture_host"], "capture_host")
@@ -119,6 +173,17 @@ def parse_system_request(line):
                         or any(type(ch) is not int for ch in route["channels"])):
                     raise ProtocolError("invalid_params", "system stereo requires unique outputs and [0,1] routes")
                 ids.add(output); addresses.add(host)
+            if "probe" in params and (params["probe"] is not True or "input" not in params
+                                      or params.get("volume") not in tuple(range(1, 101))
+                                      or ids != set(range(len(routes)))):
+                raise ProtocolError("invalid_params", "probe requires virtual input, sequential output IDs and volume 1..100")
+            if "calibration" in params:
+                calibration = params["calibration"]
+                if (not isinstance(calibration, dict) or set(calibration) != {str(r['output_id']) for r in routes}
+                        or 'input' not in params):
+                    raise ProtocolError("invalid_params", "calibration must cover every cinema output")
+                for residual in calibration.values():
+                    number(residual, -250, 750, "residual_ms")
             if "input" in params:
                 config = params['input']
                 keys(config, ('backend', 'device_uid', 'layout'),
@@ -164,7 +229,9 @@ async def system_runner(params, report):
             volume=params.get("volume", 15), exclude_pids=tuple(params.get("exclude_pids", ())), report=report,
             volume_control=params.get("_volume_control"), input_config=params.get('input'),
             mode=params.get('mode', 'synchronized'),
-            endpoint_roles={r['output_id']: r['role'] for r in params['routes'] if 'role' in r})
+            endpoint_roles={r['output_id']: r['role'] for r in params['routes'] if 'role' in r},
+            probe=params.get('probe', False),
+            calibration={int(k): v for k, v in params.get('calibration', {}).items()} or None)
         raise RuntimeError("live session returned without an explicit stop")
     finally:
         if not entered:
@@ -191,7 +258,7 @@ class SystemWorkerServer(WorkerServer):
             self.error(None, "duplicate_id", "request ID has already been used", offending_id=rid); return
         if seen is None and command not in ("stop", "shutdown"):
             self.error(rid, "resource_limit", "restart system worker", correlation); return
-        if self.shutting_down or (self.active and command in ("scan", "start")):
+        if self.shutting_down or (self.active and command in ("scan", "start", "analyze_probe", "calibration_latency", "calibration_snapshot")):
             self.error(rid, "busy", "a system-audio session is active or shutting down", correlation); return
         if self.poisoned and command not in ("hello", "stop", "shutdown"):
             self.error(rid, "worker_poisoned", "cleanup unconfirmed; restart worker", correlation); return
@@ -201,12 +268,35 @@ class SystemWorkerServer(WorkerServer):
                     "commands": list(COMMANDS), "worker_pid": os.getpid(),
                     "capabilities": {"system_audio": True, "live": True, "capture": True,
                                      "stereo_pair": False, "realtime_volume": True, "av_offset": False,
-                                     "virtual_device_v2": True},
+                                     "virtual_device_v2": True, "acoustic_calibration_v1": True, "acoustic_calibration_v2": True, "acoustic_calibration_v3": True, "acoustic_calibration_v4": True},
                     "worker_poisoned": self.poisoned})
             elif command == "scan":
                 payload = await self.scanner(params)
                 payload["devices"] = payload.get("devices", [])[:64]
                 self.emit(rid, "result", payload=payload)
+            elif command == "calibration_snapshot":
+                from adapters.live.latency_apply import _status
+                snapshot = await _status(params['helper'])
+                if snapshot.pending_status == 'pending':
+                    self.error(rid, 'latency_pending', 'Flow 声卡配置尚未完成。请重新启动 Mac 后再测试。'); return
+                self.emit(rid, 'result', payload={'target_ms': round(snapshot.ms), 'revision': snapshot.revision})
+            elif command == "calibration_latency":
+                from adapters.live.latency_apply import apply_planned_latency
+                result = await apply_planned_latency(params['helper'], 0, 44100, target_ms=params['target_ms'])
+                if result.status not in ('applied', 'unchanged'):
+                    self.error(rid, 'latency_pending', '声卡延迟写入尚未完成，请稍后重试'); return
+                self.emit(rid, 'result', payload=result.report())
+            elif command == "analyze_probe":
+                from adapters.calibration.acoustic import analyze_recording
+                try:
+                    result = await asyncio.to_thread(analyze_recording, params['recording'],
+                        params['sample_rate'], params['first_sample_ns'], params['presentation_ns'], params['nominal_ms'],
+                        params.get('injection_ns'), params.get('code'), params.get('expected_latency_ms'), params.get('clock'),
+                        params.get('signal_version', 1), params.get('diagnostics_path'),
+                        params.get('probe_kind', 'sweep'), params.get('probe_rate'))
+                except (ValueError, OSError) as error:
+                    self.error(rid, 'measurement_failed', str(error)); return
+                self.emit(rid, 'result', payload=result)
             elif command == "start":
                 sid = params["session"]
                 if sid.lower() in self.sessions:
@@ -236,6 +326,8 @@ class SystemWorkerServer(WorkerServer):
                 if (not state or state.session_id.lower() != params["session"].lower()
                         or state.stop_requested or state.finalizing):
                     self.error(rid, "stale_session", "volume requires the active session", correlation); return
+                if state.params.get('probe') and not 1 <= params['volume'] <= 100:
+                    self.error(rid, 'invalid_params', '测试音量限定为 1% 至 100%', correlation); return
                 try:
                     applied = await state.params["_volume_control"].set_volume(params["volume"])
                 except VolumeNotReady:
@@ -284,6 +376,9 @@ class SystemWorkerServer(WorkerServer):
                     "acoustic_sync_verified": False}
                 if isinstance(latency_state, dict):
                     payload["latency_state"] = latency_state
+                if report.get("probe_version") in (1, 2):
+                    payload["probe"] = {key: report.get(key) for key in
+                        ("playback_origin_ns", "nominal_probe_ms", "first_receipt_ns")}
                 if phase in ("capturing", "streaming"):
                     scheduling = report.get("scheduling")
                     if isinstance(scheduling, dict):
@@ -301,9 +396,31 @@ class SystemWorkerServer(WorkerServer):
                 previous = signature
             await asyncio.sleep(.05)
 
+    def write_session_diagnostic(self, session, failure, clean, trace):
+        """Persist the worker-side failure with the full session report."""
+        try:
+            import json
+            from datetime import datetime
+            from pathlib import Path
+            directory = Path.home() / "Library/Application Support/HomePod Flow/Diagnostics"
+            directory.mkdir(parents=True, exist_ok=True)
+            record = {
+                "at": datetime.now().isoformat(timespec="seconds"),
+                "failure": failure,
+                "clean": clean,
+                "session": session.session_id,
+                "traceback": trace,
+                "report": dict(session.report),
+            }
+            with (directory / "worker-session.log").open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(record, ensure_ascii=False, default=str) + "\n")
+        except Exception:
+            pass
+
     async def _run_session(self, session):
         monitor = asyncio.create_task(self._monitor(session))
         failure = None
+        trace = None
         stopped = False
         try:
             await self.runner(session.params, session.report)
@@ -312,8 +429,12 @@ class SystemWorkerServer(WorkerServer):
             stopped = session.stop_requested
             if not stopped:
                 failure = "unexpected session cancellation"
+            import traceback
+            trace = traceback.format_exc()
         except BaseException as error:
             failure = type(error).__name__
+            import traceback
+            trace = traceback.format_exc()
         finally:
             session.finalizing = True
             monitor.cancel(); await asyncio.gather(monitor, return_exceptions=True)
@@ -326,9 +447,15 @@ class SystemWorkerServer(WorkerServer):
                 self.emit(session.request_id, "result", session.session_id,
                     {"state": "stopped", "cleanup_complete": True, "report": dict(session.report)})
             else:
+                preparation = session.report.get("preparation_failure", {})
+                latency = session.report.get("latency_state", {})
+                if preparation and latency.get("status") in ("failure", "pending"):
+                    message = "声卡延迟更新未完成：" + str(latency.get("detail") or latency.get("pending_reason") or preparation.get("detail", ""))[:256]
+                else:
+                    message = f"system session failed ({failure or 'cleanup unconfirmed'})"
                 self.error(session.request_id, "operation_failed" if clean else "cleanup_failed",
-                    f"system session failed ({failure or 'cleanup unconfirmed'})", session.session_id,
-                    cleanup_complete=clean, report=dict(session.report))
+                    message, session.session_id, cleanup_complete=clean, report=dict(session.report))
+            self.write_session_diagnostic(session, failure, clean, trace)
             self.last_session = (session.session_id, clean)
             if clean:
                 self.cleaned_sessions.add(session.session_id.lower())

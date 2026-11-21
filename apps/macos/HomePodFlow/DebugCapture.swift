@@ -2,34 +2,116 @@ import SwiftUI
 import AppKit
 #if DEBUG
 import ScreenCaptureKit
+import AVFoundation
 import Darwin
 #endif
 
 @MainActor enum DebugCapture {
     static func makeState() -> AppState {
+        var arguments = ProcessInfo.processInfo.arguments
         #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("--check-system-route") {
+        if let report = Bundle.main.object(forInfoDictionaryKey: "FlowCalibrationE2EReport") as? String {
+            arguments += ["--calibration-e2e-report", report]
+        }
+        #endif
+        #if DEBUG
+        if arguments.contains("--check-system-route") {
             // Scheduled from the normal GUI launch, independent of lazy Window/MenuBarExtra creation.
             DispatchQueue.main.async { runSystemRouteCheckIfRequested() }
         }
-        if ProcessInfo.processInfo.arguments.contains("--capture-directory") {
+        if arguments.contains("--capture-directory") {
             let suite = "homepod-flow-ui-capture-\(UUID().uuidString)"
             captureSuite = suite
             // Screenshot-only: show the demo room while keeping the real
             // audio-component and update sections visible.
-            if ProcessInfo.processInfo.arguments.contains("--capture-demo-layout") {
+            if arguments.contains("--capture-demo-layout") {
                 let state = AppState(defaults: UserDefaults(suiteName: suite)!,
                                      visualDemo: true, showsProductionSections: true)
                 state.volume = 55
                 return state
             }
             let state = AppState(defaults: UserDefaults(suiteName: suite)!,
-                visualDemo: !ProcessInfo.processInfo.arguments.contains("--capture-empty-layout"))
+                visualDemo: !arguments.contains("--capture-empty-layout"))
             if state.visualDemo { state.volume = 55 }
             return state
         }
         #endif
-        return AppState()
+        #if DEBUG
+        let isCalibrationCheck = Bundle.main.object(forInfoDictionaryKey: "FlowMicrophoneSelfCheck") != nil
+            || Bundle.main.object(forInfoDictionaryKey: "FlowCalibrationE2EReport") != nil
+        let state = AppState(defaults: isCalibrationCheck ? UserDefaults(suiteName: "com.homepodflow.mac")! : .standard)
+        if let path = Bundle.main.object(forInfoDictionaryKey: "FlowMicrophoneSelfCheck") as? String {
+            try? Data("scheduled microphone self-check".utf8).write(to: URL(fileURLWithPath: path), options: .atomic)
+            DispatchQueue.main.async {
+                showInspectionWindow(state: state)
+                Task { @MainActor in
+                    let mic = CalibrationMicrophone()
+                    let temporary = FileManager.default.temporaryDirectory.appendingPathComponent("hpf-mic-check-\(UUID().uuidString).f32")
+                    var message = ""
+                    do {
+                        let status = AVCaptureDevice.authorizationStatus(for: .audio)
+                        try? Data("starting authorization=\(status.rawValue)".utf8).write(to: URL(fileURLWithPath: path), options: .atomic)
+                        try await mic.start()
+                        try? Data("recording \(mic.diagnostics)".utf8).write(to: URL(fileURLWithPath: path), options: .atomic)
+                        try await Task.sleep(for: .seconds(2))
+                        let result = try mic.finish(to: temporary)
+                        message = "PASS rate=\(result.rate) firstNS=\(result.firstNS) \(mic.diagnostics)"
+                    } catch { message = "FAIL \(error.localizedDescription) \(mic.diagnostics)" }
+                    mic.stop()
+                    try? FileManager.default.removeItem(at: temporary)
+                    try? FileManager.default.removeItem(at: temporary.appendingPathExtension("clock.json"))
+                    try? Data(message.utf8).write(to: URL(fileURLWithPath: path), options: .atomic)
+                }
+            }
+            return state
+        }
+        #else
+        let state = AppState()
+        #endif
+        let launchArguments = arguments
+        #if DEBUG
+        if let index = arguments.firstIndex(of: "--calibration-e2e-report"),
+           arguments.indices.contains(index + 1) {
+            let path = arguments[index + 1]
+            if path.hasPrefix("/") {
+                DispatchQueue.main.async {
+                    if Bundle.main.object(forInfoDictionaryKey: "FlowCalibrationE2EReport") != nil {
+                        showInspectionWindow(state: state)
+                    }
+                    state.mode = .cinema
+                    state.showingCalibration = true
+                    Task { @MainActor in
+                        let route = DefaultOutputRouteService()
+                        let before = route.currentDefaultOutputUID()
+                        state.calibration.begin(layout: state.layout)
+                        await state.calibration.waitUntilFinished()
+                        struct Report: Encodable {
+                            var success: Bool
+                            var phase: String
+                            var error: String
+                            var profile: AcousticCalibrationProfile?
+                            var diagnostics: [[String: JSONValue]]
+                            var defaultOutputBefore: String?
+                            var defaultOutputAfter: String?
+                        }
+                        let report = Report(success: state.calibration.candidate?.verification?.passed == true,
+                            phase: state.calibration.phase, error: state.calibration.errorText,
+                            profile: state.calibration.candidate,
+                            diagnostics: state.calibration.diagnostics,
+                            defaultOutputBefore: before, defaultOutputAfter: route.currentDefaultOutputUID())
+                        if let data = try? JSONEncoder().encode(report) {
+                            try? data.write(to: URL(fileURLWithPath: path), options: .atomic)
+                        }
+                        if !report.success, launchArguments.contains("--exit-on-calibration-failure") {
+                            state.showingCalibration = false
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { NSApp.terminate(nil) }
+                        }
+                    }
+                }
+            }
+        }
+        #endif
+        return state
     }
     #if DEBUG
     private static var captureSuite: String?
@@ -154,14 +236,19 @@ import Darwin
     }
     static func showInspectionWindow(state: AppState) {
         configure(state)
-        let host = NSHostingView(rootView: SettingsRootView(state: state))
+        let host = NSHostingView(rootView: Group {
+            if ProcessInfo.processInfo.arguments.contains("--preview-calibration") {
+                CalibrationSheet(state: state)
+            } else { SettingsRootView(state: state) }
+        })
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 960, height: 760),
             styleMask: [.titled, .closable, .resizable, .miniaturizable],
             backing: .buffered, defer: false)
         window.title = "HomePod Flow · DEBUG inspection"
         window.isReleasedWhenClosed = false
         window.contentView = host
-        window.setContentSize(NSSize(width: 960, height: 760))
+        window.setContentSize(ProcessInfo.processInfo.arguments.contains("--preview-calibration")
+                              ? NSSize(width: 680, height: 740) : NSSize(width: 960, height: 760))
         window.center()
         inspectionWindow = window
         window.makeKeyAndOrderFront(nil)

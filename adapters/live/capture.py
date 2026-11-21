@@ -5,6 +5,7 @@ import asyncio
 import json
 import os
 from pathlib import Path
+import time
 import uuid
 
 from .hub import LiveFailure
@@ -12,13 +13,14 @@ from .pcm import PCMValidator, read_frame
 
 
 class CaptureHost:
-    def __init__(self, executable, session, hub, exclude_pids=()):
+    def __init__(self, executable, session, hub, exclude_pids=(), auto_restart=False):
         path = Path(executable)
         if not path.is_absolute() or not path.is_file() or not os.access(path, os.X_OK):
             raise ValueError("an installed executable capture host is required")
         if any(type(pid) is not int or pid <= 0 for pid in exclude_pids) or len(exclude_pids) > 62:
             raise ValueError("invalid capture exclusions")
         self.executable, self.session, self.hub = str(path), session, hub
+        self.auto_restart = auto_restart
         self.exclude_pids = sorted(set(exclude_pids) | {os.getpid()})
         self.start_id, self.stop_id = str(uuid.uuid4()), str(uuid.uuid4())
         self.validator = PCMValidator(session, self.start_id)
@@ -27,8 +29,12 @@ class CaptureHost:
         self.stopping = self.cleanup_complete = False
         self.stderr_tail = bytearray()
         self.last_error = None
+        self.last_error_detail = None
         self.error_header = None
         self.ready_header = None
+        self.restarts = 0
+        self.restart_times = []
+        self.last_restart_error = None
 
     async def _command(self, command, command_id):
         params = {"session": self.session}
@@ -41,18 +47,75 @@ class CaptureHost:
     async def start(self):
         if self.process:
             raise LiveFailure("capture process already started")
+        await self._spawn(start_pump=True)
+        await asyncio.wait_for(self.hub.first_block.wait(), 5)
+        self.hub._require_live()
+
+    async def _spawn(self, start_pump):
         loop = asyncio.get_running_loop()
+        self.start_id = str(uuid.uuid4())
+        self.validator = self._make_validator()
         self.ready, self.stopped_reply = loop.create_future(), loop.create_future()
+        self.stderr_tail.clear()
         self.process = await asyncio.create_subprocess_exec(
             self.executable, "--serve", stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE, limit=98304)
-        self.pump_task = asyncio.create_task(self._pump())
+        if start_pump:
+            self.pump_task = asyncio.create_task(self._pump())
         self.stderr_task = asyncio.create_task(self._stderr())
         await self._command("start", self.start_id)
         # The public permission dialog may need human interaction before R0 exists.
         await asyncio.wait_for(asyncio.shield(self.ready), 90)
-        await asyncio.wait_for(self.hub.first_block.wait(), 5)
-        self.hub._require_live()
+
+    async def _restart(self, error):
+        now = time.monotonic()
+        self.restart_times = [stamp for stamp in self.restart_times if now - stamp < 30]
+        if len(self.restart_times) >= 3:
+            self.last_restart_error = f"{type(error).__name__}: {error}; restart limit reached"
+            return False
+        self.restart_times.append(now)
+        self.restarts += 1
+        self.last_restart_error = f"{type(error).__name__}: {error}"
+        if self.stderr_task:
+            self.stderr_task.cancel()
+            await asyncio.gather(self.stderr_task, return_exceptions=True)
+            self.stderr_task = None
+        previous, self.process = self.process, None
+        if previous:
+            if previous.returncode is None:
+                try:
+                    previous.terminate()
+                except ProcessLookupError:
+                    pass
+                try:
+                    await asyncio.wait_for(previous.wait(), 1.5)
+                except (asyncio.TimeoutError, ProcessLookupError):
+                    if previous.returncode is None:
+                        try:
+                            previous.kill()
+                        except ProcessLookupError:
+                            pass
+                        try:
+                            await asyncio.wait_for(previous.wait(), 1.0)
+                        except (asyncio.TimeoutError, ProcessLookupError):
+                            pass
+            for pipe in (previous.stdin, previous.stdout, previous.stderr):
+                try:
+                    if pipe:
+                        pipe.close()
+                except Exception:
+                    pass
+        try:
+            # The new pump task owns the restarted process; this supervisor
+            # task returns immediately after the handoff.
+            await self._spawn(start_pump=True)
+            return True
+        except BaseException as restart_error:
+            self.last_restart_error += f"; restart failed: {restart_error}"
+            return False
+
+    def _make_validator(self):
+        return PCMValidator(self.session, self.start_id)
 
     async def _stderr(self):
         while data := await self.process.stderr.read(2048):
@@ -60,6 +123,27 @@ class CaptureHost:
             del self.stderr_tail[:-8192]
 
     async def _pump(self):
+        while True:
+            try:
+                await self._pump_once()
+                return
+            except asyncio.CancelledError:
+                raise
+            except BaseException as exc:
+                self.last_error = type(exc).__name__
+                self.last_error_detail = " ".join(str(exc).split())[:256]
+                if self.stopping:
+                    return
+                if self.auto_restart and await self._restart(exc):
+                    return
+                await self.hub.fail(exc)
+                if self.ready and not self.ready.done():
+                    self.ready.set_exception(exc)
+                if self.stopped_reply and not self.stopped_reply.done():
+                    self.stopped_reply.set_exception(exc)
+                return
+
+    async def _pump_once(self):
         received_ready = False
         try:
             while True:
@@ -95,14 +179,11 @@ class CaptureHost:
                     self.error_header = h
                     raise LiveFailure("capture host reported failure: " + str(h.get("code", "unknown"))[:128])
         except BaseException as exc:
-            self.last_error = type(exc).__name__
             if not self.ready.done():
                 self.ready.set_exception(exc)
             if not self.stopped_reply.done():
                 self.stopped_reply.set_exception(exc)
-            if not self.stopping:
-                await self.hub.fail(exc)
-            # Futures carry the failure to start/stop; never leak task exceptions.
+            raise
 
     async def stop(self):
         if self.stopping:
@@ -152,13 +233,19 @@ class CaptureHost:
         return self.cleanup_complete
 
     def report(self):
+        stderr = bytes(self.stderr_tail).decode("utf-8", "replace")
         return {"capture_cleanup_complete": self.cleanup_complete,
                 "capture_host_exited": self.process is None or self.process.returncode is not None,
+                "capture_host_returncode": None if self.process is None else self.process.returncode,
+                "capture_stderr_tail": stderr[-4096:],
+                "capture_restarts": self.restarts,
+                "capture_last_restart_error": self.last_restart_error,
                 "input_closed": self.process is None or self.process.returncode is not None,
                 "capture_frames": self.validator.frames, "capture_blocks": self.validator.sequence,
                 "capture_first_source": self.validator.first_source,
                 "capture_last_source": self.validator.last_source,
                 "capture_last_error": self.last_error,
+                "capture_last_error_detail": getattr(self, "last_error_detail", None),
                 "capture_error_code": (self.error_header or {}).get("code"),
                 "capture_error_message": str((self.error_header or {}).get("message", ""))[:1024],
                 "capture_error_cleanup_reported": (self.error_header or {}).get("cleanupComplete"),

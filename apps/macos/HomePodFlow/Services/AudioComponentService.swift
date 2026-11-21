@@ -162,38 +162,15 @@ struct LiveAudioComponentInspector: AudioComponentInspecting {
             .appendingPathComponent("Install HomePod Flow.pkg")
         if manager.fileExists(atPath: sibling.path) { return sibling }
 
-        func installer(in directory: URL) -> URL? {
-            let direct = directory.appendingPathComponent("Install HomePod Flow.pkg")
-            if manager.fileExists(atPath: direct.path) { return direct }
-            guard let items = try? manager.contentsOfDirectory(
-                at: directory,
-                includingPropertiesForKeys: [.isDirectoryKey, .contentModificationDateKey],
-                options: [.skipsHiddenFiles]) else { return nil }
-            let candidates = items
-                .filter { $0.lastPathComponent.hasPrefix("HomePodFlow-") }
-                .map { $0.appendingPathComponent("Install HomePod Flow.pkg") }
-                .filter { manager.fileExists(atPath: $0.path) }
-            return candidates.max { left, right in
-                let leftDate = (try? left.resourceValues(forKeys: [.contentModificationDateKey]))?
-                    .contentModificationDate ?? .distantPast
-                let rightDate = (try? right.resourceValues(forKeys: [.contentModificationDateKey]))?
-                    .contentModificationDate ?? .distantPast
-                return leftDate < rightDate
-            }
-        }
-
-        var directories: [URL] = [
-            URL(fileURLWithPath: "/Users/Shared", isDirectory: true),
-            URL(fileURLWithPath: "/Applications", isDirectory: true),
+        // Never enumerate Downloads/Desktop/Documents: macOS treats that as
+        // user-folder access and prompts for TCC. Only look at explicit,
+        // app-owned or installer-known locations.
+        let fixed = [
+            URL(fileURLWithPath: "/Users/Shared/Install HomePod Flow.pkg"),
+            URL(fileURLWithPath: "/Applications/Install HomePod Flow.pkg"),
         ]
-        for searchPath in [FileManager.SearchPathDirectory.downloadsDirectory,
-                           .desktopDirectory, .applicationDirectory] {
-            if let url = manager.urls(for: searchPath, in: .userDomainMask).first {
-                directories.append(url)
-            }
-        }
-        for directory in directories {
-            if let found = installer(in: directory) { return found }
+        for url in fixed where manager.fileExists(atPath: url.path) {
+            return url
         }
         return nil
     }

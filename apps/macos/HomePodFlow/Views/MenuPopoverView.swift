@@ -78,7 +78,7 @@ struct MenuPopoverView: View {
                 .toggleStyle(TheaterToggleStyle())
                 .frame(width: Theater.P(138), height: Theater.P(68))
                 .offset(x: Theater.P(887), y: Theater.P(114))
-                .disabled(!state.visualDemo && (state.updates.isInstalling || state.systemAudio.routeSwitchInProgress || (!state.systemAudio.desiredEnabled &&
+                .disabled(!state.visualDemo && (state.calibration.isBusy || state.updates.isInstalling || state.systemAudio.routeSwitchInProgress || (!state.systemAudio.desiredEnabled &&
                           (state.systemAudio.isBusy || state.layout.devices.isEmpty ||
                            (state.mode.usesVirtualDevice && !state.audioComponent.allowsStart)))))
                 .accessibilityLabel(state.visualDemo

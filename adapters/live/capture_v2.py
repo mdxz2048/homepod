@@ -18,19 +18,21 @@ from .pcm_v2 import (CANONICAL_DEVICE_UID, LAYOUTS, RES_LAYOUTS,
 
 
 class CaptureHostV2(CaptureHost):
-    def __init__(self, executable, session, hub, device_uid, layout, processor):
+    def __init__(self, executable, session, hub, device_uid, layout, processor, auto_restart=False):
         if layout not in LAYOUTS or layout in RES_LAYOUTS:
             raise ValueError("unsupported virtual input layout")
         if CANONICAL_DEVICE_UID.get(layout) != device_uid:
             raise ValueError("device UID does not match the canonical input layout")
         if not callable(processor):
             raise ValueError("virtual input processor must be callable")
-        super().__init__(executable, session, hub)
+        super().__init__(executable, session, hub, auto_restart=auto_restart)
         self.device_uid = device_uid
         self.layout = layout
         self.channels = len(LAYOUTS[layout])
         self.processor = processor
-        self.validator = PCMV2Validator(session, self.start_id)
+
+    def _make_validator(self):
+        return PCMV2Validator(self.session, self.start_id)
 
     async def _command(self, command, command_id):
         params = {"session": self.session}
@@ -58,7 +60,7 @@ class CaptureHostV2(CaptureHost):
                 and type(header.get("sourceChannels")) is int
                 and header.get("sourceChannels") == self.channels)
 
-    async def _pump(self):
+    async def _pump_once(self):
         received_ready = False
         try:
             while True:
@@ -104,11 +106,8 @@ class CaptureHostV2(CaptureHost):
                     raise LiveFailure("capture host reported failure: " +
                                       f"{code} {message}".strip())
         except BaseException as exc:
-            self.last_error = type(exc).__name__
             if not self.ready.done():
                 self.ready.set_exception(exc)
             if not self.stopped_reply.done():
                 self.stopped_reply.set_exception(exc)
-            if not self.stopping:
-                await self.hub.fail(exc)
-            # Futures carry the failure to start/stop; never leak task exceptions.
+            raise

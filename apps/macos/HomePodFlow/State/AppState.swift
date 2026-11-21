@@ -14,6 +14,7 @@ private struct StoredPreferences: Codable {
 
 @Observable @MainActor final class AppState {
     let worker = WorkerStore()
+    let calibration: CalibrationStore
     let systemAudio: SystemAudioStore
     let audioComponent: AudioComponentService
     let updates = AppUpdateService()
@@ -47,10 +48,12 @@ private struct StoredPreferences: Codable {
         set { guard canConfigureDevices else { return }; storedDraftLayout = newValue }
     }
     var selectedDeviceID: UUID?
+    var showingCalibration = false
+    var calibrationSuggested = false
     var selectedPage: SettingsPage = .layout
     private(set) var statusText = "演示 · 未连接真实设备"
     var notice = "尚未配置音箱 · 添加发现的设备并应用布局后即可开启系统音频。"
-    var sessionControlsLocked: Bool { updates.isInstalling || systemAudio.desiredEnabled || systemAudio.hasActiveSession || systemAudio.isBusy }
+    var sessionControlsLocked: Bool { calibration.isBusy || updates.isInstalling || systemAudio.desiredEnabled || systemAudio.hasActiveSession || systemAudio.isBusy }
     /// Dragging positions only affects cinema routing. Music mode can still add,
     /// remove and save the speaker list.
     var layoutEditable: Bool { mode == .cinema && !sessionControlsLocked }
@@ -71,6 +74,7 @@ private struct StoredPreferences: Codable {
          showsProductionSections: Bool? = nil,
          systemAudio: SystemAudioStore? = nil, audioComponent: AudioComponentService? = nil) {
         self.defaults = defaults
+        self.calibration = CalibrationStore(defaults: defaults)
         self.systemAudio = systemAudio ?? SystemAudioStore()
         self.audioComponent = audioComponent ?? AudioComponentService()
         self.visualDemo = visualDemo
@@ -102,7 +106,7 @@ private struct StoredPreferences: Codable {
         self.systemAudio.onSystemVolumeChanged = { [weak self] value, muted in
             self?.systemVolumeDidChange(value, muted: muted)
         }
-        self.systemAudio.recoverStaleRouteIfNeeded()
+        if !visualDemo { self.systemAudio.recoverStaleRouteIfNeeded() }
     }
 
     /// The virtual device is the system's volume authority while Flow owns the
@@ -124,6 +128,12 @@ private struct StoredPreferences: Codable {
         }
         statusText = result.message
     }
+    func openCalibration() {
+        guard !sessionControlsLocked, !hasUnsavedLayout, !layout.devices.isEmpty else { return }
+        mode = .cinema
+        calibration.resetPresentation()
+        showingCalibration = true
+    }
     func applyLayout() {
         guard canConfigureDevices else { return }
         guard !sessionControlsLocked else {
@@ -132,11 +142,13 @@ private struct StoredPreferences: Codable {
         guard unconfirmedSpeakerHosts.isEmpty else {
             notice = "有设备型号未识别，请在设备属性中选择 HomePod 或 mini 后保存。"; return
         }
+        let changed = layout != draftLayout.normalized
         layout = draftLayout.normalized
         draftLayout = layout
         systemAudio.selectedDeviceIDs = Set(layout.devices.compactMap(\.host))
         persist()
         notice = "布局已保存 · 尚未改变实际音箱声道。"
+        if changed && !visualDemo && !layout.devices.isEmpty { calibrationSuggested = true }
     }
     func cancelLayout() {
         guard canConfigureDevices else { return }
@@ -253,6 +265,7 @@ private struct StoredPreferences: Codable {
     }
 
     func installUpdate() async {
+        guard !calibration.isBusy else { return }
         await updates.install {
             await self.systemAudio.stop()
             guard !self.systemAudio.hasActiveSession, !self.systemAudio.desiredEnabled,
@@ -263,6 +276,7 @@ private struct StoredPreferences: Codable {
     }
 
     func startSystemAudio() async {
+        guard !calibration.isBusy else { notice = "请先完成或停止延迟测试。"; return }
         guard !updates.isInstalling else { notice = "正在安装更新，请稍候"; return }
         guard !mode.usesVirtualDevice || audioComponent.allowsStart else {
             notice = audioComponent.snapshot.message
@@ -323,7 +337,8 @@ private struct StoredPreferences: Codable {
         notice = "正在准备系统音频与保存的音箱…"
         if mode.usesVirtualDevice { systemAudio.setSystemOutputVolume(volume) }
         handedOff = true
-        await systemAudio.start(mode: mode, volume: volume)
+        await systemAudio.start(mode: mode, volume: volume,
+                                calibration: mode == .cinema ? calibration.residuals(for: resolved) : nil)
         notice = systemAudio.statusText
     }
 

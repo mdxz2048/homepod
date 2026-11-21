@@ -263,11 +263,14 @@ def _result(status: str, before: _StatusRead, after: _StatusRead | None, *,
 
 
 async def apply_planned_latency(helper: str, latency_samples: int,
-                                sample_rate: int) -> LatencyApplyResult:
+                                sample_rate: int, *, target_ms=None) -> LatencyApplyResult:
     """Apply the negotiated presentation latency to the exact Flow driver."""
     if not isinstance(helper, str) or not helper:
         raise LatencyApplyError("latency helper path is missing")
-    target_ms = planned_presentation_ms(latency_samples, sample_rate)
+    if target_ms is None:
+        target_ms = planned_presentation_ms(latency_samples, sample_rate)
+    if type(target_ms) is not int:
+        raise LatencyApplyError("target latency must be whole milliseconds")
     if target_ms < 0 or target_ms > MAX_LATENCY_MS:
         raise LatencyApplyError(
             f"negotiated planned presentation {target_ms} ms is outside the "

@@ -8,6 +8,7 @@ struct HomePodFlowApp: App {
     init() {
         let initialState = DebugCapture.makeState()
         _state = State(initialValue: initialState)
+        appDelegate.calibration = initialState.calibration
         appDelegate.worker = initialState.worker
         appDelegate.systemAudio = initialState.systemAudio
         Task { await initialState.updates.checkIfNeeded() }

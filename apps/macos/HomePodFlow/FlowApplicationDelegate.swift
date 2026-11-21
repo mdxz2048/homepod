@@ -1,6 +1,7 @@
 import AppKit
 
 @MainActor final class FlowApplicationDelegate: NSObject, NSApplicationDelegate {
+    weak var calibration: CalibrationStore?
     weak var worker: WorkerStore?
     weak var systemAudio: SystemAudioStore?
     private var terminationPending = false
@@ -14,7 +15,9 @@ import AppKit
             signal(sig, SIG_IGN)
             let source = DispatchSource.makeSignalSource(signal: sig, queue: .main)
             source.setEventHandler {
-                NSApplication.shared.terminate(nil)
+                RunLoop.main.perform(inModes: [.common]) {
+                    MainActor.assumeIsolated { NSApplication.shared.terminate(nil) }
+                }
             }
             source.resume()
             signalSources.append(source)
@@ -30,6 +33,7 @@ import AppKit
             #if DEBUG
             DebugCapture.stopCaptureCheck()
             #endif
+            await calibration?.shutdown()
             await systemAudio?.prepareForTermination()
             await worker?.disconnectWorker()
             // Failure text remains truthful: forced exit is not a clean audio

@@ -27,6 +27,7 @@ struct SettingsRootView: View {
                     AudioComponentSection(service: state.audioComponent,
                                           canInstall: !state.sessionControlsLocked)
                 }
+                CalibrationSection(state: state)
                 AppUpdateSection(state: state)
             }
             Divider()
@@ -55,6 +56,15 @@ struct SettingsRootView: View {
         .padding(24).frame(minWidth: 820, minHeight: 580)
         .navigationTitle("HomePod Flow · 空间布局")
         .sheet(isPresented: $showingDevices) { DeviceDiscoverySheet(state: state) }
+        .sheet(isPresented: $state.showingCalibration) { CalibrationSheet(state: state) }
+        .alert("音箱布局已更新，是否校准延迟？", isPresented: $state.calibrationSuggested) {
+            Button("开始校准") {
+                state.openCalibration()
+            }
+            Button("稍后", role: .cancel) { }
+        } message: {
+            Text("测量每台音箱的实际延迟，自动保存补偿并更新声卡。可在测试窗口调节测试音量，通过后自动保存并写入声卡。")
+        }
     }
 
     private var inspector: some View {
